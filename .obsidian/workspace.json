@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "C/C Primer Plus/C Primer Plus 学习笔记.md",
+                "file": "README.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "C/C Primer Plus/C Primer Plus 学习笔记.md",
+                "file": "README.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "C/C Primer Plus/C Primer Plus 学习笔记.md",
+                "file": "README.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "C/C Primer Plus/C Primer Plus 学习笔记.md"
+                "file": "README.md"
               }
             }
           }
@@ -149,9 +149,9 @@
   },
   "active": "da37c06465902f4e",
   "lastOpenFiles": [
+    "C/C Primer Plus/C Primer Plus 学习笔记.md",
     "C/C Primer Plus/C Primer Plus复习题答案及附录.pdf",
     "C/C Primer Plus/C Primer Plus编程练习答案.pdf",
-    "C/C Primer Plus/C Primer Plus 学习笔记.md",
     "附件/Pasted image 20230329212538.png",
     "附件/Pasted image 20230329212131.png",
     "附件/Pasted image 20230329212121.png",
