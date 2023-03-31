@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "README.md",
+                "file": "C/C Primer Plus/C Primer Plus 学习笔记.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "README.md",
+                "file": "C/C Primer Plus/C Primer Plus 学习笔记.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "README.md",
+                "file": "C/C Primer Plus/C Primer Plus 学习笔记.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "README.md"
+                "file": "C/C Primer Plus/C Primer Plus 学习笔记.md"
               }
             }
           }
@@ -149,8 +149,10 @@
   },
   "active": "da37c06465902f4e",
   "lastOpenFiles": [
+    "README.md",
     "C/C Primer Plus/C Primer Plus 学习笔记.md",
     "C/C Primer Plus/C Primer Plus复习题答案及附录.pdf",
+    "计算机组成原理/计算机组成原理学习笔记.md",
     "C/C Primer Plus/C Primer Plus编程练习答案.pdf",
     "附件/Pasted image 20230329212538.png",
     "附件/Pasted image 20230329212131.png",
@@ -159,10 +161,8 @@
     "附件/Pasted image 20230329211915.png",
     "附件/Pasted image 20230329211905.png",
     "附件/Pasted image 20230329211853.png",
-    "计算机组成原理/计算机组成原理学习笔记.md",
     "C/C Primer Plus",
     "C",
-    "README.md",
     "计算机组成原理/d2utmpFx7SHP",
     "d2utmpqqwdHb",
     "附件/Pasted image 20230329145210.png",
