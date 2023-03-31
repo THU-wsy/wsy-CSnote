@@ -8,13 +8,31 @@
         "type": "tabs",
         "children": [
           {
-            "id": "da37c06465902f4e",
+            "id": "e3be423acf53a319",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "C/C Primer Plus/C Primer Plus 学习笔记.md",
+                "file": "操作系统/操作系统学习笔记.md",
                 "mode": "source",
+                "source": false
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": "227b18ee0f401124",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "501a5afa2c1f045e",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "操作系统/操作系统学习笔记.md",
+                "mode": "preview",
                 "source": false
               }
             }
@@ -85,7 +103,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "C/C Primer Plus/C Primer Plus 学习笔记.md",
+                "file": "操作系统/操作系统学习笔记.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +120,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "C/C Primer Plus/C Primer Plus 学习笔记.md",
+                "file": "操作系统/操作系统学习笔记.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +143,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "C/C Primer Plus/C Primer Plus 学习笔记.md"
+                "file": "操作系统/操作系统学习笔记.md"
               }
             }
           }
@@ -147,10 +165,12 @@
       "command-palette:打开命令面板": false
     }
   },
-  "active": "da37c06465902f4e",
+  "active": "e3be423acf53a319",
   "lastOpenFiles": [
-    "README.md",
     "C/C Primer Plus/C Primer Plus 学习笔记.md",
+    "操作系统/操作系统学习笔记.md",
+    "操作系统",
+    "README.md",
     "C/C Primer Plus/C Primer Plus复习题答案及附录.pdf",
     "计算机组成原理/计算机组成原理学习笔记.md",
     "C/C Primer Plus/C Primer Plus编程练习答案.pdf",
