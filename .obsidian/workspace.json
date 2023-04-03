@@ -4,15 +4,19 @@
     "type": "split",
     "children": [
       {
-        "id": "8e75573756494d93",
+        "id": "443a4a97aa1cd05c",
         "type": "tabs",
         "children": [
           {
-            "id": "30e0d9d2ceaae6c4",
+            "id": "6edd82a4a3f90bf9",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {}
+              "type": "markdown",
+              "state": {
+                "file": "操作系统/操作系统学习笔记.md",
+                "mode": "preview",
+                "source": false
+              }
             }
           }
         ]
@@ -81,6 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
+                "file": "操作系统/操作系统学习笔记.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -97,6 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
+                "file": "操作系统/操作系统学习笔记.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -118,7 +124,9 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {}
+              "state": {
+                "file": "操作系统/操作系统学习笔记.md"
+              }
             }
           }
         ],
@@ -139,24 +147,25 @@
       "command-palette:打开命令面板": false
     }
   },
-  "active": "30e0d9d2ceaae6c4",
+  "active": "6edd82a4a3f90bf9",
   "lastOpenFiles": [
+    "zz附件/Pasted image 20230326215756.png",
+    "计算机组成原理/计算机组成原理学习笔记.md",
     "操作系统/操作系统学习笔记.md",
-    "附件/Pasted image 20230403202259.png",
-    "附件/Pasted image 20230403202251.png",
-    "附件/Pasted image 20230403202244.png",
-    "附件/Pasted image 20230403202237.png",
-    "附件/Pasted image 20230403202229.png",
-    "附件/Pasted image 20230403202223.png",
-    "附件/Pasted image 20230403202202.png",
-    "附件/Pasted image 20230403202153.png",
-    "附件/Pasted image 20230403202145.png",
-    "附件/Pasted image 20230403202137.png",
+    "zz附件/Pasted image 20230403202259.png",
+    "zz附件/Pasted image 20230403202251.png",
+    "zz附件/Pasted image 20230403202244.png",
+    "zz附件/Pasted image 20230403202237.png",
+    "zz附件/Pasted image 20230403202229.png",
+    "zz附件/Pasted image 20230403202223.png",
+    "zz附件/Pasted image 20230403202202.png",
+    "zz附件/Pasted image 20230403202153.png",
+    "zz附件/Pasted image 20230403202145.png",
+    "zz附件/Pasted image 20230403202137.png",
     "C/C Primer Plus/C Primer Plus 学习笔记.md",
     "操作系统",
     "README.md",
     "C/C Primer Plus/C Primer Plus复习题答案及附录.pdf",
-    "计算机组成原理/计算机组成原理学习笔记.md",
     "C/C Primer Plus/C Primer Plus编程练习答案.pdf",
     "C/C Primer Plus",
     "C",
@@ -164,6 +173,6 @@
     "d2utmpqqwdHb",
     "lrd是猪猪.md",
     "计算机组成原理",
-    "附件"
+    "zz附件"
   ]
 }
