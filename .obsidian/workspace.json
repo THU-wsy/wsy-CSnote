@@ -4,40 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "01d5e59c2f41f877",
+        "id": "8e75573756494d93",
         "type": "tabs",
         "children": [
           {
-            "id": "e3be423acf53a319",
+            "id": "30e0d9d2ceaae6c4",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "操作系统/操作系统学习笔记.md",
-                "mode": "source",
-                "source": false
-              }
-            },
-            "group": "3c0376a9c7698cb0"
-          }
-        ]
-      },
-      {
-        "id": "227b18ee0f401124",
-        "type": "tabs",
-        "children": [
-          {
-            "id": "501a5afa2c1f045e",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "操作系统/操作系统学习笔记.md",
-                "mode": "preview",
-                "source": false
-              }
-            },
-            "group": "3c0376a9c7698cb0"
+              "type": "empty",
+              "state": {}
+            }
           }
         ]
       }
@@ -105,7 +81,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "操作系统/操作系统学习笔记.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -122,7 +97,6 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "操作系统/操作系统学习笔记.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -144,9 +118,7 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {
-                "file": "操作系统/操作系统学习笔记.md"
-              }
+              "state": {}
             }
           }
         ],
@@ -167,21 +139,20 @@
       "command-palette:打开命令面板": false
     }
   },
-  "active": "e3be423acf53a319",
+  "active": "30e0d9d2ceaae6c4",
   "lastOpenFiles": [
-    "附件/Pasted image 20230401220610.png",
-    "附件/Pasted image 20230401220604.png",
-    "附件/Pasted image 20230401220558.png",
-    "附件/Pasted image 20230401220553.png",
-    "附件/Pasted image 20230401220527.png",
-    "附件/Pasted image 20230401220520.png",
-    "附件/Pasted image 20230401220509.png",
-    "附件/Pasted image 20230401215811.png",
-    "附件/Pasted image 20230401215441.png",
-    "附件/Pasted image 20230401215431.png",
-    "附件/Pasted image 20230401215403.png",
-    "C/C Primer Plus/C Primer Plus 学习笔记.md",
     "操作系统/操作系统学习笔记.md",
+    "附件/Pasted image 20230403202259.png",
+    "附件/Pasted image 20230403202251.png",
+    "附件/Pasted image 20230403202244.png",
+    "附件/Pasted image 20230403202237.png",
+    "附件/Pasted image 20230403202229.png",
+    "附件/Pasted image 20230403202223.png",
+    "附件/Pasted image 20230403202202.png",
+    "附件/Pasted image 20230403202153.png",
+    "附件/Pasted image 20230403202145.png",
+    "附件/Pasted image 20230403202137.png",
+    "C/C Primer Plus/C Primer Plus 学习笔记.md",
     "操作系统",
     "README.md",
     "C/C Primer Plus/C Primer Plus复习题答案及附录.pdf",
