@@ -4,20 +4,40 @@
     "type": "split",
     "children": [
       {
-        "id": "443a4a97aa1cd05c",
+        "id": "e4b4627af9e8b87b",
         "type": "tabs",
         "children": [
           {
-            "id": "6edd82a4a3f90bf9",
+            "id": "7e1afca7cc36aaca",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "操作系统/操作系统学习笔记.md",
-                "mode": "preview",
+                "file": "计算机网络/计算机网络学习笔记.md",
+                "mode": "source",
                 "source": false
               }
-            }
+            },
+            "group": "84eb1330f23495d0"
+          }
+        ]
+      },
+      {
+        "id": "90a318c753b8ee04",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "de3572b877e53ee3",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "计算机网络/计算机网络学习笔记.md",
+                "mode": "source",
+                "source": false
+              }
+            },
+            "group": "84eb1330f23495d0"
           }
         ]
       }
@@ -85,7 +105,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "操作系统/操作系统学习笔记.md",
+                "file": "计算机网络/计算机网络学习笔记.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +122,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "操作系统/操作系统学习笔记.md",
+                "file": "计算机网络/计算机网络学习笔记.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +145,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "操作系统/操作系统学习笔记.md"
+                "file": "计算机网络/计算机网络学习笔记.md"
               }
             }
           }
@@ -147,26 +167,28 @@
       "command-palette:打开命令面板": false
     }
   },
-  "active": "6edd82a4a3f90bf9",
+  "active": "abe215fd251dfabf",
   "lastOpenFiles": [
-    "zz附件/Pasted image 20230326215756.png",
-    "计算机组成原理/计算机组成原理学习笔记.md",
+    "zz附件/Pasted image 20230404203311.png",
+    "zz附件/Pasted image 20230404202437.png",
+    "zz附件/Pasted image 20230404202359.png",
+    "zz附件/Pasted image 20230404202345.png",
     "操作系统/操作系统学习笔记.md",
+    "计算机网络/计算机网络学习笔记.md",
+    "zz附件/Pasted image 20230404201543.png",
+    "计算机组成原理/计算机组成原理学习笔记.md",
+    "C/C Primer Plus/C Primer Plus 学习笔记.md",
+    "C/C Primer Plus/C Primer Plus编程练习答案.pdf",
+    "计算机网络",
+    "zz附件/Pasted image 20230326215756.png",
     "zz附件/Pasted image 20230403202259.png",
     "zz附件/Pasted image 20230403202251.png",
     "zz附件/Pasted image 20230403202244.png",
     "zz附件/Pasted image 20230403202237.png",
     "zz附件/Pasted image 20230403202229.png",
-    "zz附件/Pasted image 20230403202223.png",
-    "zz附件/Pasted image 20230403202202.png",
-    "zz附件/Pasted image 20230403202153.png",
-    "zz附件/Pasted image 20230403202145.png",
-    "zz附件/Pasted image 20230403202137.png",
-    "C/C Primer Plus/C Primer Plus 学习笔记.md",
     "操作系统",
     "README.md",
     "C/C Primer Plus/C Primer Plus复习题答案及附录.pdf",
-    "C/C Primer Plus/C Primer Plus编程练习答案.pdf",
     "C/C Primer Plus",
     "C",
     "计算机组成原理/d2utmpFx7SHP",
