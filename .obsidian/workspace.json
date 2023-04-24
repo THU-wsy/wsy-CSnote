@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "90a318c753b8ee04",
+        "id": "cb029e9aa4f2c0df",
         "type": "tabs",
         "children": [
           {
-            "id": "de3572b877e53ee3",
+            "id": "ffe91248c9eb933c",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -18,26 +18,26 @@
                 "source": false
               }
             },
-            "group": "22f912888c42e58a"
+            "group": "6907496599e013fb"
           }
         ]
       },
       {
-        "id": "0f4520fce96b5208",
+        "id": "2948c039a9a633f7",
         "type": "tabs",
         "children": [
           {
-            "id": "412ae3d273301b1c",
+            "id": "aa85c2ff6d8478c6",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
                 "file": "操作系统/操作系统学习笔记.md",
-                "mode": "preview",
+                "mode": "source",
                 "source": false
               }
             },
-            "group": "22f912888c42e58a"
+            "group": "6907496599e013fb"
           }
         ]
       }
@@ -167,16 +167,17 @@
       "command-palette:打开命令面板": false
     }
   },
-  "active": "de3572b877e53ee3",
+  "active": "ffe91248c9eb933c",
   "lastOpenFiles": [
     "zz附件/Pasted image 20230416164416.png",
+    "zz附件/Pasted image 20230404203311.png",
+    "操作系统/操作系统学习笔记.md",
+    "操作系统/Pasted image 20230416164321.png.md",
     "zz附件/Pasted image 20230416164321.png",
     "计算机网络/计算机网络学习笔记.md",
-    "zz附件/Pasted image 20230404203311.png",
     "zz附件/Pasted image 20230404202437.png",
     "zz附件/Pasted image 20230404202359.png",
     "zz附件/Pasted image 20230404202345.png",
-    "操作系统/操作系统学习笔记.md",
     "zz附件/Pasted image 20230404201543.png",
     "计算机组成原理/计算机组成原理学习笔记.md",
     "C/C Primer Plus/C Primer Plus 学习笔记.md",
@@ -185,7 +186,6 @@
     "zz附件/Pasted image 20230326215756.png",
     "zz附件/Pasted image 20230403202259.png",
     "zz附件/Pasted image 20230403202251.png",
-    "zz附件/Pasted image 20230403202244.png",
     "操作系统",
     "README.md",
     "C/C Primer Plus/C Primer Plus复习题答案及附录.pdf",
