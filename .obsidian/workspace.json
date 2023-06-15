@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "计算机网络/计算机网络学习笔记.md",
+                "file": "C/C Primer Plus/C Primer Plus 学习笔记.md",
                 "mode": "source",
                 "source": false
               }
@@ -32,7 +32,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "计算机网络/计算机网络学习笔记.md",
+                "file": "C/C Primer Plus/C Primer Plus 学习笔记.md",
                 "mode": "preview",
                 "source": false
               }
@@ -114,7 +114,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "计算机网络/计算机网络学习笔记.md",
+                "file": "C/C Primer Plus/C Primer Plus 学习笔记.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -131,7 +131,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "计算机网络/计算机网络学习笔记.md",
+                "file": "C/C Primer Plus/C Primer Plus 学习笔记.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -154,7 +154,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "计算机网络/计算机网络学习笔记.md"
+                "file": "C/C Primer Plus/C Primer Plus 学习笔记.md"
               }
             }
           }
@@ -176,10 +176,11 @@
       "command-palette:打开命令面板": false
     }
   },
-  "active": "aa85c2ff6d8478c6",
+  "active": "ffe91248c9eb933c",
   "lastOpenFiles": [
-    "C/C Primer Plus/C Primer Plus 学习笔记.md",
     "计算机网络/计算机网络学习笔记.md",
+    "zz附件/Pasted image 20230615133516.png",
+    "C/C Primer Plus/C Primer Plus 学习笔记.md",
     "zz附件/Pasted image 20230522211612.png",
     "zz附件/Pasted image 20230522152349.png",
     "zz附件/Pasted image 20230522152338.png",
@@ -189,7 +190,6 @@
     "zz附件/Pasted image 20230522152215.png",
     "zz附件/Pasted image 20230522152209.png",
     "zz附件/Pasted image 20230522152202.png",
-    "zz附件/Pasted image 20230522152152.png",
     "操作系统/操作系统学习笔记.md",
     "操作系统/Pasted image 20230401154405.png.md",
     "计算机组成原理/计算机组成原理学习笔记.md",
