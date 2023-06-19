@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "C/C Primer Plus/C Primer Plus 学习笔记.md",
+                "file": "操作系统/操作系统学习笔记.md",
                 "mode": "source",
                 "source": false
               }
@@ -32,7 +32,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "C/C Primer Plus/C Primer Plus 学习笔记.md",
+                "file": "操作系统/操作系统学习笔记.md",
                 "mode": "preview",
                 "source": false
               }
@@ -97,8 +97,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200,
-    "collapsed": true
+    "width": 200
   },
   "right": {
     "id": "01f1b597cce25d4d",
@@ -114,7 +113,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "C/C Primer Plus/C Primer Plus 学习笔记.md",
+                "file": "操作系统/操作系统学习笔记.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -131,7 +130,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "C/C Primer Plus/C Primer Plus 学习笔记.md",
+                "file": "操作系统/操作系统学习笔记.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -154,7 +153,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "C/C Primer Plus/C Primer Plus 学习笔记.md"
+                "file": "操作系统/操作系统学习笔记.md"
               }
             }
           }
@@ -176,35 +175,37 @@
       "command-palette:打开命令面板": false
     }
   },
-  "active": "ffe91248c9eb933c",
+  "active": "abe215fd251dfabf",
   "lastOpenFiles": [
+    "zzimages/os3.png",
+    "zzimages/os2.png",
+    "zzimages/os1.png",
     "计算机网络/计算机网络学习笔记.md",
-    "zz附件/Pasted image 20230615133516.png",
-    "C/C Primer Plus/C Primer Plus 学习笔记.md",
-    "zz附件/Pasted image 20230522211612.png",
-    "zz附件/Pasted image 20230522152349.png",
-    "zz附件/Pasted image 20230522152338.png",
-    "zz附件/Pasted image 20230522152238.png",
-    "zz附件/Pasted image 20230522152230.png",
-    "zz附件/Pasted image 20230522152223.png",
-    "zz附件/Pasted image 20230522152215.png",
-    "zz附件/Pasted image 20230522152209.png",
-    "zz附件/Pasted image 20230522152202.png",
-    "操作系统/操作系统学习笔记.md",
-    "操作系统/Pasted image 20230401154405.png.md",
+    "前端开发/HTML5和CSS.md",
     "计算机组成原理/计算机组成原理学习笔记.md",
+    "前端开发/test.html",
+    "前端开发",
+    "README.md",
+    "操作系统/操作系统学习笔记.md",
+    "C/C Primer Plus/C Primer Plus 学习笔记.md",
+    "zzimages/Pasted image 20230615133516.png",
+    "zzimages/Pasted image 20230522211612.png",
+    "zzimages/Pasted image 20230522152349.png",
+    "zzimages/Pasted image 20230522152338.png",
+    "zzimages/Pasted image 20230522152238.png",
+    "zzimages/Pasted image 20230522152230.png",
+    "zzimages/Pasted image 20230522152223.png",
+    "zzimages/Pasted image 20230522152215.png",
+    "操作系统/Pasted image 20230401154405.png.md",
     "操作系统/Pasted image 20230416164321.png.md",
     "C/C Primer Plus/C Primer Plus编程练习答案.pdf",
     "计算机网络",
     "操作系统",
-    "README.md",
     "C/C Primer Plus/C Primer Plus复习题答案及附录.pdf",
     "C/C Primer Plus",
     "C",
     "计算机组成原理/d2utmpFx7SHP",
     "d2utmpqqwdHb",
-    "lrd是猪猪.md",
-    "计算机组成原理",
-    "zz附件"
+    "lrd是猪猪.md"
   ]
 }
