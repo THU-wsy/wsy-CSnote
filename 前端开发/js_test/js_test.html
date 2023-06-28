@@ -6,14 +6,13 @@
     <title>Document</title>
 </head>
 <body>
+    <input type="checkbox">
+    <button>提交</button>
     <script>
-        function getSum(arr = []) {
-            let sum = 0;
-            for (let i = 0; i < arr.length; i++)
-                sum += arr[i];
-            return sum;
-        }
-        document.write(getSum([1, 2, 3, 4]));
+        const ipt = document.querySelector('input');
+        ipt.checked = true; //勾选框
+        const btn = document.querySelector('button');
+        btn.disabled = true; //禁用按钮
     </script>
 </body>
 </html>

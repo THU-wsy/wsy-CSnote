@@ -142,6 +142,7 @@ const PI = 3.14
 ```
 
 > 注意：常量不允许重新赋值，声明的时候必须赋值（初始化）
+> 注意：对于引用数据类型，const声明的变量，里面存的不是值，而是地址。所以建议数组和对象使用 const 来声明。
 
 ## 1.4 数据类型
 
@@ -158,6 +159,24 @@ console.log(typeof age); // 作为运算符，number
 console.log(typeof(age)); // 作为函数，number
 let obj = null;
 console.log(typeof obj); // object，实际上null是对象数据类型
+```
+
+简单类型又叫做基本数据类型或者值类型，复杂类型又叫做引用类型。简单数据类型/基本数据类型，在存储时变量中存储的是值本身，因此叫做值类型，如number、string、boolean、undefined、null；复杂数据类型，在存储时变量中存储的仅仅是地址（引用），因此叫做引用数据类型，例如通过 new 关键字创建的对象（系统对象、自定义对象），如 Object、Array、Date等。
+
+值类型变量的数据直接存放在变量（栈空间）中；引用类型变量在栈空间里存放的是地址，真正的对象实例存放在堆空间中。
+
+```js
+let num1 = 10;
+let num2 = num1;
+num2 = 20;
+console.log(num1); // 10
+
+let obj1 = {
+    age: 18
+};
+let obj2 = obj1;
+obj2.age = 20;
+console.log(obj1.age); // 20
 ```
 
 ### 1.4.1 数字型
@@ -588,64 +607,462 @@ for (let k in person) {
 
 #### 方法
 
-- Math.random()，生成 0 到 1 间的随机数
+- Math.ceil(a)，数字向上取整
+- Math.floor(a)，数字向下取整
+- Math.round(a)，四舍五入取整
+- Math.max(a, b, c, ...)，在一组数中找出最大的
+- Math.min(a, b, c, ...)，在一组数中找出最小的
+- Math.pow(a, b)，计算a的b次方
+- Math.sqrt(a)，平方根
+- Math.random()，生成`[0, 1)`间的随机数
 
-```javascript
-// 0 ~ 1 之间的随机数, 包含 0 不包含 1
-Math.random()
+```js
+// 生成[N, M]之间的随机数
+Math.floor(Math.random() * (M - N + 1)) + N;
 ```
 
-- Math.ceil，数字向上取整
 
-```javascript
-// 舍弃小数部分，整数部分加1
-Math.ceil(3.4)
+
+
+
+
+# 第4章 Web APIs
+
+## 4.1 简介
+
+
+严格意义上讲，我们在 JavaScript 阶段学习的知识绝大部分属于 ECMAScript 的知识体系，ECMAScript 简称 ES 它提供了一套语言标准规范，如变量、数据类型、表达式、语句、函数等语法规则都是由 ECMAScript 规定的。浏览器将 ECMAScript 大部分的规范加以实现，并且在此基础上又扩展一些实用的功能，这些被扩展出来的内容我们称为 Web APIs。
+
+ECMAScript 运行在浏览器中然后再结合 Web APIs 才是真正的 JavaScript，Web APIs 的核心是 DOM 和 BOM。
+
+DOM（Document Object Model）是将整个 HTML 文档的每一个标签元素视为一个对象，这个对象下包含了许多的属性和方法，通过操作这些属性或者调用这些方法实现对 HTML 的动态更新，为实现网页特效以及用户交互提供技术支撑。
+
+简言之 DOM 是浏览器提供的一套专门用来 操作网页内容 的功能。
+
+### DOM 树
+
+将 HTML 文档以树状结构直观的表现出来，我们称之为文档树或 DOM 树，**文档树直观的体现了标签与标签之间的关系。**
+
+
+### DOM 对象
+
+- DOM对象：浏览器根据html标签生成的 JS对象
+  - 所有的标签属性都可以在这个对象上面找到
+  - 修改这个对象的属性会自动映射到标签身上
+- DOM的核心思想：把网页内容当做对象来处理
+- document 对象：是 DOM 里提供的一个对象，所以它提供的属性和方法都是用来访问和操作网页内容的，网页所有内容都在document里面。
+
+
+## 4.2 获取DOM对象
+
+### 4.2.1 获取DOM对象
+
+```js
+document.querySelector('css选择器');
+```
+- 功能：选择匹配的第一个元素
+- 参数：包含一个或多个有效的CSS选择器字符串
+- 返回值：CSS选择器匹配的第一个元素,一个 HTMLElement对象。如果没有匹配到，则返回null。
+
+```js
+document.querySelectorAll('css选择器');
+```
+- 功能：选择匹配的多个元素
+- 参数：包含一个或多个有效的CSS选择器字符串
+- 返回值：CSS选择器匹配的对象集合(伪数组：有长度，但没有push和pop等方法)
+
+### 4.2.2 操作元素内容
+
+#### 修改文本内容
+
+元素 `innerText` 属性：将文本内容添加/更新到任意标签位置，注意**文本中包含的标签不会被解析。**
+
+元素 `innerHTML` 属性：将文本内容添加/更新到任意标签位置，注意**文本中包含的标签会被解析，** 多标签建议使用模板字符串。
+
+
+#### 常用属性修改
+
+可以通过 JS 设置/修改标签元素属性，比如通过 src更换图片。最常见的属性比如：href、title、src 等。
+
+
+#### 修改样式属性
+
+1. 通过修改行内样式 `style` 属性，实现对样式的动态修改。
+
+通过元素节点获得的 `style` 属性本身的数据类型也是对象，如 `box.style.color`、`box.style.width` 分别用来获取元素节点 CSS 样式的 `color` 和 `width` 的值。
+
+任何标签都有 `style` 属性，通过 `style` 属性可以动态更改网页标签的样式，如要遇到 `css` 属性中包含字符 `-` 时，要将 `-` 去掉并将其后面的字母改成大写，如 `background-color` 要写成 `box.style.backgroundColor`
+
+2. 通过类名(className)操作CSS
+
+```js
+元素.className = 'Css类名';
 ```
 
-- Math.floor，数字向下取整
+>注意：
+>
+>1.由于class是关键字, 所以使用className去代替
+>
+>2.className是使用新值换旧值, 所以如果需要添加一个类, 就需要保留之前的类名
 
-```javascript
-// 舍弃小数部分，整数部分不变
-Math.floor(4.68)
+3. 通过 classList 操作类控制CSS
+
+为了解决 className 容易覆盖以前的类名，我们可以通过classList方式追加和删除类名。
+
+```js
+元素.classList.add('类名'); //添加一个类
+元素.classList.remove('类名'); //删除一个类
+元素.classList.toggle('类名'); //切换一个类(即如果有该类，则删除之；没有该类，则添加之)
 ```
 
-- Math.round，四舍五入取整
 
-```javascript
-// 取整，四舍五入原则
-Math.round(5.46539)
-Math.round(4.849)
+#### 操作表单元素属性
+
+```js
+表单.value; //获取用户输入的内容
+表单.type; //获取表单的类型
 ```
 
-- Math.max，在一组数中找出最大的
+表单属性中添加就有效果, 移除就没有效果, 一律使用布尔值表示, 如果为true代表添加了该属性, 如果是false代表移除了该属性。如disabled、checked、selected
 
-```javascript
-// 找出最大值
-Math.max(10, 21, 7, 24, 13)
+```html
+<input type="checkbox">
+<button>提交</button>
+<script>
+    const ipt = document.querySelector('input');
+    ipt.checked = true; //勾选复选框
+    const btn = document.querySelector('button');
+    btn.disabled = true; //禁用按钮
+</script>
 ```
 
-- Math.min，在一组数中找出最小的
+#### 自定义属性
 
-```javascript
-// 找出最小值
-Math.min(24, 18, 6, 19, 21)
+在html5中推出来了专门的data-自定义属性，在标签上一律以data-开头，在DOM对象上一律以dataset对象方式获取。
+
+```html
+<div data-id="1"> 自定义属性 </div>
+<script>
+// 1. 获取元素
+let div = document.querySelector('div');
+// 2. 获取自定义属性值
+console.log(div.dataset.id);
+</script>
 ```
 
-- Math.pow，幂方法
+#### 定时器-间歇函数
 
-```javascript
-// 求某个数的多少次方
-Math.pow(4, 2) // 求 4 的 2 次方
-Math.pow(2, 3) // 求 2 的 3 次方
+
+`setInterval` 是 JavaScript 中内置的函数，它的作用是间隔固定的时间自动重复执行另一个函数，也叫定时器函数。
+
+1. 开启定时器
+
+```js
+let n = setInterval(函数, 间隔时间);
+```
+作用：每隔一段时间调用这个函数, 间隔时间单位是毫秒。定时器返回的是一个id数字。
+
+2. 关闭定时器
+
+```js
+clearInterval(n);
 ```
 
-- Math.sqrt，平方根
 
-```javascript
-// 求某数的平方根
-Math.sqrt(16)
+
+## 4.3 事件
+
+事件是编程语言中的术语，它是用来描述程序的行为或状态的，**一旦行为或状态发生改变，便立即调用一个函数。**
+
+
+### 4.3.1 事件监听(绑定)
+
+结合 DOM 使用事件时，需要为 DOM 对象添加事件监听，等待事件发生（触发）时，便立即调用一个函数。
+
+`addEventListener` 是 DOM 对象专门用来添加事件监听的方法，它的两个参数分别为【事件类型】和【事件回调】。
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>事件监听</title>
+</head>
+<body>
+  <h3>事件监听</h3>
+  <p id="text">为 DOM 元素添加事件监听，等待事件发生，便立即执行一个函数。</p>
+  <button id="btn">点击改变文字颜色</button>
+  <script>
+    // 1. 获取 button 对应的 DOM 对象
+    const btn = document.querySelector('#btn')
+
+    // 2. 添加事件监听
+    btn.addEventListener('click', function () {
+      console.log('等待事件被触发...')
+      // 改变 p 标签的文字颜色
+      let text = document.getElementById('text')
+      text.style.color = 'red'
+    })
+
+    // 3. 只要用户点击了按钮，事件便触发了！！！
+  </script>
+</body>
+</html>
 ```
 
-数学对象提供了比较多的方法，这里不要求强记，通过演示数学对象的使用，加深对对象的理解。
+
+
+### 事件类型
+
+`click` 译成中文是【点击】的意思，它的含义是监听（等着）用户鼠标的单击操作，除了【单击】还有【双击】`dblclick`
+
+```html
+<script>
+  // 双击事件类型
+  btn.addEventListener('dblclick', function () {
+    console.log('等待事件被触发...');
+    // 改变 p 标签的文字颜色
+    const text = document.querySelector('.text')
+    text.style.color = 'red'
+  })
+
+  // 只要用户双击击了按钮，事件便触发了！！！
+</script>
+```
+
+结论：【事件类型】决定了事件被触发的方式，如 `click` 代表鼠标单击，`dblclick` 代表鼠标双击。
+
+### 事件处理程序
+
+`addEventListener` 的第2个参数是函数，这个函数会在事件被触发时立即被调用，在这个函数中可以编写任意逻辑的代码，如改变 DOM 文本颜色、文本内容等。
+
+```html
+<script>
+  // 双击事件类型
+  btn.addEventListener('dblclick', function () {
+    console.log('等待事件被触发...')
+    
+    const text = document.querySelector('.text')
+    // 改变 p 标签的文字颜色
+    text.style.color = 'red'
+    // 改变 p 标签的文本内容
+    text.style.fontSize = '20px'
+  })
+</script>
+```
+
+结论：【事件处理程序】决定了事件触发后应该执行的逻辑。
+
+
+
+## 事件类型
+
+将众多的事件类型分类可分为：鼠标事件、键盘事件、表单事件、焦点事件等，我们逐一展开学习。
+
+### 鼠标事件
+
+鼠标事件是指跟鼠标操作相关的事件，如单击、双击、移动等。
+
+1. `mouseenter 监听鼠标是否移入 DOM 元素
+
+```html
+<body>
+  <h3>鼠标事件</h3>
+  <p>监听与鼠标相关的操作</p>
+  <hr>
+  <div class="box"></div>
+  <script>
+    // 需要事件监听的 DOM 元素
+    const box = document.querySelector('.box');
+
+    // 监听鼠标是移入当前 DOM 元素
+    box.addEventListener('mouseenter', function () {
+      // 修改文本内容
+      this.innerText = '鼠标移入了...';
+      // 修改光标的风格
+      this.style.cursor = 'move';
+    })
+  </script>
+</body>
+```
+
+1. `mouseleave 监听鼠标是否移出 DOM 元素
+
+```html
+<body>
+  <h3>鼠标事件</h3>
+  <p>监听与鼠标相关的操作</p>
+  <hr>
+  <div class="box"></div>
+  <script>
+    // 需要事件监听的 DOM 元素
+    const box = document.querySelector('.box');
+
+    // 监听鼠标是移出当前 DOM 元素
+    box.addEventListener('mouseleave', function () {
+      // 修改文本内容
+      this.innerText = '鼠标移出了...';
+    })
+  </script>
+</body>
+```
+
+###  键盘事件
+
+keydown   键盘按下触发
+keyup   键盘抬起触发
+
+### 焦点事件
+
+focus  获得焦点
+
+blur 失去焦点
+
+### 文本框输入事件
+
+input  
+
+## 事件对象
+
+任意事件类型被触发时与事件相关的信息会被以对象的形式记录下来，我们称这个对象为事件对象。
+
+```html
+<body>
+  <h3>事件对象</h3>
+  <p>任意事件类型被触发时与事件相关的信息会被以对象的形式记录下来，我们称这个对象为事件对象。</p>
+  <hr>
+  <div class="box"></div>
+  <script>
+    // 获取 .box 元素
+    const box = document.querySelector('.box')
+
+    // 添加事件监听
+    box.addEventListener('click', function (e) {
+      console.log('任意事件类型被触发后，相关信息会以对象形式被记录下来...');
+
+      // 事件回调函数的第1个参数即所谓的事件对象
+      console.log(e)
+    })
+  </script>
+</body>
+```
+
+事件回调函数的【第1个参数】即所谓的事件对象，通常习惯性的将这个对数命名为 `event`、`ev` 、`ev` 。
+
+接下来简单看一下事件对象中包含了哪些有用的信息：
+
+1. `ev.type` 当前事件的类型
+2. `ev.clientX/Y` 光标相对浏览器窗口的位置
+3. `ev.offsetX/Y` 光标相于当前 DOM 元素的位置
+
+注：在事件回调函数内部通过 window.event 同样可以获取事件对象。
+
+## 环境对象
+
+> 能够分析判断函数运行在不同环境中 this 所指代的对象。
+
+环境对象指的是函数内部特殊的变量 `this` ，它代表着当前函数运行时所处的环境。
+
+```html
+<script>
+  // 声明函数
+  function sayHi() {
+    // this 是一个变量
+    console.log(this);
+  }
+
+  // 声明一个对象
+  let user = {
+    name: '张三',
+    sayHi: sayHi // 此处把 sayHi 函数，赋值给 sayHi 属性
+  }
+  
+  let person = {
+    name: '李四',
+    sayHi: sayHi
+  }
+
+  // 直接调用
+  sayHi() // window
+  window.sayHi() // window
+
+  // 做为对象方法调用
+  user.sayHi()// user
+	person.sayHi()// person
+</script>
+```
+
+结论：
+
+1. `this` 本质上是一个变量，数据类型为对象
+2. 函数的调用方式不同 `this` 变量的值也不同
+3. 【谁调用 `this` 就是谁】是判断 `this` 值的粗略规则
+4. 函数直接调用时实际上 `window.sayHi()` 所以 `this` 的值为 `window`
+## 回调函数
+
+如果将函数 A 做为参数传递给函数 B 时，我们称函数 A 为回调函数。
+
+```html
+<script>
+  // 声明 foo 函数
+  function foo(arg) {
+    console.log(arg);
+  }
+
+  // 普通的值做为参数
+  foo(10);
+  foo('hello world!');
+  foo(['html', 'css', 'javascript']);
+
+  function bar() {
+    console.log('函数也能当参数...');
+  }
+  // 函数也可以做为参数！！！！
+  foo(bar);
+</script>
+```
+
+函数 `bar` 做参数传给了 `foo` 函数，`bar` 就是所谓的回调函数了！！！
+
+我们回顾一下间歇函数 `setInterval` 
+
+```html
+<script>
+	function fn() {
+    console.log('我是回调函数...');
+  }
+  // 调用定时器
+  setInterval(fn, 1000);
+</script>
+```
+
+`fn` 函数做为参数传给了 `setInterval` ，这便是回调函数的实际应用了，结合刚刚学习的函数表达式上述代码还有另一种更常见写法。
+
+```html
+<script>
+  // 调用定时器，匿名函数做为参数
+  setInterval(function () {
+    console.log('我是回调函数...');
+  }, 1000);
+</script>
+```
+
+结论：
+
+1. 回调函数本质还是函数，只不过把它当成参数使用
+2. 使用匿名函数做为回调函数比较常见
+
+
+
+
+
+
+
+
+
+
+
+
 
 
