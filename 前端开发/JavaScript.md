@@ -3,7 +3,7 @@
 
 ## 1.1 简介
 
-JavaScript是一种运行在客户端（浏览器）的编程语言，实现人机交互效果。JavaScript由 ECMAScript 和 Web APIs 组成，其中前者规定了js基础语法核心知识，后者由 DOM（操作文档）和 BOM（操作浏览器）组成。
+JavaScript是一种运行在客户端（浏览器）的编程语言，实现人机交互效果，它是跨平台、面向对象的脚本语言。JavaScript由 ECMAScript 和 Web APIs 组成，其中前者规定了js基础语法核心知识，后者由 DOM（操作文档）和 BOM（操作浏览器）组成。
 
 ### 1.1.1 引入方式
 
@@ -911,6 +911,355 @@ clearInterval(n);
 2. 使用匿名函数做为回调函数比较常见
 
 
+
+
+
+
+
+
+
+
+# 补充
+
+### 1.5.1 JS对象
+
+#### 1.5.1.1 Array对象
+
+##### 特点
+
+与java中不一样的是，JavaScript中数组相当于java中的集合，数组的长度是可以变化的。而且JavaScript是弱数据类型的语言，所以数组中可以存储任意数据类型的值。
+
+##### 属性和方法
+
+Array作为一个对象，那么对象是有属性和方法的，所以接下来我们介绍一下Array对象的属性和方法
+
+属性：
+
+| 属性   | 描述                         |
+| :----- | :--------------------------- |
+| length | 设置或返回数组中元素的数量。 |
+
+方法：
+
+| 方法方法  | 描述                                             |
+| :-------- | :----------------------------------------------- |
+| forEach() | 遍历数组中的每个有值得元素，并调用一次传入的函数 |
+| push()    | 将新元素添加到数组的末尾，并返回新的长度         |
+| splice()  | 从数组中删除元素                                 |
+
+
+
+- forEach()函数
+
+  首先我们学习forEach()方法，顾名思义，这是用来遍历的，那么遍历做什么事呢？所以这个方法的参数，需要传递一个函数，而且这个函数接受一个参数，就是遍历时数组的值。修改之前的遍历代码如下：
+
+  ~~~js
+  //e是形参，接受的是数组遍历时的值
+  arr.forEach(function(e){
+       console.log(e);
+  })
+  ~~~
+
+  当然了，在ES6中，引入箭头函数的写法，语法类似java中lambda表达式，修改上述代码如下：
+
+  ~~~js
+  arr.forEach((e) => {
+       console.log(e);
+  }) 
+  ~~~
+
+
+  注意的是，没有元素的内容是不会输出的，因为forEach只会遍历有值的元素 
+
+
+
+
+
+#### 1.5.1.2 String对象
+
+##### 语法格式
+
+String对象的创建方式有2种：
+
+
+~~~js
+var 变量名 = new String("…") ; //方式一
+var 变量名 = "…" ; //方式二
+~~~
+
+##### 属性和方法
+
+String对象也提供了一些常用的属性和方法，如下表格所示：
+
+属性：
+
+| 属性   | 描述           |
+| ------ | -------------- |
+| length | 字符串的长度。 |
+
+方法：
+
+| 方法        | 描述                                     |
+| ----------- | ---------------------------------------- |
+| charAt()    | 返回在指定位置的字符。                   |
+| indexOf()   | 检索字符串。                             |
+| trim()      | 去除字符串两边的空格                     |
+| substring() | 提取字符串中两个指定的索引号之间的字符。 |
+
+- length属性：
+
+  length属性可以用于返回字符串的长度，添加如下代码：
+
+  ~~~js
+  //length
+  console.log(str.length);
+  ~~~
+
+- charAt()函数：
+
+  charAt()函数用于返回在指定索引位置的字符，函数的参数就是索引。添加如下代码：
+
+  ~~~js
+  console.log(str.charAt(4));
+  ~~~
+
+- indexOf()函数
+
+  indexOf()函数用于检索指定内容在字符串中的索引位置的，返回值是索引，参数是指定的内容。添加如下代码：
+
+  ~~~js
+  console.log(str.indexOf("lo"));
+  ~~~
+
+- trim()函数
+
+  trim()函数用于去除字符串两边的空格的。添加如下代码：
+
+  ~~~js
+  var s = str.trim();
+  console.log(s.length);
+  ~~~
+
+- substring()函数
+
+  substring()函数用于截取字符串的，函数有2个参数。
+
+  参数1：表示从那个索引位置开始截取。包含
+
+  参数2：表示到那个索引位置结束。不包含
+
+  ~~~js
+  console.log(s.substring(0,5));
+  ~~~
+
+
+
+
+#### 1.5.1.3 JSON对象
+
+
+##### json对象
+
+JSON对象：**J**ava**S**cript **O**bject **N**otation，JavaScript对象标记法。是通过JavaScript标记法书写的文本。其格式如下：
+
+~~~js
+{
+    "key":value,
+    "key":value,
+    "key":value
+}
+~~~
+
+其中，**key必须使用引号并且是双引号标记，value可以是任意数据类型。**
+
+那么json这种数据格式的文本到底应用在企业开发的什么地方呢？-- 经常用来作为前后台交互的数据载体
+
+**定义：**
+~~~js
+var jsonstr = '{"name":"Tom", "age":18, "addr":["北京","上海","西安"]}';
+~~~
+
+注：value的数据类型如果是字符串，则必须用双引号包裹
+
+**上述是一个json字符串，不是json对象，所以我们需要借助如下函数来进行json字符串和json对象的转换**。添加代码如下：
+
+~~~js
+var obj = JSON.parse(jsonstr); // JSON字符串转为JS对象
+alert(obj.name);
+~~~
+
+我们也可以通过如下函数将json对象再次转换成json字符串。添加如下代码：
+
+~~~js
+var str = JSON.stringify(obj); // JS对象转为JSON字符串
+~~~
+
+
+
+
+### 1.5.2 BOM对象
+
+BOM的全称是Browser Object Model,翻译过来是浏览器对象模型。也就是JavaScript将浏览器的各个组成部分封装成了对象，允许JavaScript与浏览器对话。我们要操作浏览器的部分功能，可以通过操作BOM对象的相关属性或者函数来完成。例如：我们想要将浏览器的地址改为`http://www.baidu.com`,我们就可以通过BOM中提供的location对象的href属性来完成，代码如下：`location.href='http://www.baidu.com'`
+
+BOM中提供了如下5个对象：
+
+| 对象名称  | 描述           |
+| :-------- | :------------- |
+| Window    | 浏览器窗口对象 |
+| Navigator | 浏览器对象     |
+| Screen    | 屏幕对象       |
+| History   | 历史记录对象   |
+| Location  | 地址栏对象    |
+
+
+#### 1.5.2.1 Window对象
+
+window对象指的是浏览器窗口对象，是JavaScript的全部对象，所以对于window对象，我们可以直接使用，并且对于window对象的方法和属性，我们可以省略window.例如：我们之前学习的alert()函数其实是属于window对象的,其完整的代码如下：
+
+~~~js
+window.alert('hello');
+~~~
+
+其可以省略window.  所以可以简写成
+
+~~~js
+alert('hello');
+~~~
+
+所以对于window对象的属性和方法，我们都是采用简写的方式。window提供了很多属性和方法，下表列出了常用属性和方法
+
+window对象提供了获取其他BOM对象的属性：
+
+| 属性      | 描述                  |
+| --------- | --------------------- |
+| history   | 对 History 对象的只读引用   |
+| location  | 用于窗口或框架的 Location 对象  |
+| navigator | 对 Navigator 对象的只读引用 |
+| screen    | 用于获取Screen对象    |
+
+
+
+window也提供了一些常用的函数，如下表格所示：
+
+| 函数          | 描述                                               |
+| ------------- | -------------------------------------------------- |
+| alert()       | 显示带有一段消息和一个确认按钮的警告框。           |
+| comfirm()     | 显示带有一段消息以及确认按钮和取消按钮的对话框。   |
+| setInterval() | 按照指定的周期（以毫秒计）来调用函数或计算表达式。 |
+| setTimeout()  | 在指定的毫秒数后调用函数或计算表达式。             |
+
+
+
+- alert()函数：弹出警告框，函数的内容就是警告框的内容
+
+  ~~~html
+  <script>
+      //window对象是全局对象，window对象的属性和方法在调用时可以省略window.
+      window.alert("Hello BOM");
+      alert("Hello BOM Window");
+  </script>
+  ~~~
+
+
+
+- confirm()函数：弹出确认框，并且提供用户2个按钮，分别是确认和取消。
+
+  添加如下代码：
+
+  ~~~js
+  confirm("您确认删除该记录吗?");
+  ~~~
+
+
+  但是我们怎么知道用户点击了确认还是取消呢？所以这个函数有一个返回值，当用户点击确认时，返回true，点击取消时，返回false。我们根据返回值来决定是否执行后续操作。
+
+
+- setInterval(fn,毫秒值)：定时器，用于周期性的执行某个功能，并且是**循环执行**。该函数需要传递2个参数：
+
+  fn:函数，需要周期性执行的功能代码
+
+  毫秒值：间隔时间
+
+  ~~~js
+  //定时器 - setInterval -- 周期性的执行某一个函数
+  var i = 0;
+  setInterval(function(){
+       i++;
+       console.log("定时器执行了"+i+"次");
+  },2000);
+  ~~~
+
+
+- setTimeout(fn,毫秒值) ：定时器，只会在一段时间后**执行一次功能**。参数和上述setInterval一致
+
+  ~~~js
+  //定时器 - setTimeout -- 延迟指定时间执行一次 
+  setTimeout(function(){
+  	alert("JS");
+  },3000);
+  ~~~
+
+  浏览器打开，3s后弹框，关闭弹框，发现再也不会弹框了。
+
+
+
+#### 1.5.2.2 Location对象
+
+location是指代浏览器的地址栏对象，对于这个对象，我们常用的是href属性，用于获取或者设置浏览器的地址信息，添加如下代码：
+
+~~~js
+//获取浏览器地址栏信息
+alert(location.href);
+//设置浏览器地址栏信息
+location.href = "https://www.itcast.cn";
+~~~
+
+浏览器效果如下：首先弹框展示浏览器地址栏信息，然后点击确定后，因为我们设置了地址栏信息，所以浏览器跳转到传智首页
+
+
+
+### 1.5.3 DOM对象
+
+#### 1.5.3.1 DOM介绍
+
+DOM：Document Object Model 文档对象模型。也就是 JavaScript 将 HTML 文档的各个组成部分封装为对象。
+
+封装的对象分为
+
+- Document：整个文档对象
+- Element：元素对象
+- Attribute：属性对象
+- Text：文本对象
+- Comment：注释对象
+
+JavaScript 通过DOM，就能够对HTML进行操作：
+
+- 改变 HTML 元素的内容
+- 改变 HTML 元素的样式（CSS）
+- 对 HTML DOM 事件作出反应
+- 添加和删除 HTML 元素
+
+DOM是 W3C（万维网联盟）的标准，定义了访问HTML和XML文档的标准，分为3个不同的部分：
+- Core DOM - 所有文档类型的标准模型
+  - Document：整个文档对象
+  - Element：元素对象
+  - Attribute：属性对象
+  - Text：文本对象
+  - Comment：注释对象
+- XML DOM - XML 文档的标准模型
+- HTML DOM - HTML 文档的标准模型
+
+
+#### 1.5.3.2 获取DOM对象
+
+HTML中的Element对象可以通过Document对象获取，而Document对象是通过window对象获取的。document对象提供的用于获取Element元素对象的api如下表所示：
+
+| 函数                              | 描述                                     |
+| --------------------------------- | ---------------------------------------- |
+| document.getElementById()         | 根据id属性值获取，返回单个Element对象    |
+| document.getElementsByTagName()   | 根据标签名称获取，返回Element对象数组    |
+| document.getElementsByName()      | 根据name属性值获取，返回Element对象数组  |
+| document.getElementsByClassName() | 根据class属性值获取，返回Element对象数组 |
 
 
 
