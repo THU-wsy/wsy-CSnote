@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="http://localhost:8080" method="get">
+        <table align="center">
+            <tr>
+                <td>用户名称：</td>
+                <td>
+                    <input type="text" name="username" value="默认值">
+                </td>
+            </tr>
+            <tr>
+                <td>用户密码：</td>
+                <td>
+                    <input type="password" name="password" value="default">
+                </td>
+            </tr>
+            <tr>
+                <td>性别：</td>
+                <td>
+                    <input type="radio" name="sex" value="boy" checked>男
+                    <input type="radio" name="sex" value="girl">女
+                </td>
+            </tr>
+            <tr>
+                <td>兴趣爱好：</td>
+                <td>
+                    <input type="checkbox" name="hobby" checked value="java">java
+                    <input type="checkbox" name="hobby" value="cpp">c++
+                    <input type="checkbox" name="hobby" value="py">python
+                </td>
+            </tr>
+            <tr>
+                <td>国籍：</td>
+                <td>
+                    <select name="country">
+                        <option value="none">无</option>
+                        <option value="cn" selected>中国</option>
+                        <option value="usa">美国</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>自我评价：</td>
+                <td>
+                    <textarea name="desc" cols="20" rows="10">
+                    </textarea>
+                </td>
+            </tr>
+            <tr>
+                <td><button type="reset">重置</button></td>
+                <td><button type="submit">提交</button></td>
+            </tr>
+        </table>
+    </form>
+</body>
+</html>
