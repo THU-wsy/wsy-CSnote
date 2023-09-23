@@ -1,0 +1,92 @@
+<!-- 搜索框案例 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>搜索框案例</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        ul {
+
+            list-style: none;
+        }
+
+        .mi {
+            position: relative;
+            width: 223px;
+            margin: 100px auto;
+        }
+
+        .mi input {
+            width: 223px;
+            height: 48px;
+            padding: 0 10px;
+            font-size: 14px;
+            line-height: 48px;
+            border: 1px solid #e0e0e0;
+            outline: none;
+        }
+
+        .mi .search {
+            border: 1px solid #ff6700;
+        }
+
+        .result-list {
+            display: none;
+            position: absolute;
+            left: 0;
+            top: 48px;
+            width: 223px;
+            border: 1px solid #ff6700;
+            border-top: 0;
+            background: #fff;
+        }
+
+        .result-list a {
+            display: block;
+            padding: 6px 15px;
+            font-size: 12px;
+            color: #424242;
+            text-decoration: none;
+        }
+
+        .result-list a:hover {
+            background-color: #eee;
+        }
+    </style>
+</head>
+<body>
+    <div class="mi">
+        <input type="search" placeholder="身份">
+        <ul class="result-list">
+            <li><a href="#">莫德雷德</a></li>
+            <li><a href="#">莫甘娜</a></li>
+            <li><a href="#">刺客</a></li>
+            <li><a href="#">奥伯伦</a></li>
+            <li><a href="#">梅林</a></li>
+            <li><a href="#">派西维尔</a></li>
+            <li><a href="#">忠臣</a></li>
+        </ul>
+    </div>
+    <script>
+        const ipt = document.querySelector('input');
+        const ul = document.querySelector('.result-list');
+        ipt.addEventListener('focus', function () {
+            // ul显示
+            ul.style.display = 'block';
+            // 添加一个带有颜色边框的类名
+            ipt.classList.add('search');
+        });
+        ipt.addEventListener('blur', function () {
+            ul.style.display = 'none';
+            ipt.classList.remove('search');
+        });
+    </script>
+</body>
+</html>

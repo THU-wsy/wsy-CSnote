@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tab栏切换</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    .tab {
+      width: 590px;
+      height: 340px;
+      margin: 20px;
+      border: 1px solid #e4e4e4;
+    }
+
+    .tab-nav {
+      width: 100%;
+      height: 60px;
+      line-height: 60px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .tab-nav h3 {
+      font-size: 24px;
+      font-weight: normal;
+      margin-left: 20px;
+    }
+
+    .tab-nav ul {
+      list-style: none;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .tab-nav ul li {
+      margin: 0 20px;
+      font-size: 14px;
+    }
+
+    .tab-nav ul li a {
+      text-decoration: none;
+      border-bottom: 2px solid transparent;
+      color: #333;
+    }
+
+    .tab-nav ul li a.active {
+      border-color: #e1251b;
+      color: #e1251b;
+    }
+
+    .tab-content {
+      padding: 0 16px;
+    }
+
+    .tab-content .item {
+      display: none;
+    }
+
+    .tab-content .item.active {
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="tab">
+    <div class="tab-nav">
+      <h3>每日特价</h3>
+      <ul>
+        <li><a class="active" href="javascript:;">精选</a></li>
+        <li><a href="javascript:;">美食</a></li>
+        <li><a href="javascript:;">百货</a></li>
+        <li><a href="javascript:;">个护</a></li>
+        <li><a href="javascript:;">预告</a></li>
+      </ul>
+    </div>
+    <div class="tab-content">
+      <div class="item active"><img src="./images/tab00.png" alt="" /></div>
+      <div class="item"><img src="./images/tab01.png" alt="" /></div>
+      <div class="item"><img src="./images/tab02.png" alt="" /></div>
+      <div class="item"><img src="./images/tab03.png" alt="" /></div>
+      <div class="item"><img src="./images/tab04.png" alt="" /></div>
+    </div>
+  </div>
+  <script>
+    // 1. a 模块制作 要给 5个链接绑定鼠标经过事件
+    // 1.1 获取 a 元素 
+    const as = document.querySelectorAll('.tab-nav a')
+    // console.log(as) 
+    for (let i = 0; i < as.length; i++) {
+      // console.log(as[i])
+      // 要给 5个链接绑定鼠标经过事件
+      as[i].addEventListener('mouseenter', function () {
+        // console.log('鼠标经过')
+        // 排他思想  
+        // 干掉别人 移除类active
+        document.querySelector('.tab-nav .active').classList.remove('active')
+        // 我登基 我添加类 active  this 当前的那个 a 
+        this.classList.add('active')
+
+        // 下面5个大盒子 一一对应  .item 
+        // 干掉别人
+        document.querySelector('.tab-content .active').classList.remove('active')
+        // 对应序号的那个 item 显示 添加 active 类
+        document.querySelector(`.tab-content .item:nth-child(${i + 1})`).classList.add('active')
+
+      })
+    }
+  </script>
+</body>
+
+</html>

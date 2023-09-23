@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        .box {
+            width: 600px;
+            margin: 50px auto;
+            display: flex;
+            font-size: 25px;
+            line-height: 40px;
+        }
+
+        .qs {
+
+            width: 450px;
+            height: 40px;
+            color: red;
+
+        }
+
+        .btns {
+            text-align: center;
+        }
+
+        .btns button {
+            width: 120px;
+            height: 35px;
+            margin: 0 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>随机点名</h2>
+    <div class="box">
+        <span>名字是：</span>
+        <div class="qs">这里显示姓名</div>
+    </div>
+    <div class="btns">
+        <button class="start">开始</button>
+        <button class="end">结束</button>
+    </div>
+
+    <script>
+        // 数据数组
+        const arr = ['马超', '黄忠', '赵云', '关羽', '张飞']
+        // 定时器的全局变量
+        let timerId = 0
+        // 随机号要全局变量
+        let random = 0
+        // 业务1.开始按钮模块
+        const qs = document.querySelector('.qs')
+        // 1.1 获取开始按钮对象
+        const start = document.querySelector('.start')
+        // 1.2 添加点击事件
+        start.addEventListener('click', function () {
+            // 如果数组里面只有一个值了，还需要抽取吗？  不需要  让两个按钮禁用就可以
+            if (arr.length == 1) {
+                start.disabled = end.disabled = true;
+                qs.innerHTML = arr[0];
+                return;
+            }
+            
+            start.disabled = true;
+            end.disabled = false;
+            timerId = setInterval(function () {
+                // 随机数
+                random = parseInt(Math.random() * arr.length)
+                // console.log(arr[random])
+                qs.innerHTML = arr[random]
+            }, 35)
+
+        })
+
+        // 2. 关闭按钮模块
+        const end = document.querySelector('.end')
+        end.disabled = true;
+        end.addEventListener('click', function () {
+            clearInterval(timerId)
+            start.disabled = false;
+            end.disabled = true;
+            // 结束了，可以删除掉当前抽取的那个数组元素
+            arr.splice(random, 1)
+            console.log(arr)
+        })
+    </script>
+</body>
+
+</html>

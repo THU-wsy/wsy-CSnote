@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>评论回车发布</title>
+  <style>
+    .wrapper {
+      min-width: 400px;
+      max-width: 800px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      overflow: hidden;
+      background: url(./images/avatar.jpg) no-repeat center / cover;
+      margin-right: 20px;
+    }
+
+    .wrapper textarea {
+      outline: none;
+      border-color: transparent;
+      resize: none;
+      background: #f5f5f5;
+      border-radius: 4px;
+      flex: 1;
+      padding: 10px;
+      transition: all 0.5s;
+      height: 30px;
+    }
+
+    .wrapper textarea:focus {
+      border-color: #e4e4e4;
+      background: #fff;
+      height: 50px;
+    }
+
+    .wrapper button {
+      background: #00aeec;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      margin-left: 10px;
+      width: 70px;
+      cursor: pointer;
+    }
+
+    .wrapper .total {
+      margin-right: 80px;
+      color: #999;
+      margin-top: 5px;
+      opacity: 0;
+      transition: all 0.5s;
+    }
+
+    .list {
+      min-width: 400px;
+      max-width: 800px;
+      display: flex;
+    }
+
+    .list .item {
+      width: 100%;
+      display: flex;
+    }
+
+    .list .item .info {
+      flex: 1;
+      border-bottom: 1px dashed #e4e4e4;
+      padding-bottom: 10px;
+    }
+
+    .list .item p {
+      margin: 0;
+    }
+
+    .list .item .name {
+      color: #FB7299;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .list .item .text {
+      color: #333;
+      padding: 10px 0;
+    }
+
+    .list .item .time {
+      color: #999;
+      font-size: 12px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrapper">
+    <i class="avatar"></i>
+    <textarea id="tx" placeholder="发一条友善的评论" rows="2" maxlength="200"></textarea>
+    <button>发布</button>
+  </div>
+  <div class="wrapper">
+    <span class="total">0/200字</span>
+  </div>
+  <div class="list">
+    <div class="item" style="display: none;">
+      <i class="avatar"></i>
+      <div class="info">
+        <p class="name">清风徐来</p>
+        <p class="text">大家都辛苦啦，感谢各位大大的努力，能圆满完成真是太好了[笑哭][支持]</p>
+        <p class="time">2022-10-10 20:29:21</p>
+      </div>
+    </div>
+  </div>
+  <script>
+    const tx = document.querySelector('#tx')
+    const total = document.querySelector('.total')
+    const item = document.querySelector('.item')
+    const text = document.querySelector('.text')
+    // 1. 当我们文本域获得了焦点，就让 total 显示出来
+    tx.addEventListener('focus', function () {
+      total.style.opacity = 1
+    })
+    // 2. 当我们文本域失去了焦点，就让 total 隐藏出来
+    tx.addEventListener('blur', function () {
+      total.style.opacity = 0
+    })
+    // 3. 检测用户输入
+    tx.addEventListener('input', function () {
+      // console.log(tx.value.length)  得到输入的长度
+      total.innerHTML = `${tx.value.length}/200字`
+    })
+
+    // 4. 按下回车发布评论
+    tx.addEventListener('keyup', function (e) {
+      // 只有按下的是回车键，才会触发
+      // console.log(e.key)
+      if (e.key === 'Enter') {
+        // 如果用户输入的不为空就显示和打印
+        if (tx.value.trim()) {
+          // console.log(11)
+          item.style.display = 'block'
+          // console.log(tx.value)  // 用户输入的内容
+          text.innerHTML = tx.value
+
+        }
+        // 等我们按下回车，结束，清空文本域
+        tx.value = ''
+        // 按下回车之后，就要把 字符统计 复原
+        total.innerHTML = '0/200字'
+      }
+
+    })
+  </script>
+</body>
+
+</html>
