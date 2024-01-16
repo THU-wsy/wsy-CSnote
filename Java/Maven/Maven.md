@@ -32,7 +32,7 @@ Maven 可以管理项目的编译、测试、打包、部署等构建过程。�
     ```xml
     <localRepository>D:\maven-repository</localRepository>
     ```
-- 配置Maven的下载镜像(国内阿里镜像)：第168行，
+- 配置Maven的下载镜像(国内阿里镜像)：第168行，需要注释掉已有的mirror标签
     ```xml
     <mirror>
         <id>nexus-aliyun</id>
@@ -60,6 +60,63 @@ Maven 可以管理项目的编译、测试、打包、部署等构建过程。�
 ## 1.3 IDEA配置本地Maven
 
 ![](images/20230916122419.png)
+
+## 1.4 Linux安装Maven
+
+（1）将官网下载的apache-maven-3.9.5-bin.tar.gz上传到Linux服务器的/usr/local目录下，然后解压
+
+```shell
+tar -zxvf apache-maven-3.9.5-bin.tar.gz
+cd apache-maven-3.9.5
+mkdir maven-repository
+```
+
+（2）Maven的配置文件
+
+```shell
+cd conf
+vim settings.xml
+```
+
+- 配置本地仓库地址：
+    ```xml
+    <localRepository>/usr/local/apache-maven-3.9.5/maven-repository</localRepository>
+    ```
+- 配置Maven的下载镜像(国内阿里镜像)：需要注释掉已有的mirror标签
+    ```xml
+    <mirror>
+        <id>nexus-aliyun</id>
+        <mirrorOf>central</mirrorOf>
+        <name>Nexus aliyun</name>
+        <url>http://maven.aliyun.com/nexus/content/groups/public</url>
+    </mirror>
+    ```
+- 配置maven选用编译项目的jdk版本(jdk17)：
+    ```xml
+    <profile>
+        <id>jdk-17</id>
+        <activation>
+            <activeByDefault>true</activeByDefault>
+            <jdk>17</jdk>
+        </activation>
+        <properties>
+            <maven.compiler.source>17</maven.compiler.source>
+            <maven.compiler.target>17</maven.compiler.target>
+            <maven.compiler.compilerVersion>17</maven.compiler.compilerVersion>
+        </properties>
+    </profile>
+    ```
+
+（3）配置Maven环境变量，`vim /etc/profile`，在最后加上
+
+```vim
+export MAVEN_HOME=/usr/local/apache-maven-3.9.5
+export PATH=$PATH:$MAVEN_HOME/bin
+```
+
+然后重新加载一下`source /etc/profile`使新增配置生效
+
+（4）测试`mvn -v`
 
 # 2. 基于IDEA的Maven工程创建
 

@@ -36,7 +36,7 @@ Spring Web MVC是基于Servlet API构建的原始Web框架，从一开始就包�
 2. `HandlerMapping`: SpringMVC提供，我们需要进行IoC配置使其加入IoC容器方可生效，它**内部缓存handler方法和handler访问路径数据**，被DispatcherServlet调用，**用于查找路径对应的handler**。
 3. `HandlerAdapter`: SpringMVC提供，我们需要进行IoC配置使其加入IoC容器方可生效，它可以**处理请求参数和处理响应数据**，每次DispatcherServlet都是**通过HandlerAdapter间接调用handler**，所以它是handler和DispatcherServlet之间的适配器。
 4. `handler`: handler又称处理器，它是Controller类内部的方法简称，是由我们自己定义，用来接收参数，向后调用业务，最终返回响应结果。
-5. `ViewResovler`: SpringMVC提供，我们需要进行IoC配置使其加入IoC容器方可生效。视图解析器主要作用**简化模版视图页面查找**，但是需要注意，前后端分离项目，后端只返回JSON数据，不返回页面，那就不需要视图解析器。所以，视图解析器，相对其他的组件不是必须的。
+5. `ViewResovler`: SpringMVC提供，我们需要进行IoC配置使其加入IoC容器方可生效。视图解析器主要作用**简化模板视图页面查找**，但是需要注意，前后端分离项目，后端只返回JSON数据，不返回页面，那就不需要视图解析器。所以，视图解析器，相对其他的组件不是必须的。
 
 # 2. 实战案例整体流程
 
@@ -1263,7 +1263,7 @@ public void addInterceptors(InterceptorRegistry registry) {
 }
 ```
 
-> 注：上述方式添加的拦截器，默认对DispatcherServlet处理的**所有请求**都进行拦截。我们还可以采用下面的方式拦截指定请求。
+> 注：上述方式添加的拦截器，默认对DispatcherServlet处理的**所有请求**都进行拦截(包括对静态资源的访问)。我们还可以采用下面的方式拦截指定请求。
 
 **精确拦截：**
 
@@ -1283,8 +1283,8 @@ public void addInterceptors(InterceptorRegistry registry) {
 @Override
 public void addInterceptors(InterceptorRegistry registry) {
     registry.addInterceptor(new FirstInterceptor())
-            .addPathPatterns("/**")
-            .excludePathPatterns("/abc");
+            .addPathPatterns("/**") // "/**"会拦截所有请求
+            .excludePathPatterns("/css/**", "/js/**"); // 可以使用这种方式放行静态资源
 }
 ```
 
@@ -1355,112 +1355,7 @@ public class MyWebAppInitializer extends AbstractAnnotationConfigDispatcherServl
 }
 ```
 
-# 9. 文件上传和下载
 
-## 9.1 文件下载
-
-ResponseEntity用于控制器方法的返回值类型，该控制器方法的返回值就是响应到浏览器的完整响应报文。使用ResponseEntity可以实现下载文件的功能：
-
-```java
-@RequestMapping("/test/download")
-public ResponseEntity<byte[]> testResponseEntity(HttpSession session) throws
-        IOException {
-    //获取ServletContext对象
-    ServletContext servletContext = session.getServletContext();
-    //获取服务器中文件的真实路径
-    String realPath = servletContext.getRealPath("/static/img/pig.png");
-    //创建输入流
-    InputStream is = new FileInputStream(realPath);
-    //创建字节数组
-    byte[] bytes = new byte[is.available()];
-    //将流读到字节数组中
-    is.read(bytes);
-    //创建HttpHeaders对象设置响应头信息
-    MultiValueMap<String, String> headers = new HttpHeaders();
-    //设置要下载方式以及下载文件的名字
-    headers.add("Content-Disposition", "attachment;filename=pig.png");
-    //设置响应状态码
-    HttpStatus statusCode = HttpStatus.OK;
-    //创建ResponseEntity对象
-    ResponseEntity<byte[]> responseEntity = new ResponseEntity<>(bytes, headers, statusCode);
-    //关闭输入流
-    is.close();
-    return responseEntity;
-}
-```
-
-前端代码：
-
-```html
-<a th:href="@{/test/download}">下载图片</a><br>
-```
-
-## 9.2 文件上传
-
-> 注意：以下方式只适用于Spring5
-
-文件上传要求form表单的请求方式必须为`post`，并且添加属性`enctype="multipart/form-data"`。
-
-前端代码：
-```html
-<form th:action="@{/test/upload}" method="post" enctype="multipart/form-data">
-    头像：<input type="file" name="photo"><br>
-    <button type="submit">上传</button>
-</form>
-```
-
-SpringMVC中将上传的文件封装到MultipartFile对象中，通过此对象可以获取文件相关信息。需要以下步骤：
-
-**1、添加依赖**
-
-```xml
-<dependency>
-    <groupId>commons-fileupload</groupId>
-    <artifactId>commons-fileupload</artifactId>
-    <version>1.5</version>
-</dependency>
-```
-
-**2、在SpringMVC的配置文件中添加配置**
-
-```xml
-<!--配置文件上传解析器，只适用于Spring5-->
-<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"></bean>
-```
-
-**控制器方法**
-
-```java
-@RequestMapping("/test/upload")
-public String testUp(MultipartFile photo, HttpSession session) throws IOException {
-    // 获取上传的文件的文件名
-    String filename = photo.getOriginalFilename();
-    // 获取上传的文件的后缀名
-    String suffix = filename.substring(filename.lastIndexOf("."));
-    // 获取uuid
-    String uuid = UUID.randomUUID().toString();
-    // 拼接一个新的文件名，用于防止相同的文件名导致内容覆盖
-    filename = uuid + suffix;
-    // 获取ServletContext对象
-    ServletContext servletContext = session.getServletContext();
-    // 获取当前工程下photo目录的真实路径
-    String photoPath = servletContext.getRealPath("photo");
-    // 创建photoPath所对应的File对象
-    File file = new File(photoPath);
-    // 判断file所对应目录是否存在
-    if (!file.exists()) {
-        file.mkdir();
-    }
-    String finalPath = photoPath + File.separator + filename;
-    // 上传文件
-    photo.transferTo(new File(finalPath));
-    return "success";
-}
-```
-
-**补充**：如果上传多个文件，
-- 若请求参数名不同，则在控制器方法中使用多个MultipartFile类型的形参分别接收即可
-- 若请求参数名相同，则在控制器方法中使用`List<MultipartFile>`类型的形参接收即可
 
 
 # 10. 参数校验
@@ -1670,15 +1565,6 @@ public class MyWebAppInitializer extends AbstractAnnotationConfigDispatcherServl
 
 # 12. SpringMVC底层原理
 
-## 12.1 SpringMVC常用组件
-
-- DispatcherServlet：前端控制器，不需要工程师开发，由框架提供。作用：统一处理请求和响应，整个流程控制的中心，由它调用其它组件处理用户的请求
-- HandlerMapping：处理器映射器，不需要工程师开发，由框架提供。作用：根据请求的url、method等信息查找Handler，即控制器方法。
-- Handler：处理器，需要工程师开发。作用：在DispatcherServlet的控制下Handler对具体的用户请求进行处理。
-- HandlerAdapter：处理器适配器，不需要工程师开发，由框架提供。作用：通过HandlerAdapter来调用处理器（控制器方法）进行执行。
-- ViewResolver：视图解析器，不需要工程师开发，由框架提供。作用：进行视图解析，得到相应的视图，例如：ThymeleafView、InternalResourceView、RedirectView。
-- View：视图。作用：将模型数据通过页面展示给用户。
-
 ## 12.2 DispatcherServlet初始化过程
 
 DispatcherServlet 本质上是一个 Servlet，所以天然的遵循 Servlet 的生命周期。所以宏观上是 Servlet 生命周期来进行调度。
@@ -1713,96 +1599,9 @@ FrameworkServlet类中通过调用createWebApplicationContext()方法创建了We
 FrameworkServlet类中通过调用onRefresh()方法刷新容器，此方法在DispatcherServlet类中进行了重写，调用了initStrategies(context)方法，初始化DispatcherServlet的各个组件，如请求映射等。
 
 
-## 12.3 DispatcherServlet处理请求
 
-### 1、processRequest()
 
-FrameworkServlet类重写了HttpServlet中的service()和doXxx()等方法，并在这些方法中都调用了`processRequest(request, response)`。
 
-而processRequest()方法中，调用了doService()方法执行服务，这是一个抽象方法，在DispatcherServlet中进行了重写。
-
-### 2、doService()
-
-DispatcherServlet类中重写了doService()方法，该方法中调用了`doDispatch(request, response);`来处理请求和响应。
-
-### 3、doDispatch()
-
-DispatcherServlet类中doDispatch()方法的核心操作：
-
-**1、建立调用链**
-
-```java
-mappedHandler = getHandler(processedRequest);
-```
-
-mappedHandler是调用链，包含handler、interceptorList、interceptorIndex：
-- handler：浏览器发送的请求所匹配的控制器方法
-- interceptorList：处理控制器方法的所有拦截器集合
-- interceptorIndex：拦截器索引，控制拦截器afterCompletion()的执行
-
-**2、创建处理器适配器**
-
-通过控制器方法创建相应的处理器适配器，它有以下作用：
-- 将请求参数绑定到实体类对象中
-- 给目标 handler 方法准备所需的其他参数
-- 调用目标 handler 方法
-
-所以 HandlerAdapter 这个适配器是将底层的 HTTP 报文、原生的 request 对象进行解析和封装，『适配』到我们定义的 handler 方法上。
-
-```java
-HandlerAdapter ha = getHandlerAdapter(mappedHandler.getHandler());
-```
-
-**3、调用拦截器的preHandle()**
-
-```java
-if (!mappedHandler.applyPreHandle(processedRequest, response)) {
-    return;
-}
-```
-
-**4、由处理器适配器调用具体的控制器方法，最终获得ModelAndView对象(核心代码)**
-
-```java
-mv = ha.handle(processedRequest, response, mappedHandler.getHandler());
-```
-
-**5、调用拦截器的postHandle()**
-
-```java
-mappedHandler.applyPostHandle(processedRequest, response, mv);
-```
-
-**6、后续处理：处理模型数据和渲染视图**
-
-```java
-processDispatchResult(processedRequest, response, mappedHandler, mv, dispatchException);
-```
-
-而在processDispatchResult()方法中做了以下操作：
-
-1. 处理模型数据和渲染视图：`render(mv, request, response);`
-2. 调用拦截器的afterCompletion()：`mappedHandler.triggerAfterCompletion(request, response, null);`
-
-## 12.4 总结：SpringMVC的执行流程
-
-1. 用户向服务器发送请求，请求被SpringMVC 前端控制器DispatcherServlet捕获。
-2. DispatcherServlet对请求URL进行解析，得到请求资源标识符（URI），判断请求URI对应的映射：
-   - 若不存在，则判断是否配置了`mvc:default-servlet-handler`。如果没配置，则控制台报映射查找不到，客户端展示404错误；如果有配置，则访问目标资源（一般为静态资源，如：JS,CSS,HTML），找不到的话客户端也会展示404错误。
-   - 存在则执行下面的流程
-3. 根据该URI，调用HandlerMapping获得该Handler配置的所有相关的对象（包括Handler对象以及Handler对象对应的拦截器），最后以HandlerExecutionChain执行链对象的形式返回。
-4. DispatcherServlet 根据获得的Handler，选择一个合适的HandlerAdapter。
-5. 如果成功获得HandlerAdapter，此时将开始执行拦截器的preHandler()方法【正向】
-6. 提取Request中的模型数据，填充Handler入参，开始执行Handler(Controller)方法，处理请求。在填充Handler的入参过程中，根据你的配置，Spring将帮你做一些额外的工作：
-   - HttpMessageConveter：将请求消息（如Json、xml等数据）转换成一个对象，将对象转换为指定的响应信息
-   - 数据转换：对请求消息进行数据转换。如String转换成Integer、Double等。
-   - 数据格式化：对请求消息进行数据格式化。如将字符串转换成格式化数字或格式化日期等。
-   - 数据验证：验证数据的有效性（长度、格式等），验证结果存储到BindingResult或Error中。
-7. Handler执行完成后，向DispatcherServlet返回一个ModelAndView对象。
-8. 此时将开始执行拦截器的postHandle()方法【逆向】
-9. 根据返回的ModelAndView（此时会判断是否存在异常：如果存在异常，则执行HandlerExceptionResolver进行异常处理）选择一个适合的ViewResolver进行视图解析，根据Model和View，来渲染视图。
-10. 渲染视图完毕执行拦截器的afterCompletion()方法【逆向】
-11. 将渲染结果返回给客户端。
 
 
 # 13. 补充：ContextLoaderListener

@@ -1,30 +1,31 @@
-# 第13章_泛型(Generic)
+# 第13章_泛型
 
 ## 1. 泛型概述
 
-泛型即为`类型参数`，即，在定义类、接口、方法时，同时声明了一个或者多个类型变量（如：`<E>`），称为泛型类、泛型接口、泛型方法，它们统称为泛型。
+泛型(Generic)即为`类型参数`，即在定义类、接口、方法时，同时声明了一个或者多个类型变量（如：`<E>`），称为泛型类、泛型接口、泛型方法。
 
-**泛型的作用：泛型提供了在编译阶段约束所能操作的数据类型，并自动进行检查的能力！这样可以避免强制类型转换，及其可能出现的异常**。
+**泛型的作用**：泛型提供了在**编译阶段**约束所能操作的数据类型，并自动进行检查的能力。这样可以避免强制类型转换，及其可能出现的异常。
 
 **泛型的本质：把具体的数据类型作为参数传给类型变量**。
 
-**注意**：泛型的类型变量，只能使用引用数据类型进行赋值。（不能使用基本数据类型，可以使用包装类替换）
+**注意**：泛型的类型变量，只能使用**引用数据类型**进行赋值（不能使用基本数据类型，但可以使用包装类替换）
 
-**泛型擦除**：事实上，泛型是工作在编译阶段的，一旦程序编译成class文件，class文件中就不存在泛型了，这就是泛型擦除。
+**泛型擦除**：事实上，泛型是工作在编译阶段的，一旦程序编译成class文件，**class文件中就不存在泛型了**，这就是泛型擦除。
 
 ## 2. 自定义泛型结构
 
 ### 2.1 自定义泛型类
 
-自定义泛型类的格式如下
+自定义泛型类的格式如下：
 
 ```java
-// 这里的<E, T>其实指的就是类型变量，可以是一个，也可以是多个。
-// 类型变量建议用大写的英文字母，常用的有：E、T、K、V 等
-修饰符 class 类名<E, T>{
+// 这里的<E, T>指的就是类型变量，可以是一个，也可以是多个
+public class 类名<E, T> {
     
 }
 ```
+
+举例：
 
 ```java
 public class MyArrayList<E> {
@@ -75,17 +76,16 @@ public class Test {
 
 **注意**
 
-- 对于数组的声明，无法直接使用泛型参数，即 `E[] arr = new E[10];` 是错误的，因为数组不是泛型类。我们需要使用以下语句声明数组 `E[] arr = (E[]) new Object[10];`
-- 在本类/本接口的静态方法中，无法使用类/接口上声明的泛型参数。
-- 异常类不能是泛型类。
-
+- **对于数组的声明，无法直接使用泛型参数**，即`E[] arr = new E[10];`是错误的，因为数组不是泛型类。我们需要使用以下语句声明数组`E[] arr = (E[]) new Object[10];`
+- 在本类/本接口的**静态方法**中，无法使用类/接口上声明的泛型参数
+- **异常类不能是泛型类**
 
 ### 2.2 自定义泛型接口
 
 定义格式如下：
 
 ```java
-修饰符 interface 接口名<E>{
+修饰符 interface 接口名<E> {
     
 }
 ```
@@ -102,11 +102,11 @@ public class StringData implements Data<String> {
 }
 ```
 
-泛型接口的具体细节与泛型类几乎类似。
+泛型接口的具体细节与泛型类类似。
 
 ### 2.3 自定义泛型方法
 
-泛型方法的格式
+泛型方法的格式如下：
 
 ```java
 修饰符 <E> 返回值类型 方法名(形参列表) {
@@ -114,16 +114,16 @@ public class StringData implements Data<String> {
 }
 ```
 
+举例：
+
 ```java
 public class Test{
     public static void main(String[] args){
         ArrayList<Animal> ans = new ArrayList<>();
         go(ans);
     }
-    
-    //这是一个泛型方法<T>表示一个不确定的数据类型，由调用者确定
+    // 这是一个泛型方法<T>表示一个不确定的数据类型，由调用者确定
     public static <T> void go(ArrayList<T> t){
-    
     }
 }
 ```
@@ -133,43 +133,12 @@ public class Test{
 **说明**
 
 - 泛型方法，与其所在的类是否是泛型类没有关系。换而言之，如果一个方法只使用了其泛型类上定义的泛型参数，就并不是一个泛型方法。简而言之，只有在方法修饰符后定义了泛型参数`<E>`才是一个泛型方法。
-- 泛型方法中的泛型参数的具体类型是在方法被调用时确定的。
+- 泛型方法中的泛型参数的具体类型是在方法被调用时确定的
 - 泛型方法可以声明为static
-
-
-**泛型的应用场景**
-
-```java
-// DAO:database access object，内部封装了操作数据库相关表的增删改查操作
-class DAO<T> {
-    public void insert(T bean) {
-        // 通过相应的sql语句，将bean对象的属性值写入到数据表中
-    }
-    public void deleteById(int id) {}
-    public void update(int id, T bean) {}
-    public T queryForInstance(int id) { return null; }
-    public List<T> queryForList(int id) { return null; }
-}
-/*
-* ORM思想(object relational mapping)
-* 数据库中的一个表 与 Java中的一个类对应
-* 表中的一条记录 与 Java类的一个对象对应
-* 表中的一个字段(或列) 与 Java类的一个属性(或字段)对应
-*/
-class Table {
-    int id;
-    String name;
-    String info;
-}
-class TableDAO extends DAO<Table> {
-    // 利用泛型，使得只能操作某张固定的表
-}
-```
-
 
 ## 3. 泛型在继承上的体现
 
-**类`SuperA`是类`A`的父类或接口，则 `G<SuperA>` 与 `G<A>` 是并列的两个类，没有任何子父类的关系**。比如 `ArrayList<Object>` 与 `ArrayList<String>`没有子父类关系，所以下面的语句显然是错误的：
+**类`SuperA`是类`A`的父类或接口，则`G<SuperA>`与`G<A>`是并列的两个类，没有任何子父类的关系**。比如`ArrayList<Object>`与`ArrayList<String>`没有子父类关系，所以下面的语句显然是错误的：
 
 ```java
 ArrayList<Object> list1 = new ArrayList<>();
@@ -187,9 +156,9 @@ list1 = list2;
 
 ## 4. 通配符的使用
 
-根据上述讨论，我们发现在方法传递参数时，参数类型如果限制为`List<Object>`，也无法传入`List<String>`类型的实参，即使是`ArrayList<String>`也无法传入，因为泛型参数已经限定为`Object`，我们只能传入`A<Object>`类型的参数，其中`A`是`List`或其实现类。
+根据上述讨论，我们发现在方法传递参数时，参数类型如果限制为`List<Object>`，就无法传入`List<String>`类型的实参，即使是`ArrayList<String>`也无法传入，因为泛型参数已经限定为`Object`，我们只能传入`A<Object>`类型的参数，其中`A`是`List`或其实现类。
 
-为了让我们**使用泛型**时更具有通用性，我们可以使用类型通配符`?`，它表示一切泛型参数。
+为了让我们使用泛型时更具有通用性，我们可以使用类型通配符`?`，它表示一切泛型参数。
 
 ### 4.1 通配符
 
@@ -222,40 +191,35 @@ public class MyTest {
 **使用注意点**：
 
 1. `?`不能用在泛型方法声明上，即返回值类型前面的`<>`不能使用`?`
+    ```java
+    public static <?> void test(ArrayList<?> list){} // 报错
+    ```
 
-```java
-public static <?> void test(ArrayList<?> list){
-} // 报错
-```
+2. `?`不能用在泛型类的声明上
+    ```java
+    class GenericTypeClass<?> {} // 报错
+    ```
 
-2. 不能用在泛型类的声明上
-
-```java
-class GenericTypeClass<?>{
-} // 报错
-```
-
-3. 不能用在创建对象上，即不能new一个带`?`类型的对象
-
-```java
-new ArrayList<?>(); // 报错
-```
+3. `?`不能用在创建对象上，即不能new一个带`?`类型的对象
+    ```java
+    new ArrayList<?>(); // 报错
+    ```
 
 ### 4.2 有限制的通配符
 
-泛型上限：`<? extends Father>`，表示 `?` 能接收的必须是`Father`及其子类。
+泛型上限：`<? extends Father>`，表示`?`能接收的必须是`Father`及其子类。
 
-泛型下限：`<? super Father>`，表示 `?` 能接受的必须是`Father`及其父类。
+泛型下限：`<? super Father>`，表示`?`能接收的必须是`Father`及其父类。
 
 **注意**：有限制的通配符**限制了泛型变量的范围**，例如对于`List<? extends Father>`的类型，即使是`ArrayList<Object>`的对象也不能赋值给它，泛型变量必须是`Father`及其子类。
 
-**`<? extends Father>`的读操作**：由于`?`可能代表的类型最大是`Father`，所以进行读操作的时候，读出来的值类型最精确的声明是`Father`
+`<? extends Father>`的读操作：由于`?`可能代表的类型最大是`Father`，所以进行读操作的时候，读出来的值类型最精确的声明是`Father`
 
-**`<? extends Father>`的写操作**：由于`?`可能代表的类型最大是`Father`，所以为了不产生冲突，只能写入`null`
+`<? extends Father>`的写操作：由于`?`可能代表的类型最大是`Father`，所以为了不产生冲突，只能写入`null`
 
-**`<? super Father>`的读操作**：由于`?`可能代表的类型最小是`Father`，所以进行读操作的时候，读出来的值类型必须声明为`Object`
+`<? super Father>`的读操作：由于`?`可能代表的类型最小是`Father`，所以进行读操作的时候，读出来的值类型必须声明为`Object`
 
-**`<? super Father>`的写操作**：由于`?`可能代表的类型最小是`Father`，所以进行写操作的时候，只要是`Father`类型或其子类的对象，都能写入
+`<? super Father>`的写操作：由于`?`可能代表的类型最小是`Father`，所以进行写操作的时候，只要是`Father`类型或其子类的对象，都能写入
 
 ```java
 public class MyTest {
@@ -287,7 +251,7 @@ class Son extends Father{
 }
 ```
 
-# 第14章_数据结构与集合源码
+# 第14章_集合源码
 
 ## 1. List接口分析
 
@@ -310,7 +274,7 @@ elementData[0] = "新元素";
 
 **懒惰初始化的原因**：用的时候，再创建数组，避免浪费。因为很多方法的返回值是ArrayList类型，需要返回一个ArrayList的对象，例如：后期从数据库查询对象的方法，返回值很多就是ArrayList。有可能你要查询的数据不存在，要么返回null，要么返回一个没有元素的ArrayList对象。
 
-注意：jdk7及之前并没有采用懒惰初始化，而是在调用空参构造器时直接初始化一个长度为10的数组。
+> 注意：jdk7及之前并没有采用懒惰初始化，而是在调用空参构造器时直接初始化一个长度为10的数组。
 
 ### 1.2 Vector底层源码
 
@@ -321,7 +285,6 @@ Object[] elementData = new Object[10];
 ```
 
 当底层数组已满时再添加元素，会扩容2倍。
-
 
 ### 1.3 LinkedList底层源码
 
@@ -344,12 +307,11 @@ private static class Node<E> {
 
 调用空参构造器创建LinkedList对象时，底层什么都没做，即first和last都是默认为null。当添加元素时，底层会创建一个新的Node结点，并设置next和prev指针，最后再调整first和last指向相应的结点。注意LinkedList底层作为一个双向链表，是不存在扩容问题的。
 
-
 ## 2. Map接口分析
 
 ### 2.1 HashMap底层源码(JDK7)
 
-#### 2.1.1 创建对象的过程
+#### 1、创建对象的过程
 
 调用空参构造器创建HashMap对象时，底层会默认初始化一个**长度为16的Entry数组**：
 
@@ -357,7 +319,7 @@ private static class Node<E> {
 Entry[] table = new Entry[16];
 ```
 
-如果调用有参构造器，设置底层table的长度为initialCapacity，实际上底层table的长度capacity未必就会被设置为initialCapacity，而是会被设置为2的幂次方，且满足 `capacity >= initialCapacity`，源码如下：
+如果调用有参构造器，设置底层table的长度为initialCapacity，实际上底层table的长度capacity未必就会被设置为initialCapacity，而是会被设置为2的幂次方，且满足`capacity >= initialCapacity`，源码如下：
 
 ```java
 public HashMap(int initialCapacity, float loadFactor) {
@@ -376,9 +338,9 @@ public HashMap(int initialCapacity, float loadFactor) {
 }
 ```
 
-注1：**装载因子loadFactor默认为0.75**，虽然也可以通过有参构造器修改，但不建议这么做。
-注2：**底层table数组的长度一定是2的幂次方**。
-注3：`int threshold`是临界值，其值**由 capacity 与 loadFactor 相乘得到**，所以会随着 capacity 的变化而变化。
+- **装载因子loadFactor默认为0.75**，虽然也可以通过有参构造器修改，但不建议这么做。
+- **底层table数组的长度一定是2的幂次方**。
+- `int threshold`是临界值，其值**由capacity与loadFactor相乘得到**，所以会随着capacity的变化而变化。
 
 **Entry的定义如下**：
 
@@ -398,7 +360,7 @@ static class Entry<K,V> implements Map.Entry<K,V> {
 }
 ```
 
-#### 2.1.2 put(key,value)的过程
+#### 2、put(key,value)的过程
 
 源码如下：
 
@@ -433,7 +395,7 @@ public V put(K key, V value) {
 
 **第1步**：如果key1为null，则会将(key1,value1)这个Entry对象**放到table索引为0的位置**。因为此时key1为null，所以产生Hash冲突时只需比较另一个对象的键是否为null即可，如果也为null，则直接用value1替换其值。该过程对应源码中的步骤1。
 
-**第2步**：调用key1所在类的hashCode()方法，计算key1对应的哈希值1，此哈希值1经过某种算法(hash())之后，得到哈希值2。该过程对应源码中的步骤2。hash()方法的源码如下：
+**第2步**：调用key1所在类的`hashCode()`方法，计算key1对应的哈希值1，此哈希值1经过某种算法(`hash()`)之后，得到哈希值2。该过程对应源码中的步骤2。hash()方法的源码如下：
 
 ```java
 final int hash(Object k) {
@@ -455,7 +417,7 @@ final int hash(Object k) {
 }
 ```
 
-**第3步**：将哈希值2作为参数调用indexFor()方法，从而得到(key1,value1)在数组table中的索引位置i。该过程对应源码中的步骤3。indexFor()方法源码如下：
+**第3步**：将哈希值2作为参数调用`indexFor()`方法，从而得到(key1,value1)在数组table中的索引位置i。该过程对应源码中的步骤3。indexFor()方法源码如下：
 
 ```java
 static int indexFor(int h, int length) {
@@ -463,7 +425,7 @@ static int indexFor(int h, int length) {
 }
 ```
 
-注意：**由于table的length为2的幂次方，所以length-1的二进制表示是全1的，用位与运算可以快速确定索引，效率极高**。
+> 注意：**由于table的length为2的幂次方，所以length-1的二进制表示是全1的，用位与运算可以快速确定索引，效率极高**。
 
 **第4步**：如果数组索引i上没有元素，则(key1,value1)添加成功。addEntry()方法的源码如下：
 
@@ -527,6 +489,32 @@ static class Entry<K,V> extends HashMap.Node<K,V> {
 }
 ```
 
+### 2.4 HashMap的其他相关问题
+
+（1）Entry中的hash属性为什么不直接使用key的`hashCode()`返回值呢？
+
+HashMap底层不是直接用key的hashCode值与`table.length-1`计算求下标的，而是先对key的hashCode值又进行了一个哈希运算`hash()`，这是为了保证**尽量均匀分布**。该哈希算法的思路是将hashCode值的**高位二进制与低位二进制值进行了异或**，让高位二进制也参与到index的计算中，这样做的原因是：
+
+因为一个HashMap的table数组一般不会特别大（至少在不断扩容之前），那么`table.length-1`的大部分高位都是0，**直接用hashCode和table.length-1进行按位与运算的话，就会导致总是只有最低的几位是有效的**，那么就算你的`hashCode()`实现的再好也难以避免发生碰撞，这时让高位参与进来的意义就体现出来了。它对hashcode的低位添加了随机性并且混合了高位的部分特征，显著减少了碰撞冲突的发生。
+
+（2）key-value中的key是否可以修改？
+
+key-value存储到**HashMap中会存储key的hash值**，这样就不用在每次查找时重新计算每一个Entry的hash值了，因此如果已经put到Map中的key-value，再修改key的属性，而这个属性又参与hash值的计算，那么会导致匹配不上。所以不建议修改key。
+
+（3）JDK1.7中HashMap的循环链表是怎么回事？如何解决？
+
+![](images/2023071966666.jpg)
+
+避免HashMap发生死循环的常用解决方案：
+
+- 多线程环境下，使用线程安全的ConcurrentHashMap替代HashMap，推荐
+- 多线程环境下，使用synchronized或Lock加锁，但会影响性能，不推荐
+- 多线程环境下，使用线程安全的Hashtable替代，性能低，不推荐
+
+HashMap死循环只会发生在JDK1.7版本中，主要原因：头插法+链表+多线程并发+扩容。
+
+在JDK1.8中，HashMap改用尾插法，解决了链表死循环的问题。
+
 ## 3. Set接口分析
 
 - HashSet底层使用的就是HashMap
@@ -541,37 +529,6 @@ public boolean add(E e) {
 }
 private static final Object PRESENT = new Object();
 ```
-
-## 4. 【拓展】HashMap的相关问题
-
-### 1、Entry中的hash属性为什么不直接使用key的hashCode()返回值呢？
-
-不管是JDK1.7还是JDK1.8中，都不是直接用key的hashCode值直接与table.length-1计算求下标的，而是先对key的hashCode值进行了一个运算，JDK1.7和JDK1.8关于hash()的实现代码不一样，但是不管怎么样都是为了提高hash code值与 (table.length-1)的按位与完的结果，**尽量的均匀分布**。
-
-虽然算法不同，但是**思路都是将hashCode值的高位二进制与低位二进制值进行了异或，让高位二进制也参与到index的计算中**。
-
-为什么要hashCode值的二进制的高位参与到index计算呢？
-
-因为一个HashMap的table数组一般不会特别大，至少在不断扩容之前，那么table.length-1的大部分高位都是0，**直接用hashCode和table.length-1进行&运算的话，就会导致总是只有最低的几位是有效的**，那么就算你的hashCode()实现的再好也难以避免发生碰撞，这时让高位参与进来的意义就体现出来了。它对hashcode的低位添加了随机性并且混合了高位的部分特征，显著减少了碰撞冲突的发生。
-
-### 2、key-value中的key是否可以修改？
-
-key-value存储到**HashMap中会存储key的hash值**，这样就不用在每次查找时重新计算每一个Entry的hash值了，因此如果已经put到Map中的key-value，再修改key的属性，而这个属性又参与hashcode值的计算，那么会导致匹配不上。所以不建议修改key。
-
-### 3、JDK1.7中HashMap的循环链表是怎么回事？如何解决？
-
-![](/zzimages/2023071966666.jpg)
-
-避免HashMap发生死循环的常用解决方案：
-
-- 多线程环境下，使用线程安全的ConcurrentHashMap替代HashMap，推荐
-- 多线程环境下，使用synchronized或Lock加锁，但会影响性能，不推荐
-- 多线程环境下，使用线程安全的Hashtable替代，性能低，不推荐
-
-HashMap死循环只会发生在JDK1.7版本中，主要原因：头插法+链表+多线程并发+扩容。
-
-在JDK1.8中，HashMap改用尾插法，解决了链表死循环的问题。
-
 
 
 # 第15章_File类与IO流
@@ -1822,536 +1779,606 @@ Logback提供了一个核心配置文件logback.xml，日志框架在记录日�
 
 ## 1. 网络编程概述
 
-Java是 Internet 上的语言，它从语言级上提供了对网络应用程序的支持，程序员能够很容易开发常见的网络应用程序。
+### 1.1 简介
 
-Java提供的网络类库，可以实现无痛的网络连接，联网的底层细节被隐藏在 Java 的本机安装系统里，由 JVM 进行控制。并且 Java 实现了一个跨平台的网络库，`程序员面对的是一个统一的网络编程环境`。
+Java提供的网络类库（`java.net`包），可以实现无痛的网络连接，联网的底层细节被隐藏在Java的本机安装系统里，由JVM进行控制。并且Java实现了一个跨平台的网络库，程序员面对的是一个统一的网络编程环境。
 
-### 1.1 软件架构
+### 1.2 通信架构
 
-**C/S架构** ：全称为Client/Server结构，是指客户端和服务器结构。常见程序有QQ、美团app、360安全卫士等软件。
+**C/S架构**：全称为Client/Server结构，是指客户端和服务器结构。
 
-**B/S架构** ：全称为Browser/Server结构，是指浏览器和服务器结构。常见浏览器有IE、谷歌、火狐等。
+**B/S架构**：全称为Browser/Server结构，是指浏览器和服务器结构。
 
-两种架构各有优势，但是无论哪种架构，都离不开网络的支持。**网络编程**，就是在一定的协议下，实现两台计算机的通信的程序。
+两种架构各有优势，但是无论哪种架构，都离不开网络的支持。**网络编程**，就是在一定的协议下，实现两台计算机之间的通信。
 
-### 1.2 网络基础
+### 1.3 网络通信的三要素
 
-#### 1.2.1 IP地址
+#### 1、IP地址
 
-**常用命令：**
+IP地址是设备在网络中的唯一标识。
 
-- 查看本机IP地址，在控制台输入：
+#### 2、端口号
 
-```shell
-ipconfig
+端口号是进程在设备中的唯一标识，它是用两个字节表示的整数，取值范围为`0~65535`
+
+- 周知端口：`0~1023`，被预先定义的知名应用占用。如`HTTP(80)`，`FTP(21)`，`Telnet(23)`
+- 注册端口：`1024~49151`，分配给用户进程或某些应用程序。如`Tomcat(8080)`，`MySQL(3306)`，`Oracle(1521)`
+- 动态端口：`49152~65535`，一般不固定分配某种进程，而是动态分配。
+
+#### 3、协议
+
+通信的协议还是比较复杂的，`java.net`包中包含的类和接口，它们提供低层次的通信细节。我们可以直接使用这些类和接口，来专注于网络程序开发，而不用考虑通信的细节。
+
+`java.net`包中提供了两种常见的传输层协议的支持：
+
+- UDP：用户数据报协议(User Datagram Protocol)
+- TCP：传输控制协议(Transmission Control Protocol)
+
+UDP协议的特点是无连接、不可靠通信，所以通信效率高，一般用于语音通话、视频直播等。而TCP协议的特点是面向连接、可靠通信，所以通信效率没有UDP高。
+
+### 1.4 InetAddress
+
+InetAddress类用于表示IP地址，有两个子类：Inet4Address、Inet6Address。
+
+InetAddress类没有提供公共的构造器，而是提供了如下几个静态方法来**获取InetAddress实例**：
+
+- `static InetAddress getLocalHost()`：获取本机IP，返回一个InetAddress对象
+- `static InetAddress getByName(String host)`：参数传递的字符串可以是IP地址，也可以是域名，返回一个InetAddress对象
+- `static InetAddress getByAddress(byte[] addr)`：根据参数传递的IP地址，返回一个InetAddress对象
+
+InetAddress类提供了以下几个**常用API**：
+
+- `String getHostAddress()`：返回IP地址字符串
+- `String getHostName()`：获取此IP地址对象所对应的主机名
+- `boolean isReachable(int timeout)`：在指定毫秒内，判断当前主机与该ip所对应的主机是否能连通
+
+### 1.5 套接字
+
+利用**套接字**(Socket)开发网络应用程序早已被广泛的采用，以至于成为事实上的标准，网络通信其实就是Socket间的通信。套接字指的就是具有唯一标识的IP地址和端口号的组合。
+
+通信的两端都要有Socket，这是两台机器间通信的端点。Socket允许程序把网络连接当成一个流，数据在两个Socket间通过IO传输。一般主动发起通信的应用程序称为客户端，等待通信请求的称为服务端。
+
+Java中套接字分为两类：一类是`数据报套接字`，被UDP协议使用，对应的Java类是`DatagramSocket`；另一类是`流套接字`，被TCP协议使用，对应的Java类有两个：
+
+- Socket，该类就是两台机器间通信的端点
+- ServerSocket，该类代表服务端的监听套接字，用于监听连接请求、建立连接
+
+
+## 2. UDP网络编程
+
+### 2.1 DatagramSocket
+
+DatagramSocket类和DatagramPacket类实现了基于UDP协议的网络程序。UDP数据报通过数据报套接字DatagramSocket发送和接收，常用API如下：
+
+- `DatagramSocket()`：空参构造器，系统会随机分配一个端口号，一般用于创建发送端的套接字对象。
+- `DatagramSocket(int port)`：有参构造器，绑定到指定端口号，一般用于创建接收端（服务端）的套接字对象。
+- `void send(DatagramPacket p)`：从该套接字发送UDP数据报
+- `void receive(DatagramPacket p)`：从该套接字接收UDP数据报，将其保存到参数p中。此方法在接收到数据报前会一直阻塞。
+- `void close()`：关闭套接字
+
+### 2.2 DatagramPacket
+
+DatagramPacket类用于封装UDP数据报。UDP协议中每个数据报都包含完整的地址信息（发送端和接收端的IP、port），因此无须建立发送方和接收方的连接。DatagramPacket类的常用API如下：
+
+- `DatagramPacket(byte buf[], int length, InetAddress address, int port)`：创建要发出去的数据报对象。buf是要发送的数据，length是数据长度，address是接收端的IP对象，port是接收端的端口号。
+- `DatagramPacket(byte buf[], int length)`：创建对象，一般用来接收数据报
+- `int getLength()`：返回将要发送或接收到的数据报的实际长度
+- `byte[] getData()`：返回DatagramPacket中用来发送和接收数据报的内部缓冲区
+- `InetAddress getAddress()`：返回某台远程主机的IP地址，此数据报将要发送给该主机，或者是从该主机接收到的
+- `int getPort()`：返回某台远程主机的端口号，此数据报将要发送给该主机，或者是从该主机接收到的
+
+### 2.3 UDP网络编程的步骤
+
+**发送端**：
+
+1. 创建DatagramSocket，一般默认使用系统随机分配端口号
+2. 创建DatagramPacket，将要发送的数据用字节数组表示，并指定要发送的数据长度，以及接收方的IP地址和端口号
+3. 调用该DatagramSocket对象的`send()`方法发送数据报
+4. 关闭DatagramSocket对象
+
+**接收端**：
+
+1. 创建DatagramSocket，指定监听的端口号
+2. 创建DatagramPacket，指定接收数据用的字节数组（缓冲区），并指定最大可以接收的数据长度
+3. 调用该DatagramSocket对象的`receive()`方法，阻塞等待接收数据报
+
+> 说明：接收端（服务端）一般会一直运行，所以不需要关闭套接字。
+
+### 2.4 UDP网络编程案例
+
+#### 1、发送端
+
+```java
+public class Client {
+    public static void main(String[] args) throws Exception {
+        // 1. 创建发送端套接字对象DatagramSocket
+        DatagramSocket socket = new DatagramSocket();
+
+        // 准备要发送的数据
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            System.out.println("请输入要发送的数据：");
+            String msg = scanner.nextLine();
+            if ("exit".equals(msg)) {
+                // 4. 如果用户输入exit，则退出客户端，关闭套接字
+                socket.close();
+                break;
+            }
+
+            // 2. 创建要发送的数据报DatagramPacket
+            byte[] bytes = msg.getBytes();
+            DatagramPacket packet = new DatagramPacket(bytes, bytes.length,
+                    InetAddress.getLocalHost(), 8888);
+
+            // 3. 发送UDP数据报
+            socket.send(packet);
+        }
+    }
+}
 ```
 
-- 检查网络是否连通，在控制台输入：
+#### 2、接收端
 
-```shell
-ping 空格 IP地址
-ping 220.181.57.216
+```java
+public class Server {
+    public static void main(String[] args) throws Exception {
+        // 1. 创建DatagramSocket，指定监听的端口号
+        DatagramSocket socket = new DatagramSocket(8888);
+
+        // 2. 创建DatagramPacket，指定接收数据用的缓冲区
+        byte[] buffer = new byte[1024 * 64];
+        DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+
+        while (true) {
+            // 3. 接收数据
+            socket.receive(packet);
+
+            // 数据处理
+            String ip = packet.getAddress().getHostAddress(); // 发送端ip
+            int port = packet.getPort(); // 发送端port
+            int len = packet.getLength(); // 接收到的实际数据长度
+            String data = new String(buffer, 0, len); // 接收到的实际数据
+            System.out.println("收到数据: " + data + ", 来自IP="
+                    + ip + ", Port=" + port);
+        }
+    }
+}
 ```
-
-**特殊的IP地址：**
-
-- 本地回环地址(hostAddress)：`127.0.0.1`  
-- 主机名(hostName)：`localhost`
-
-#### 1.2.2 端口号
-
-如果说**IP地址**可以唯一标识网络中的设备，那么**端口号**就可以唯一标识设备中的进程（应用程序）。
-
-不同的进程，设置不同的端口号。**端口号：用两个字节表示的整数，它的取值范围是0~65535**。
-- 公认端口：0~1023。被预先定义的服务通信占用，如：HTTP（80），FTP（21），Telnet（23）
-- 注册端口：1024~49151。分配给用户进程或应用程序。如：Tomcat（8080），MySQL（3306），Oracle（1521）。
-- 动态/ 私有端口：49152~65535。
-
-如果端口号被另外一个服务或应用所占用，会导致当前程序启动失败。
-
-#### 1.2.3 TCP协议与UDP协议
-
-通信的协议还是比较复杂的，`java.net` 包中包含的类和接口，它们提供低层次的通信细节。我们可以直接使用这些类和接口，来专注于网络程序开发，而不用考虑通信的细节。
-
-`java.net` 包中提供了两种常见的网络协议的支持：
-
-- **UDP**：用户数据报协议(User Datagram Protocol)。
-- **TCP**：传输控制协议 (Transmission Control Protocol)。
-
-**TCP协议：**
-
-- TCP协议进行通信的两个应用进程：客户端、服务端。
-- 使用TCP协议前，须先`建立TCP连接`，形成基于字节流的传输数据通道
-- 传输前，采用“三次握手”方式，点对点通信，是`可靠的`
-  - TCP协议使用`重发机制`，当一个通信实体发送一个消息给另一个通信实体后，需要收到另一个通信实体确认信息，如果没有收到另一个通信实体确认信息，则会再次重复刚才发送的消息。
-- 在连接中可进行`大数据量的传输`
-- 传输完毕，需`释放已建立的连接，效率低`
-
-**UDP协议：**
-
-- UDP协议进行通信的两个应用进程：发送端、接收端。
-- 将数据、源、目的封装成数据包（传输的基本单位），`不需要建立连接`
-- 发送不管对方是否准备好，接收方收到也不确认，不能保证数据的完整性，故是`不可靠的`
-- 每个数据报的大小限制在`64K`内
-- 发送数据结束时`无需释放资源，开销小，通信效率高`
-- 适用场景：音频、视频和普通数据的传输。例如视频会议
-
-
-## 2. 网络编程API
-
-### 2.1 InetAddress类
-
-InetAddress类主要表示IP地址，有两个子类：Inet4Address、Inet6Address。
-
-InetAddress 类没有提供公共的构造器，而是提供了如下几个静态方法来获取InetAddress实例
-
-* `public static InetAddress getLocalHost()`
-* `public static InetAddress getByName(String host)`：参数传递的字符串可以是IP地址，也可以是域名
-* `public static InetAddress getByAddress(byte[] addr)`
-
-InetAddress 提供了如下几个常用的方法
-
-* `public String getHostAddress()`：返回 IP 地址字符串（以文本表现形式）
-* `public String getHostName()`：获取此 IP 地址的主机名
-* `public boolean isReachable(int timeout)`：测试是否可以达到该地址
-
-### 2.2 Socket类
-
--  网络上具有唯一标识的IP地址和端口号组合在一起构成唯一能识别的标识符套接字（Socket）。
--  利用套接字(Socket)开发网络应用程序早已被广泛的采用，以至于成为事实上的标准。网络通信其实就是Socket间的通信。
-- 通信的两端都要有Socket，是两台机器间通信的端点。
-- Socket允许程序把网络连接当成一个流，数据在两个Socket间通过IO传输。
-- 一般主动发起通信的应用程序属客户端，等待通信请求的为服务端。
-- Socket分类：
-  - 流套接字（stream socket）：使用TCP提供可依赖的字节流服务
-    - ServerSocket：此类实现TCP服务器套接字。服务器套接字等待请求通过网络传入。
-    - Socket：此类实现客户端套接字（也可以就叫“套接字”）。套接字是两台机器间通信的端点。
-  - 数据报套接字（datagram socket）：使用UDP提供“尽力而为”的数据报服务
-    - DatagramSocket：此类表示用来发送和接收UDP数据报包的套接字。 
-
-### 2.3 Socket相关类API
-
-#### 2.3.1 ServerSocket类
-
-**ServerSocket类的构造方法：**
-
-* ServerSocket(int port) ：创建绑定到特定端口的服务器套接字。
-
-**ServerSocket类的常用方法：**
-
-* Socket accept()：侦听并接受到此套接字的连接。 
-
-#### 2.3.2 Socket类
-
-**Socket类的常用构造方法**：
-
-* public Socket(InetAddress address,int port)：创建一个流套接字并将其连接到指定 IP 地址的指定端口号。
-* public Socket(String host,int port)：创建一个流套接字并将其连接到指定主机上的指定端口号。
-
-**Socket类的常用方法**：
-
-* public InputStream getInputStream()：返回此套接字的输入流，可以用于接收消息
-* public OutputStream getOutputStream()：返回此套接字的输出流，可以用于发送消息
-* public InetAddress getInetAddress()：此套接字连接到的远程 IP 地址；如果套接字是未连接的，则返回 null。
-* public InetAddress getLocalAddress()：获取套接字绑定的本地地址。
-* public int getPort()：此套接字连接到的远程端口号；如果尚未连接套接字，则返回 0。
-* public int getLocalPort()：返回此套接字绑定到的本地端口。如果尚未绑定套接字，则返回 -1。
-* public void close()：关闭此套接字。套接字被关闭后，便不可在以后的网络连接中使用（即无法重新连接或重新绑定）。需要创建新的套接字对象。 关闭此套接字也将会关闭该套接字的 InputStream 和 OutputStream。 
-* public void shutdownInput()：如果在套接字上调用 shutdownInput() 后从套接字输入流读取内容，则流将返回 EOF（文件结束符）。 即不能在从此套接字的输入流中接收任何数据。
-* public void shutdownOutput()：禁用此套接字的输出流。对于 TCP 套接字，任何以前写入的数据都将被发送，并且后跟 TCP 的正常连接终止序列。 如果在套接字上调用 shutdownOutput() 后写入套接字输出流，则该流将抛出 IOException。 即不能通过此套接字的输出流发送任何数据。
-
-**注意：**先后调用Socket的shutdownInput()和shutdownOutput()方法，仅仅关闭了输入流和输出流，并不等于调用Socket的close()方法。在通信结束后，仍然要调用Scoket的close()方法，因为只有该方法才会释放Socket占用的资源，比如占用的本地端口号等。
-
-#### 2.3.3 DatagramSocket类
-
-**DatagramSocket 类的常用方法：**
-
-* public DatagramSocket(int port)创建数据报套接字并将其绑定到本地主机上的指定端口。套接字将被绑定到通配符地址，IP 地址由内核来选择。
-* public DatagramSocket(int port,InetAddress laddr)创建数据报套接字，将其绑定到指定的本地地址。本地端口必须在 0 到 65535 之间（包括两者）。如果 IP 地址为 0.0.0.0，套接字将被绑定到通配符地址，IP 地址由内核选择。 
-* public void close()关闭此数据报套接字。 
-* public void send(DatagramPacket p)从此套接字发送数据报包。DatagramPacket 包含的信息指示：将要发送的数据、其长度、远程主机的 IP 地址和远程主机的端口号。 
-* public void receive(DatagramPacket p)从此套接字接收数据报包。当此方法返回时，DatagramPacket 的缓冲区填充了接收的数据。数据报包也包含发送方的 IP 地址和发送方机器上的端口号。 此方法在接收到数据报前一直阻塞。数据报包对象的 length 字段包含所接收信息的长度。如果信息比包的长度长，该信息将被截短。 
-* public InetAddress getLocalAddress()获取套接字绑定的本地地址。
-* public int getLocalPort()返回此套接字绑定的本地主机上的端口号。 
-* public InetAddress getInetAddress()返回此套接字连接的地址。如果套接字未连接，则返回 null。
-* public int getPort()返回此套接字的端口。如果套接字未连接，则返回 -1。
-
-#### 2.3.4 DatagramPacket类
-
-**DatagramPacket类的常用方法：**
-
-* public DatagramPacket(byte[] buf,int length)构造 DatagramPacket，用来接收长度为 length 的数据包。 length 参数必须小于等于 buf.length。
-* public DatagramPacket(byte[] buf,int length,InetAddress address,int port)构造数据报包，用来将长度为 length 的包发送到指定主机上的指定端口号。length 参数必须小于等于 buf.length。
-* public InetAddress getAddress()返回某台机器的 IP 地址，此数据报将要发往该机器或者是从该机器接收到的。
-* public int getPort()返回某台远程主机的端口号，此数据报将要发往该主机或者是从该主机接收到的。
-* `public byte[] getData()`返回数据缓冲区。接收到的或将要发送的数据从缓冲区中的偏移量 offset 处开始，持续 length 长度。
-* `public int getLength()`返回将要发送或接收到的数据的长度。
 
 ## 3. TCP网络编程
 
-### 3.1 通信模型
+### 3.1 Socket
 
-Java语言的基于套接字TCP编程分为服务端编程和客户端编程，其通信模型如图所示：
+Socket类代表TCP套接字，有以下常用API：
 
-![](/zzimages/image-20220514172833216.png)
+- `Socket(String host, int port)`：根据指定的服务器ip、端口号请求与服务端建立连接，连接通过，就获得了客户端socket
+- `OutputStream getOutputStream()`：返回字节输出流对象，可以用于发送消息
+- `InputStream getInputStream()`：返回字节输入流对象，可以用于接收消息
+- `SocketAddress getRemoteSocketAddress()`：返回该Socket对象所连接的远程端点的地址
+- `void close()`：关闭套接字
 
-### 3.2 开发步骤
+### 3.2 ServerSocket
 
-**客户端程序包含以下四个基本的步骤 ：**
+ServerSocket类代表服务端的用于监听的TCP套接字，有以下常用API：
 
-* 创建 Socket ：根据指定服务端的 IP 地址或端口号构造 Socket 类对象。若服务器端响应，则建立客户端到服务器的通信线路。若连接失败，会出现异常。
-* 打开连接到 Socket  的输入/ 出流： 使用 getInputStream()方法获得输入流，使用getOutputStream()方法获得输出流，进行数据传输
-* 按照一定的协议对 Socket 进行读/ 写操作：通过输入流读取服务器放入线路的信息（但不能读取自己放入线路的信息），通过输出流将信息写入线路。
-* 关闭 Socket ：断开客户端到服务器的连接，释放线路
+- `ServerSocket(int port)`：创建绑定到指定端口的服务端监听套接字
+- `Socket accept()`：阻塞等待客户端的连接请求，一旦与某个客户端成功连接，则返回一个Socket对象（该Socket对象是服务端的，与成功连接的客户端Socket相连）
 
-**服务器端程序包含以下四个基本的步骤：**
+### 3.3 TCP网络编程的步骤
 
-* 调用 ServerSocket(int port) ：创建一个服务器端套接字，并绑定到指定端口上。用于监听客户端的请求。
-* 调用 accept() ：监听连接请求，如果客户端请求连接，则接受连接，返回通信套接字对象。
-* 调用该Socket类对象的getOutputStream()和getInputStream ()：获取输出流和输入流，开始网络数据的发送和接收。
-* 关闭Socket 对象：客户端访问结束，关闭通信套接字。
+![](images/image-20220514172833216.png)
 
-### 3.3 例题
+**客户端**：
 
-例题1：客户端发送内容给服务端，服务端将内容打印到控制台上。
+1. 根据指定服务端的IP地址和端口号创建Socket对象。若服务端响应，则建立客户端到服务端的连接；若连接失败，会出现异常。
+2. 通过Socket对象获取字节输入/输出流进行通信
+3. 关闭Socket，释放资源
+
+**服务端**：
+
+1. 创建一个服务端的监听套接字ServerSocket，绑定到指定端口上，用于监听客户端的请求。
+2. 调用ServerSocket的`accept()`方法，等待客户端的连接请求，连接成功后得到Socket管道对象。
+3. 调用该Socket对象的方法获取字节输入/输出流进行通信
+4. 关闭Socket，释放资源
+
+> 说明：服务端一般会一直运行，所以监听套接字ServerSocket无需关闭。
+
+### 3.4 TCP网络编程案例
+
+#### 1、客户端
 
 ```java
-@Test
-public void client() {
-    // 1. 创建一个Socket
-    InetAddress inetAddress = null; // 服务端的ip地址
-    int port = 8989; // 客户端的端口号
-    try {
-        inetAddress = InetAddress.getByName("192.168.0.10");
-    } catch (UnknownHostException e) {
-        e.printStackTrace();
-    }
+public class Client {
+    public static void main(String[] args) throws Exception {
+        // 1. 创建Socket对象，并同时请求与服务端程序的连接
+        Socket socket = new Socket("127.0.0.1", 8888);
 
-    try (
-            Socket socket = new Socket(inetAddress, port);
-            ) {
+        // 2. 从Socket通信管道中得到一个字节输出流，用来发数据给服务端
         OutputStream os = socket.getOutputStream();
-        // 2. 发送数据
-        os.write("你好，我是客户端".getBytes());
-    } catch (IOException e) {
-        e.printStackTrace();
-    }
 
-    // 3. 关闭Socket、关闭流，由try-with-resource自动调用close()
-}
+        // 把低级的字节输出流包装成数据输出流，便于使用
+        DataOutputStream dos = new DataOutputStream(os);
 
-@Test
-public void server() {
-    // 1. 创建一个ServerSocket
-    int port = 8989;
-    try (
-            ServerSocket serverSocket = new ServerSocket(port);
-            // 为防止乱码，将读到的字节全部存放到一个字节数组流中
-            ByteArrayOutputStream baos = new ByteArrayOutputStream(); // 内部维护了一个byte[]数组
-            ) {
-        // 2. 调用accept()，接收客户端的Socket
-        Socket socket = serverSocket.accept(); // 阻塞式的方法
-        System.out.println("服务器端收到了来自" +
-                socket.getInetAddress().getHostAddress() + "的连接");
+        // 准备要发送的数据
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            System.out.println("请输入要发送的数据：");
+            String msg = scanner.nextLine();
+            if ("exit".equals(msg)) {
+                // 4. 如果用户输入exit，则退出客户端，关闭套接字
+                dos.close();
+                socket.close();
+                break;
+            }
 
-        // 3. 接收数据
-        InputStream is = socket.getInputStream();
-        byte[] buffer = new byte[5];
-        int len = 0;
-        while ((len = is.read(buffer)) != -1) {
-            baos.write(buffer, 0, len);
+            // 3. 发送数据
+            dos.writeUTF(msg);
+            dos.flush();
         }
-        System.out.println(baos);
-    } catch (IOException e) {
-        e.printStackTrace();
     }
-    // 4. 关闭Socket、ServerSocket、流
 }
 ```
 
-例题2：客户端发送文件给服务端，服务端将文件存到本地，并返回"发送成功"给客户端。
+#### 2、服务端
+
+主线程只用于监听和建立连接，每与一个客户端建立连接（新创建一个套接字），就新创建一个线程用于业务处理。
 
 ```java
-@Test
-public void client() throws IOException {
-    // 1. 创建一个Socket
-    InetAddress inetAddress = InetAddress.getByName("192.168.0.10"); // 服务端的ip地址
-    int port = 9989; // 客户端的端口号
-    Socket socket = new Socket(inetAddress, port);
+public class Server {
+    public static void main(String[] args) throws Exception {
+        // 1. 创建监听套接字ServerSocket
+        ServerSocket serverSocket = new ServerSocket(8888);
 
-    // 2. 发送数据
-    FileInputStream fis = new FileInputStream("IOtest/picture.png");
-    OutputStream os = socket.getOutputStream();
+        while (true) {
+            // 2. 调用accept()方法等待客户端的连接请求
+            Socket socket = serverSocket.accept();
+            System.out.println("有人上线了：" + socket.getRemoteSocketAddress());
 
-    byte[] buffer = new byte[1024];
-    int len = 0;
-    while ((len = fis.read(buffer)) != -1) {
-        os.write(buffer, 0, len);
+            // 把这个socket通信管道，交给一个独立线程负责处理
+            Runnable serverThread = new ServerThread(socket);
+            new Thread(serverThread).start();
+        }
     }
-    // 客户端表明自己不再发送数据
-    socket.shutdownOutput();
-
-    // 3. 接收数据
-    InputStream is = socket.getInputStream();
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-    while ((len = is.read(buffer)) != -1) {
-        baos.write(buffer, 0, len);
-    }
-    System.out.println(baos);
-
-    // 4. 关闭Socket、关闭流
-    baos.close();
-    is.close();
-    os.close();
-    fis.close();
-    socket.close();
-}
-
-@Test
-public void server() throws IOException {
-    // 1. 创建一个ServerSocket
-    int port = 9989;
-    ServerSocket serverSocket = new ServerSocket(port);
-
-    // 2. 调用accept()，接收客户端的Socket
-    Socket socket = serverSocket.accept(); // 阻塞式的方法
-    System.out.println("服务器端收到了来自" +
-            socket.getInetAddress().getHostAddress() + "的连接");
-
-    // 3. 接收数据
-    FileOutputStream fos = new FileOutputStream("IOtest/pic_server.png");
-    InputStream is = socket.getInputStream();
-    byte[] buffer = new byte[5];
-    int len = 0;
-    while ((len = is.read(buffer)) != -1) {
-        fos.write(buffer, 0, len);
-    }
-
-    // 4. 发送数据
-    OutputStream os = socket.getOutputStream();
-    os.write("发送成功".getBytes());
-
-    // 5. 关闭Socket、ServerSocket、流
-    os.close();
-    is.close();
-    fos.close();
-    socket.close();
-    serverSocket.close();
 }
 ```
-
-
-
-
-
-
-## 4. UDP网络编程
-
-UDP(User Datagram Protocol，用户数据报协议)：是一个无连接的传输层协议、提供面向事务的简单不可靠的信息传送服务，类似于短信。
-
-### 4.1 通信模型
-
-UDP协议是一种**面向非连接**的协议，面向非连接指的是在正式通信前不必与对方先建立连接，不管对方状态就直接发送，至于对方是否可以接收到这些数据内容，UDP协议无法控制，因此说，UDP协议是一种**不可靠的**协议。无连接的好处就是快，省内存空间和流量，因为维护连接需要创建大量的数据结构。UDP会尽最大努力交付数据，但不保证可靠交付，没有TCP的确认机制、重传机制，如果因为网络原因没有传送到对端，UDP也不会给应用层返回错误信息。
-
-UDP协议是面向数据报文的信息传送服务。UDP在发送端没有缓冲区，对于应用层交付下来的报文在添加了首部之后就直接交付于ip层，不会进行合并，也不会进行拆分，而是一次交付一个完整的报文。比如我们要发送100个字节的报文，我们调用一次send()方法就会发送100字节，接收方也需要用receive()方法一次性接收100字节，不能使用循环每次获取10个字节，获取十次这样的做法。
-
-UDP协议没有拥塞控制，所以当网络出现的拥塞不会导致主机发送数据的速率降低。虽然UDP的接收端有缓冲区，但是这个缓冲区只负责接收，并不会保证UDP报文的到达顺序是否和发送的顺序一致。因为网络传输的时候，由于网络拥塞的存在是很大的可能导致先发的报文比后发的报文晚到达。如果此时缓冲区满了，后面到达的报文将直接被丢弃。这个对实时应用来说很重要，比如：视频通话、直播等应用。
-
-因此UDP适用于一次只传送少量数据、对可靠性要求不高的应用环境，数据报大小限制在64K以下。
-
-类 DatagramSocket 和 DatagramPacket 实现了基于 UDP 协议网络程序。
-
-UDP数据报通过数据报套接字 DatagramSocket 发送和接收，系统不保证  UDP数据报一定能够安全送到目的地，也不能确定什么时候可以抵达。
-
-DatagramPacket 对象封装了UDP数据报，在数据报中包含了发送端的IP地址和端口号以及接收端的IP地址和端口号。
-
-UDP协议中每个数据报都给出了完整的地址信息，因此无须建立发送方和接收方的连接。如同发快递包裹一样。
-
-### 4.2 开发步骤
-
-**发送端程序包含以下四个基本的步骤：**
-
-* 创建DatagramSocket ：默认使用系统随机分配端口号。
-* 创建DatagramPacket：将要发送的数据用字节数组表示，并指定要发送的数据长度，接收方的IP地址和端口号。
-* 调用该DatagramSocket 类对象的 send方法 ：发送数据报DatagramPacket对象。
-* 关闭DatagramSocket 对象：发送端程序结束，关闭通信套接字。
-
-**接收端程序包含以下四个基本的步骤 ：**
-
-* 创建DatagramSocket ：指定监听的端口号。
-* 创建DatagramPacket：指定接收数据用的字节数组，起到临时数据缓冲区的效果，并指定最大可以接收的数据长度。
-* 调用该DatagramSocket 类对象的receive方法 ：接收数据报DatagramPacket对象。。
-* 关闭DatagramSocket ：接收端程序结束，关闭通信套接字。
-
-### 4.3 演示发送和接收消息
-
-基于UDP协议的网络编程仍然需要在通信实例的两端各建立一个Socket，但这两个Socket之间并没有虚拟链路，这两个Socket只是发送、接收数据报的对象，Java提供了DatagramSocket对象作为基于UDP协议的Socket，使用DatagramPacket代表DatagramSocket发送、接收的数据报。
-
-举例：UDP通信示例
 
 ```java
-@Test
-public void sender() throws IOException{
-    // 1. 创建DatagramSocket实例
-    DatagramSocket ds = new DatagramSocket();
-
-    // 2. 将数据、目的ip、目的端口号都封装在DatagramPacket数据报中
-    InetAddress inetAddress = InetAddress.getByName("127.0.0.1");
-    int port = 9090;
-    byte[] bytes = "我是发送端".getBytes("utf-8");
-    DatagramPacket packet = new DatagramPacket(bytes, 0, bytes.length, inetAddress, port);
-
-    // 3. 发送数据
-    ds.send(packet);
-    // 4. 关闭socket
-    ds.close();
+public class ServerThread implements Runnable {
+    private Socket socket; // 用于保存主线程中创建出来的套接字
+    public ServerThread(Socket socket) {
+        this.socket = socket;
+    }
+    @Override
+    public void run() {
+        try {
+            // 3. 从Socket通信管道中得到一个字节输入流，用于接收数据
+            InputStream is = socket.getInputStream();
+            // 把低级的字节输入流包装成数据输入流，便于使用
+            DataInputStream dis = new DataInputStream(is);
+            while (true) {
+                try {
+                    // 4. 读取数据
+                    String msg = dis.readUTF();
+                    System.out.println(msg);
+                } catch (Exception e) {
+                    // 如果客户端关闭，则读取会产生异常，我们就可以关闭套接字
+                    System.out.println("有人下线了：" + socket.getRemoteSocketAddress());
+                    dis.close();
+                    socket.close();
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
-@Test
-public void receiver() throws IOException{
-    // 1. 创建DatagramSocket实例
-    int port = 9090;
-    DatagramSocket ds = new DatagramSocket(port);
+```
 
-    // 2. 创建数据报的对象，用于接收发送端发送过来的数据
-    byte[] buffer = new byte[1024 * 64];
-    DatagramPacket packet = new DatagramPacket(buffer, 0, buffer.length);
+## 4. 案例实战-多人聊天室
 
-    // 3. 接收数据
-    ds.receive(packet);
+多人聊天室，就是一个客户端发消息，所有客户端都能收到。核心思想就是：在服务端创建一个**存储Socket的集合**，每当一个客户端连接服务端，就可以把对应的Socket存储起来；当一个客户端给服务端发消息时，再**遍历集合通过每个Socket将消息发送给每个客户端**。
 
-    // 4. 获取数据，并打印到控制台上
-    String str = new String(packet.getData(), 0, packet.getLength());
-    System.out.println(str);
+### 4.1 客户端-主线程
 
-    // 5. 关闭socket
-    ds.close();
+```java
+public class ChatClient {
+    public static void main(String[] args) throws Exception {
+        // 1. 创建Socket对象，并同时请求与服务端程序的连接
+        Socket socket = new Socket("127.0.0.1", 8888);
+
+        // 2. 创建一个独立的线程，负责读取服务端发来的数据
+        Runnable runnable = new ClientReaderThread(socket);
+        new Thread(runnable).start();
+
+        // 3. 从Socket通信管道中得到一个字节输出流，用来发数据给服务端
+        OutputStream os = socket.getOutputStream();
+        DataOutputStream dos = new DataOutputStream(os);
+
+        // 准备要发送的数据
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            String msg = scanner.nextLine();
+            if ("exit".equals(msg)) {
+                // 5. 如果用户输入exit，则退出客户端，关闭套接字
+                dos.close();
+                socket.close();
+                break;
+            }
+
+            // 4. 发送数据
+            dos.writeUTF(msg);
+            dos.flush();
+        }
+    }
+}
+```
+
+### 4.2 客户端-接收消息线程
+
+```java
+public class ClientReaderThread implements Runnable{
+    private Socket socket; // 保存Socket套接字
+    public ClientReaderThread(Socket socket) {
+        this.socket = socket;
+    }
+    @Override
+    public void run() {
+        try {
+            // 1. 通过Socket获取字节输入流
+            InputStream is = socket.getInputStream();
+            DataInputStream dis = new DataInputStream(is);
+            while (true) {
+                try {
+                    // 2. 接收消息
+                    String msg = dis.readUTF();
+                    System.out.println(msg);
+                } catch (Exception e) {
+                    System.out.println("下线!");
+                    dis.close();
+                    socket.close();
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+### 4.3 服务端-主线程
+
+```java
+public class ChatServer {
+    // 保存所有在线的Socket
+    public static List<Socket> onlineSockets = new ArrayList<>();
+
+    public static void main(String[] args) throws Exception {
+        // 1. 创建监听套接字ServerSocket
+        ServerSocket serverSocket = new ServerSocket(8888);
+
+        while (true) {
+            // 2. 调用accept()方法等待客户端的连接请求
+            Socket socket = serverSocket.accept();
+
+            // 3. 保存Socket
+            onlineSockets.add(socket);
+            System.out.println("有人上线了：" + socket.getRemoteSocketAddress());
+
+            // 4. 把这个socket通信管道，交给一个独立线程负责处理
+            Runnable runnable = new ChatServerThread(socket);
+            new Thread(runnable).start();
+        }
+    }
+}
+```
+
+### 4.4 服务端-消息处理线程
+
+```java
+public class ChatServerThread implements Runnable {
+    private Socket socket; // 保存Socket套接字
+    public ChatServerThread(Socket socket) {
+        this.socket = socket;
+    }
+    @Override
+    public void run() {
+        try {
+            // 1. 通过Socket获取字节输入流
+            InputStream is = socket.getInputStream();
+            DataInputStream dis = new DataInputStream(is);
+            while (true) {
+                try {
+                    String msg = dis.readUTF();
+                    System.out.println(msg);
+                    // 把这个消息发送给全部客户端
+                    sendMsgToAll(msg);
+                } catch (Exception e) {
+                    System.out.println("有人下线了：" + socket.getRemoteSocketAddress());
+                    // 从在线Socket集合中移除该Socket
+                    ChatServer.onlineSockets.remove(socket);
+                    dis.close();
+                    socket.close();
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void sendMsgToAll(String msg) throws IOException {
+        for (Socket onlineSocket : ChatServer.onlineSockets) {
+            OutputStream os = onlineSocket.getOutputStream();
+            DataOutputStream dos = new DataOutputStream(os);
+            dos.writeUTF(msg);
+            dos.flush();
+        }
+    }
 }
 ```
 
 
+## 5. 案例实战-Web服务器
 
-## 5. URL编程
+### 5.1 服务端-主线程
 
-### 5.1 URL类
+对于BS架构，我们无需编写客户端程序，因为使用的是浏览器访问。但我们需要注意，响应的数据需要满足HTTP协议。
 
-URL(Uniform Resource Locator)：统一资源定位符，它表示 Internet 上某一资源的地址。
+服务端的主线程，仍然是只负责监听客户端请求并进行连接，而具体的业务处理则交给新创建的线程。为了提高效率，我们使用**线程池**。
 
-URL的基本结构由5部分组成：
+```java
+public class WebServer {
+    public static void main(String[] args) throws Exception {
+        // 1. 创建监听套接字，监听8080端口
+        ServerSocket serverSocket = new ServerSocket(8080);
 
-```http
+        // 2. 创建线程池，负责处理通信管道的任务
+        ThreadPoolExecutor pool = new ThreadPoolExecutor(16 * 2, 16 * 2, 0,
+                TimeUnit.SECONDS,
+                new ArrayBlockingQueue<>(8),
+                Executors.defaultThreadFactory(),
+                new ThreadPoolExecutor.AbortPolicy());
+
+        System.out.println("=====服务器启动成功=====");
+
+        while (true) {
+            // 3. 等待客户端的连接请求
+            Socket socket = serverSocket.accept();
+
+            // 4. 将这个socket通信管道，交给一个独立的线程负责处理
+            pool.execute(new WebTask(socket));
+        }
+    }
+}
+```
+
+### 5.2 服务端-线程任务类
+
+```java
+public class WebTask implements Runnable {
+    private Socket socket; // 保存Socket套接字
+    public WebTask(Socket socket) {
+        this.socket = socket;
+    }
+    @Override
+    public void run() {
+        try {
+            // 1. 通过Socket获取字节输出流
+            OutputStream os = socket.getOutputStream();
+            // 2. 包装成打印流，便于使用
+            PrintStream ps = new PrintStream(os);
+            // 3. 响应的内容要符合HTTP协议
+            ps.println("HTTP/1.1 200 OK");
+            ps.println("Content-Type:text/html;charset=UTF-8");
+            ps.println();
+            ps.println("<h1>wsy666</h1>");
+            // 4. 关闭套接字
+            ps.close();
+            socket.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+**测试**：启动程序后，浏览器访问`http://localhost:8080`即可看到内容
+
+
+## 6. URL网络编程
+
+### 6.1 URL类
+
+URL(Uniform Resource Locator)：统一资源定位符，它表示Internet上某一资源的地址。URL的基本结构由5部分组成：
+
+```
 <传输协议>://<主机名>:<端口号>/<文件名>#片段名?参数列表
 ```
 
+Java中使用`java.net.URL`类来表示它。它的**构造器**有：
 
-为了表示URL，`java.net` 中实现了类 URL。我们可以通过下面的构造器来初始化一个 URL 对象：
+- `URL(String spec)`：参数是一个URL地址字符串
+- `URL(URL context, String spec)`：context是基URL，spec是一个相对URL
 
-  - `public URL (String spec)`：通过一个表示URL地址的字符串可以构造一个URL对象。例如：
+一个URL对象生成后，它的属性是不能修改的，但可以通过**以下API来获取这些属性**：
 
-    ```http
-    URL url = new URL("http://www. atguigu.com/"); 
-    ```
+- `String getProtocol()`：传输协议
+- `String getHost()`：主机名
+- `int getPort()`：端口号
+- `String getPath()`：文件路径
+- `String getFile()`：文件路径加上请求参数
+- `String getQuery()`：请求参数
 
-  - `public URL(URL context, String spec)`：通过基 URL 和相对 URL 构造一个 URL 对象。例如：
-
-    ```http
-    URL downloadUrl = new URL(url, “download.html")
-    ```
-
-  - `public URL(String protocol, String host, String file);` 例如：
-
-    ```http
-    URL url = new URL("http", "www.atguigu.com", “download. html");
-    ```
-
-  - `public URL(String protocol, String host, int port, String file);` 例如: 
-
-    ```java
-    URL gamelan = new URL("http", "www.atguigu.com", 80, "download.html");
-    ```
-
-URL类的构造器都声明抛出非运行时异常，必须要对这一异常进行处理，通常是用 try-catch 语句进行捕获。
-
-### 5.2 URL类常用方法
-
-一个URL对象生成后，其属性是不能被改变的，但可以通过它给定的方法来获取这些属性：
-
-- public String getProtocol( )   获取该URL的协议名
-
-- public String getHost( )      获取该URL的主机名
-
-- public String getPort( )      获取该URL的端口号
-
-- public String getPath( )      获取该URL的文件路径
-
-- public String getFile( )       获取该URL的文件名
-
-- public String getQuery(  )    获取该URL的查询名
+举例：
 
 ```java
-String str = "http://localhost:8080/demo/测试.html?name=Tom";
+String str = "http://localhost:8080/demo/abc.html?name=Tom&id=2";
 
 try {
     URL url = new URL(str);
-    System.out.println(url.getProtocol());
-    System.out.println(url.getHost());
-    System.out.println(url.getPort());
-    System.out.println(url.getPath());
-    System.out.println(url.getFile());
-    System.out.println(url.getQuery());
+    System.out.println(url.getProtocol()); // http
+    System.out.println(url.getHost()); // localhost
+    System.out.println(url.getPort()); // 8080
+    System.out.println(url.getPath()); // /demo/abc.html
+    System.out.println(url.getFile()); // /demo/abc.html?name=Tom&id=2
+    System.out.println(url.getQuery()); // name=Tom&id=2
 } catch (MalformedURLException e) {
     e.printStackTrace();
 }
 ```
 
-### 5.3 针对HTTP协议的URLConnection类
+### 6.2 URLConnection类
 
-- URL的方法 openStream()：能从网络上读取数据
-- 若希望输出数据，例如向服务器端的 CGI （公共网关接口-Common Gateway Interface-的简称，是用户浏览器和服务器端的应用程序进行连接的接口）程序发送一些数据，则必须先与URL建立连接，然后才能对其进行读写，此时需要使用 URLConnection 。
-- URLConnection：表示到URL所引用的远程对象的连接。当与一个URL建立连接时，首先要在一个 URL 对象上通过方法 openConnection() 生成对应的 URLConnection 对象。如果连接过程失败，将产生IOException. 
-  - `URL netchinaren = new URL ("http://www.atguigu.com/index.shtml");`
-  - `URLConnectonn u = netchinaren.openConnection( );`
+**URL类还有以下两个核心API**：
 
-- 通过URLConnection对象获取的输入流和输出流，即可以与现有的CGI程序进行交互。
-  - public Object getContent( ) throws IOException
+- `InputStream openStream()`：获取一个字节输入流，用于从网络上读取数据
+- `URLConnection openConnection()`：生成对应的URLConnection对象
 
-  - public int getContentLength( )
-  - public String getContentType( )
-  - public long getDate( )
-  - public long getLastModified( )
-  - **public InputStream getInputStream ( ) throws IOException**
-  - public OutputSteram getOutputStream( )throws IOException
+如果我们希望向某个url发送一些数据，就必须先与该url建立连接，然后才能进行读写。而**URLConnection类就代表到URL所引用的远程对象的连接**。因此，我们必须通过调用URL的`openConnection()`方法来得到对应的URLConnection对象。
 
-举例：URL编程下载资源
+URLConnection有以下**常用API**：
+
+- `Object getContent()`
+- `int getContentLength()`
+- `String getContentType()`
+- `long getDate()`
+- `long getLastModified()`
+- `InputStream getInputStream()`：获取字节输入流
+- `OutputStream getOutputStream()`：获取字节输出流
+
+案例实战：URL编程下载资源
 
 ```java
-@Test
-public void testUrl() throws IOException {
+public static void main(String[] args) throws Exception {
     // 1. 获取URL实例
-    URL url = new URL("http://localhost:8080/demo/%E6%B5%8B%E8%AF%95.html");
+    String str = "https://unpkg.com/vue@3.3.9/dist/vue.global.js";
+    URL url = new URL(str);
 
     // 2. 建立与服务端的连接
-    HttpURLConnection urlConnection = (HttpURLConnection)url.openConnection();
+    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-    // 3. 获取输入流，创建输出流
-    InputStream is = urlConnection.getInputStream();
-    File file = new File("IOtest/copy.html");
+    // 3. 获取URLConnection对象的输入流
+    InputStream is = conn.getInputStream();
+
+    // 4. 创建输出流(下载资源的位置)
+    File file = new File("E:\\my-vue.js");
     FileOutputStream fos = new FileOutputStream(file);
 
-    // 4. 读写数据
+    // 5. 读写数据
     byte[] buffer = new byte[1024];
     int len = 0;
     while ((len = is.read(buffer)) != -1) {
         fos.write(buffer, 0, len);
     }
-    // 5. 关闭资源
+
+    // 6. 关闭资源
     fos.close();
     is.close();
-    urlConnection.disconnect();
+    conn.disconnect();
 }
 ```
-
-
 
 #  第17章_反射机制
 
@@ -3273,8 +3300,6 @@ public class ProxyTest {
 }
 ```
 
-
-
 # 第18章_JDK8-17新特性
 
 ## 1. Java8新特性：Lambda表达式
@@ -3312,112 +3337,77 @@ interface Swim {
 
 ### 1.2 Lambda表达式省略规则
 
+Lambda的标准格式：
+
 ```java
-  Lambda的标准格式：
-	(参数类型1 参数名1, 参数类型2 参数名2) -> {
-		...方法体的代码...
-		return 返回值;
-	}
-
-1. 参数类型可以省略不写
-	(参数名1, 参数名2)->{
-		...方法体的代码...
-		return 返回值;
-	}
-	
-2. 如果只有一个参数，()也可以省略。
-    参数名1 -> { ... }
-
-3. 如果方法体代码只有一行代码，可以省略大括号不写，同时要省略分号。
-此时，如果这行代码是return语句，就必须去掉return。
-	(a, b) -> a - b
+(参数类型1 参数名1, 参数类型2 参数名2) -> {
+    ...方法体的代码...
+    return 返回值;
+}
 ```
 
-### 1.3 补充：常见的函数式接口
+**（1）规则一**：参数类型可以省略不写
 
-jdk8中声明的函数式接口都在java.util.function包下。
+```java
+(参数名1, 参数名2) -> {
+    ...方法体的代码...
+    return 返回值;
+}
+```
 
-四大核心函数式接口：
+**（2）规则二**：如果只有一个参数，`()`也可以省略
 
+```java
+参数名1 -> {
+    ...方法体的代码...
+    return 返回值;
+}
+```
 
-| 函数式接口         | 称谓       | 参数类型 | 用途                                                         |
-| ------------------ | ---------- | -------- | ------------------------------------------------------------ |
-| `Consumer<T>  `    | 消费型接口 | T        | 对类型为T的对象应用操作，包含方法：  `void accept(T t)  `    |
-| `Supplier<T>  `    | 供给型接口 | 无       | 返回类型为T的对象，包含方法：`T get()  `                     |
-| `Function<T, R>  ` | 函数型接口 | T        | 对类型为T的对象应用操作，并返回结果。结果是R类型的对象。包含方法：`R apply(T t)  ` |
-| `Predicate<T>  `   | 判断型接口 | T        | 确定类型为T的对象是否满足某约束，并返回 boolean 值。包含方法：`boolean test(T t)  ` |
+**（3）规则三**：如果方法体代码只有一行代码，可以省略大括号不写，同时要省略分号；此时，如果这行代码是return语句，就必须去掉return。
 
+```java
+(a, b) -> a - b
+```
 
-**类型1：消费型接口**
+### 1.3 常见的函数式接口
 
-消费型接口的抽象方法特点：有形参，但是返回值类型是void
+Lambda表达式需要一个目标类型，这个目标类型必须是一个函数式接口。jdk8中声明的函数式接口都在java.util.function包下，主要有以下四大核心函数式接口。
 
-| 接口名               | 抽象方法                       | 描述                       |
-| -------------------- | ------------------------------ | -------------------------- |
-| BiConsumer\<T,U\>      | void accept(T t, U u)          | 接收两个对象用于完成功能   |
-| DoubleConsumer       | void accept(double value)      | 接收一个double值           |
-| IntConsumer          | void accept(int value)         | 接收一个int值              |
-| LongConsumer         | void accept(long value)        | 接收一个long值             |
-| ObjDoubleConsumer\<T\> | void accept(T t, double value) | 接收一个对象和一个double值 |
-| ObjIntConsumer\<T\>    | void accept(T t, int value)    | 接收一个对象和一个int值    |
-| ObjLongConsumer\<T\>   | void accept(T t, long value)   | 接收一个对象和一个long值   |
+#### 1、消费型接口
 
-**类型2：供给型接口**
+最重要的消费型接口是`Consumer<T>`，它的抽象方法是`void accept(T t);`即接收一个类型为T的参数，无返回值。
 
-这类接口的抽象方法特点：无参，但是有返回值
+消费型接口的抽象方法特点是有形参，但是无返回值。还有一些常见的消费型接口，例如：
 
-| 接口名          | 抽象方法               | 描述              |
-| --------------- | ---------------------- | ----------------- |
-| BooleanSupplier | boolean getAsBoolean() | 返回一个boolean值 |
-| DoubleSupplier  | double getAsDouble()   | 返回一个double值  |
-| IntSupplier     | int getAsInt()         | 返回一个int值     |
-| LongSupplier    | long getAsLong()       | 返回一个long值    |
+- `BiConsumer<T,U>`，其抽象方法是`void accept(T t, U u);`
+- `DoubleConsumer`，其抽象方法是`void accept(double value);`
 
-**类型3：函数型接口**
+#### 2、供给型接口
 
-这类接口的抽象方法特点：既有参数又有返回值
+最重要的供给型接口是`Supplier<T>`，它的抽象方法是`T get();`即没有形参，返回一个类型为T的对象。
 
-| 接口名                  | 抽象方法                                        | 描述                                                |
-| ----------------------- | ----------------------------------------------- | --------------------------------------------------- |
-| UnaryOperator\<T\>        | T apply(T t)                                    | 接收一个T类型对象，返回一个T类型对象结果            |
-| DoubleFunction\<R\>       | R apply(double value)                           | 接收一个double值，返回一个R类型对象                 |
-| IntFunction\<R\>          | R apply(int value)                              | 接收一个int值，返回一个R类型对象                    |
-| LongFunction\<R\>         | R apply(long value)                             | 接收一个long值，返回一个R类型对象                   |
-| ToDoubleFunction\<T\>     | double applyAsDouble(T value)                   | 接收一个T类型对象，返回一个double                   |
-| ToIntFunction\<T\>        | int applyAsInt(T value)                         | 接收一个T类型对象，返回一个int                      |
-| ToLongFunction\<T\>       | long applyAsLong(T value)                       | 接收一个T类型对象，返回一个long                     |
-| DoubleToIntFunction     | int applyAsInt(double value)                    | 接收一个double值，返回一个int结果                   |
-| DoubleToLongFunction    | long applyAsLong(double value)                  | 接收一个double值，返回一个long结果                  |
-| IntToDoubleFunction     | double applyAsDouble(int value)                 | 接收一个int值，返回一个double结果                   |
-| IntToLongFunction       | long applyAsLong(int value)                     | 接收一个int值，返回一个long结果                     |
-| LongToDoubleFunction    | double applyAsDouble(long value)                | 接收一个long值，返回一个double结果                  |
-| LongToIntFunction       | int applyAsInt(long value)                      | 接收一个long值，返回一个int结果                     |
-| DoubleUnaryOperator     | double applyAsDouble(double operand)            | 接收一个double值，返回一个double                    |
-| IntUnaryOperator        | int applyAsInt(int operand)                     | 接收一个int值，返回一个int结果                      |
-| LongUnaryOperator       | long applyAsLong(long operand)                  | 接收一个long值，返回一个long结果                    |
-| BiFunction\<T,U,R\>       | R apply(T t, U u)                               | 接收一个T类型和一个U类型对象，返回一个R类型对象结果 |
-| BinaryOperator\<T\>       | T apply(T t, T u)                               | 接收两个T类型对象，返回一个T类型对象结果            |
-| ToDoubleBiFunction\<T,U\> | double applyAsDouble(T t, U u)                  | 接收一个T类型和一个U类型对象，返回一个double        |
-| ToIntBiFunction\<T,U\>    | int applyAsInt(T t, U u)                        | 接收一个T类型和一个U类型对象，返回一个int           |
-| ToLongBiFunction\<T,U\>   | long applyAsLong(T t, U u)                      | 接收一个T类型和一个U类型对象，返回一个long          |
-| DoubleBinaryOperator    | double applyAsDouble(double left, double right) | 接收两个double值，返回一个double结果                |
-| IntBinaryOperator       | int applyAsInt(int left, int right)             | 接收两个int值，返回一个int结果                      |
-| LongBinaryOperator      | long applyAsLong(long left, long right)         | 接收两个long值，返回一个long结果                    |
+供给型接口的抽象方法特点是无形参，但是有返回值。还有一些常见的供给型接口，例如：
 
-**类型4：判断型接口**
+- `DoubleSupplier`，其抽象方法是`double getAsDouble();`
 
-这类接口的抽象方法特点：有参，但是返回值类型是boolean结果。
+#### 3、函数型接口
 
-| 接口名           | 抽象方法                   | 描述             |
-| ---------------- | -------------------------- | ---------------- |
-| BiPredicate\<T,U\> | boolean test(T t, U u)     | 接收两个对象     |
-| DoublePredicate  | boolean test(double value) | 接收一个double值 |
-| IntPredicate     | boolean test(int value)    | 接收一个int值    |
-| LongPredicate    | boolean test(long value)   | 接收一个long值   |
+最重要的函数型接口是`Function<T, R>`，它的抽象方法是`R apply(T t);`即接收一个类型为T的参数，返回一个类型为R的对象。
 
+函数型接口的抽象方法特点是既有参数又有返回值。还有一些常见的函数型接口，例如：
 
+- `BiFunction<T, U, R>`，其抽象方法是`R apply(T t, U u);`
+- `DoubleFunction<R>`，其抽象方法是`R apply(double value);`
 
+#### 4、判断型接口
 
+最重要的判断型接口是`Predicate<T>`，它的抽象方法是`boolean test(T t);`即接收一个类型为T的参数，返回一个boolean值。
+
+判断型接口的抽象方法特点是有形参，且返回值类型是boolean。还有一些常见的判断型接口，例如：
+
+- `BiPredicate<T, U>`，其抽象方法是`boolean test(T t, U u);`
+- `DoublePredicate`，其抽象方法是`boolean test(double value);`
 
 ## 2. Java8新特性：方法引用
 
@@ -3587,22 +3577,21 @@ public class MyTest {
 }
 ```
 
+## 3. Java8新特性：Stream API
 
-## 3. Java8新特性：强大的Stream API
-
-JDK8中有两大最为重要的改变。第一个是Lambda表达式；另外一个则是Stream API(java.util.stream)。
+JDK8中有两大最为重要的改变：第一个是Lambda表达式，另外一个则是Stream API(`java.util.stream`)
 
 ### 3.1 Stream流概述
 
 Stream是数据渠道，用于操作数据源（集合、数组等）所生成的元素序列。
 
-Stream和集合的区别：**集合是一种静态的内存数据结构，讲的是数据，而Stream是有关计算的，讲的是计算**。前者是主要面向内存，存储在内存中，后者主要是面向CPU，通过CPU实现计算。Stream API 它大量地结合了Lambda的语法风格来编程，代码更简洁，可读性更好
+Stream和集合的区别：**集合是一种静态的内存数据结构，讲的是数据，而Stream是有关计算的，讲的是计算**。前者是主要面向内存，存储在内存中，后者主要是面向CPU，通过CPU实现计算。Stream API大量地结合了Lambda的语法风格来编程，代码更简洁，可读性更好。
 
 **注意**：
 
-1. Stream 自己不会存储元素。
-2. **Stream 不会改变源对象。相反，他们会返回一个持有结果的新Stream**。
-3. Stream 操作是延迟执行的。这意味着他们会等到需要结果的时候才执行。即一旦执行终止操作，就执行中间操作链，并产生结果。
+1. Stream自己不会存储元素。
+2. **Stream不会改变源对象。相反，他们会返回一个持有结果的新Stream**。
+3. 流是**惰性的**，只有在启动最终操作时才会对源数据进行计算，而且只在需要时才会消耗源元素
 4. Stream一旦执行了终止操作，就不能再调用其它中间操作或终止操作了。
 
 **Stream操作三个步骤**：
@@ -3613,14 +3602,12 @@ Stream和集合的区别：**集合是一种静态的内存数据结构，讲的
 
 ### 3.2 Stream流的创建
 
-#### 3.2.1 创建集合的Stream流
+#### 1、通过集合API创建流
 
-JDK8 中的 Collection 接口被扩展，提供了两个获取流的方法：
+JDK8中Collection接口被扩展，提供了两个获取流的方法：
 
 - `default Stream<E> stream()`: 返回一个顺序流
-
 - `default Stream<E> parallelStream()`: 返回一个并行流
-
 
 ```java
 public static void main(String[] args) {
@@ -3645,116 +3632,115 @@ public static void main(String[] args) {
 }
 ```
 
-#### 3.2.2 创建数组的Stream流
+#### 2、通过数组API创建流
 
-JDK8 中的 Arrays 的静态方法 stream() 可以获取数组流：
-
+JDK8中Arrays的静态方法stream()可以获取数组流：
 
 - `static <T> Stream<T> stream(T[] array)`
-- `public static IntStream stream(int[] array)`
-- `public static LongStream stream(long[] array)`
-- `public static DoubleStream stream(double[] array)`
+- `static IntStream stream(int[] array)`
+- `static LongStream stream(long[] array)`
+- `static DoubleStream stream(double[] array)`
 
 
 ```java
 // 获取数组的Stream流
 String[] names2 = {"张翠山", "东方不败", "唐大山", "独孤求败"};
-Stream<String> s1 = Arrays.stream(names2); // 方式1
+Stream<String> s1 = Arrays.stream(names2);
 int[] arr = {1, 2, 3};
 IntStream s2 = Arrays.stream(arr);
 ```
 
-#### 3.2.3 通过Stream的of()方法创建Stream流
+#### 3、通过Stream的API创建流
 
-可以调用Stream类静态方法of()，通过显式值创建一个流。
-
-- `public static<T> Stream<T> of(T... values)`
+- `Stream.of()`：通过显式值创建一个流
+- `Stream.concat()`：合并两个流
+- `Stream.builder()`：通过builder来创建流
 
 ```java
-Stream<Integer> stream = Stream.of(1,2,3,4,5);
+Stream<Integer> stream = Stream.of(1, 2, 3, 4, 5);
+Stream<Integer> stream2 = Stream.concat(Stream.of(6, 8), stream);
+Stream<Object> stream3 = Stream.builder().add("11").add("22").build();
 ```
 
-#### 3.2.4 创建无限流(了解)
+#### 4、创建无限流
 
-可以使用静态方法 Stream.iterate() 和 Stream.generate(), 创建无限流。
+可以使用静态方法`Stream.iterate()`和`Stream.generate()`，创建无限流。
 
-- 迭代
-  `public static<T> Stream<T> iterate(final T seed, final UnaryOperator<T> f)`
-
-- 生成
-  `public static<T> Stream<T> generate(Supplier<T> s)`
+- 迭代：`static<T> Stream<T> iterate(final T seed, final UnaryOperator<T> f)`
+- 生成：`static<T> Stream<T> generate(Supplier<T> s)`
 
 ```java
-// 创建无限流
 @Test
 public void test05() {
-	// 迭代
-	// public static<T> Stream<T> iterate(final T seed, final
-	// UnaryOperator<T> f)
 	Stream<Integer> stream = Stream.iterate(0, x -> x + 2);
 	stream.limit(10).forEach(System.out::println);
 
-	// 生成
-	// public static<T> Stream<T> generate(Supplier<T> s)
 	Stream<Double> stream1 = Stream.generate(Math::random);
 	stream1.limit(10).forEach(System.out::println);
 }
 ```
 
-
 ### 3.3 Stream的中间操作
 
-多个中间操作可以连接起来形成一个流水线，除非流水线上触发终止操作，否则中间操作不会执行任何的处理！而在终止操作时一次性全部处理，称为**惰性求值**。
+多个中间操作可以连接起来形成一个流水线，除非流水线上触发终止操作，否则中间操作不会执行任何的处理。所以在终止操作时一次性全部进行处理，就称为**惰性求值**。
 
-**1、筛选与切片**
+**注意**：对于串行流，默认会将一个元素依次执行完所有流中的操作过程，然后再处理下一个元素(如果是像sorted()这种必须用到所有元素的操作则除外)。
 
-（1）`Stream<T> filter(Predicate<? super T> predicate)`：接收Lambda，从流中筛选某些元素(保留返回true的元素)。其中Predicate是函数式接口，它的抽象方法是boolean test(T t);
-（2）`Stream<T> distinct()`：去除重复元素，hashCode()相等且equals()返回true则认为重复
-（3）`Stream<T> limit(long maxSize)`：保留流前面的maxSize个元素
-（4）`Stream<T> skip(long n)`：返回一个扔掉了前n个元素的流。若流中元素不足n个，则返回一个空流。
+#### 1、筛选
+
+- `Stream<T> filter(Predicate<? super T> predicate)`：接收Lambda，从流中筛选某些元素(保留抽象方法test()返回true的元素)。
+- `Stream<T> distinct()`：去除重复元素，hashCode()相等且equals()返回true则认为重复
+- `Stream<T> limit(long maxSize)`：保留流前面的maxSize个元素
+- `Stream<T> skip(long n)`：返回一个扔掉了前n个元素的流。若流中元素不足n个，则返回一个空流。
 
 ```java
 public static void main(String[] args) {
-    List<Integer> list = new ArrayList<>();
-    Collections.addAll(list, 1, 2, 3, 4, 5, 6, 2, 4, 8, 4);
+    List<Integer> list = List.of(1, 2, 3, 4, 5, 6, 2, 4, 8, 4);
 
-    list.stream().filter(i -> i % 2 == 0)
+    list.stream()
+            .filter(i -> i % 2 == 0)
             .limit(4)
-            .forEach(System.out::print); // 2462
-    System.out.println("---------------");
-
-    list.stream().skip(5)
+            .forEach(System.out::println); // 2462
+    list.stream()
+            .skip(5)
             .distinct()
-            .forEach(System.out::print); // 6248
+            .forEach(System.out::println); // 6248
 }
 ```
 
-**2、映射**
+#### 2、映射
 
-（5）`<R> Stream<R> map(Function<? super T, ? extends R> mapper)`：接收一个函数作为参数，该函数会被应用到每个元素上，并将其映射成一个新的元素。其中Function是一个函数式接口，它的抽象方法是R apply(T t);
+- `Stream<R> map(Function mapper)`：接收一个Function作为参数，该函数会被应用到每个元素上，并将其映射成一个新的元素。
+- `Stream<R> flatMap(Function f)`：接收一个Function作为参数，将流中的每个值都映射成另一个流，然后把所有流连接起来成为一个流
 
-其他一些类似的映射方法(不常用)：
+补充：其他一些类似的映射方法
 
-`mapToDouble(ToDoubleFunction f)`：接收一个函数作为参数，该函数会被应用到每个元素上，产生一个新的DoubleStream
-`mapToInt(ToIntFunction f)`：接收一个函数作为参数，该函数会被应用到每个元素上，产生一个新的IntStream
-`mapToLong(ToLongFunction f)`：接收一个函数作为参数，该函数会被应用到每个元素上，产生一个新的LongStream
-`flatMap(Function f)`：接收一个函数作为参数，将流中的每个值都换成另一个流，然后把所有流连接成一个流
+- `mapToDouble(ToDoubleFunction f)`
+- `mapToInt(ToIntFunction f)`
+- `mapToLong(ToLongFunction f)`
+
 
 ```java
 public static void main(String[] args) {
-    List<String> list = new ArrayList<>();
-    Collections.addAll(list, "aa", "bB", "CC");
+    List<String> list = List.of("a a", "b B", "C C");
 
-    list.stream().map(s -> s.toUpperCase())
-            .forEach(System.out::print); // AABBCC
+    list.stream()
+            .map(s -> s.toUpperCase())
+            .forEach(System.out::print); // A AB BC C
+    System.out.println("-----");
+    list.stream()
+            .flatMap(s -> {
+                String[] arr = s.split(" ");
+                return Arrays.stream(arr);
+            })
+            .forEach(System.out::print); // aabBCC
 }
 ```
 
-**3、排序**
+#### 3、排序
 
-（6）`Stream<T> sorted()`：按自然顺序排序
-（7）`Stream<T> sorted(Comparator<? super T> comparator)`：按比较器顺序排序
-（8）补充：`static <T> Stream<T> concat(Stream a, Stream b)`：合并两个流成为一个流
+- `Stream<T> sorted()`：按自然顺序排序
+- `Stream<T> sorted(Comparator comparator)`：按比较器顺序排序
 
 ```java
 public static void main(String[] args) {
@@ -3767,30 +3753,48 @@ public static void main(String[] args) {
 
     list.stream().sorted((o1, o2) -> -Integer.compare(o1, o2))
             .forEach(System.out::print); // 8654443221
-    System.out.println("-----------");
+}
+```
 
-    Stream<String> st1 = Stream.of("张三", "李四");
-    Stream<String> st2 = Stream.of("张三2", "李四2", "王五");
-    Stream<String> allSt = Stream.concat(st1, st2);
-    allSt.forEach(System.out::println);
+#### 4、并行流
+
+- `parallel()`：返回一个并行流。注意，**流默认是不并行的，使用中间操作parallel()后可以得到并行流**。
+
+```java
+Stream<Integer> stream = Stream.of(1,2,3,4,5);
+Stream<Integer> parallelStream = stream.parallel();
+```
+
+#### 5、其他
+
+- `Stream<T> peek(Consumer action)`：对流中每个元素调用参数Consumer中的accept()方法，该API的主要作用是打印流中的信息
+- `Stream<T> takeWhile(Predicate predicate)`：对于test()返回true的元素进行保留，而一旦返回false，就直接截断，不再判断后续的元素
+
+```java
+public static void main(String[] args) {
+    List<Integer> list = List.of(1, 2, 5, 7, 3, 8, 4);
+    Object[] arr = list.stream()
+            .takeWhile(e -> e < 6)
+            .peek(System.out::print) // 125
+            .toArray();
 }
 ```
 
 ### 3.4 Stream的终止操作
 
-终端操作会从流的流水线生成结果。其结果可以是任何不是流的值，例如：List、Integer，甚至是void。流进行了终止操作后，不能再次使用。
+终止操作会从流的流水线生成结果，其返回值不再是Stream，而是例如：List、Integer、void等。流进行了终止操作后，不能再次使用。
 
-**1、匹配与查找**
+#### 1、匹配与查找
 
-（1）`boolean allMatch(Predicate<? super T> predicate)`：检查是否匹配所有元素
-（2）`boolean anyMatch(Predicate<? super T> predicate)`：检查是否至少匹配一个元素
-（3）`boolean noneMatch(Predicate<? super T> predicate)`：检查是否不匹配所有元素
-（4）`Optional<T> findFirst()`：返回第一个元素
-（5）`Optional<T> findAny()`：返回当前流中的任意元素
-（6）`long count()`：返回流中元素总数
-（7）`Optional<T> max(Comparator<? super T> comparator)`：返回流中最大值
-（8）`Optional<T> min(Comparator<? super T> comparator)`：返回流中最小值
-（9）`void forEach(Consumer<? super T> action)`：遍历操作。集合的forEach遍历称为外部迭代，集合对应Stream流的forEach遍历称为内部迭代。
+- `boolean allMatch(Predicate p)`：检查是否匹配所有元素
+- `boolean anyMatch(Predicate p)`：检查是否至少匹配一个元素
+- `boolean noneMatch(Predicate p)`：检查是否不匹配所有元素
+- `Optional<T> findFirst()`：返回第一个元素
+- `Optional<T> findAny()`：返回当前流中的任意元素
+- `long count()`：返回流中元素总数
+- `Optional<T> max(Comparator c)`：返回流中最大值
+- `Optional<T> min(Comparator c)`：返回流中最小值
+- `void forEach(Consumer action)`：遍历操作。集合的forEach遍历称为外部迭代，集合对应Stream流的forEach遍历称为内部迭代。
 
 ```java
 public static void main(String[] args) {
@@ -3805,12 +3809,12 @@ public static void main(String[] args) {
 }
 ```
 
-**2、归约**
+#### 2、归约
 
-（10）`T reduce(T identity, BinaryOperator<T> accumulator)`：可以将流中元素反复结合起来，得到一个值。返回T
-（11）`Optional<T> reduce(BinaryOperator<T> accumulator)`：可以将流中元素反复结合起来，得到一个值。返回 Optional\<T\>
+- `T reduce(T identity, BinaryOperator<T> accumulator)`：可以将流中元素反复结合起来，得到一个值。返回T
+- `Optional<T> reduce(BinaryOperator<T> accumulator)`：可以将流中元素反复结合起来，得到一个值，返回Optional
 
-备注：map 和 reduce 的连接通常称为 map-reduce 模式，因 Google 用它来进行网络搜索而出名。
+> 注：map 和 reduce 的连接通常称为 map-reduce 模式，因 Google 用它来进行网络搜索而出名。
 
 ```java
 public static void main(String[] args) {
@@ -3824,22 +3828,20 @@ public static void main(String[] args) {
 }
 ```
 
-**3、收集**
+#### 3、收集
 
 收集Stream流，就是把Stream流操作后的结果转回到集合或者数组中取返回。
 
-（12）`<R, A> R collect(Collector<? super T, A, R> collector)`：将流收集到一个指定的集合中去。参数接收一个Collector接口的实现，用于给Stream中元素做汇总的方法。
-（13）`Object[] toArray()`：将流收集到一个数组中去
-（14）`<A> A[] toArray(IntFunction<A[]> generator)`：将流收集到一个数组中去
+- `R collect(Collector collector)`：将流收集到一个指定的集合中去。参数接收一个Collector接口的实现，用于给Stream中元素做汇总的方法。
+- `Object[] toArray()`：将流收集到一个数组中去
+- `A[] toArray(IntFunction<A[]> generator)`：将流收集到一个数组中去
 
+Collector接口中方法的实现决定了如何对流执行收集的操作(如收集到List、Set、Map)。而**工具类Collectors提供了很多静态方法，可以方便地创建常见收集器实例**，工具类的常用方法如下：
 
-Collector接口中方法的实现决定了如何对流执行收集的操作(如收集到List、Set、Map)。而工具类Collectors提供了很多静态方法，可以方便地创建常见收集器实例，工具类的具体方法如下：
-
-- `public static <T> Collector<T, ?, List<T>> toList()`：把元素收集到List集合中
-- `public static <T> Collector<T, ?, Set<T>> toSet()`：把元素收集到Set集合中
-- `public static <T, K, U> Collector<T, ?, Map<K,U>> toMap(Function<? super T, ? extends K> keyMapper, Function<? super T, ? extends U> valueMapper)`：把元素收集到Map集合中
-- `public static <T, C extends Collection<T>> Collector<T, ?, C> toCollection(Supplier<C> collectionFactory)`：把元素收集到创建的集合中
-
+- `Collectors.toList()`：把元素收集到List集合中
+- `Collectors.toSet()`：把元素收集到Set集合中
+- `Collectors.toMap(Function keyMapper, Function valueMapper)`：把元素收集到Map集合中
+- `Collectors.toCollection(Supplier collectionFactory)`：把元素收集到创建的集合中
 
 ```java
 public static void main(String[] args) {
@@ -3873,37 +3875,34 @@ public static void main(String[] args) {
 }
 ```
 
-
-
 ## 4. 其他新特性
 
 ### 4.1 Java的REPL工具：jShell命令
 
-**JDK9的新特性**
+**JDK 9的新特性**
 
-Java 终于拥有了像Python之类的REPL工具（交互式编程环境，read-evaluate-print-loop）：`jShell`。以交互式的方式对语句和表达式进行求值。`即写即得`、`快速运行`。利用jShell在没有创建类的情况下，在命令行里直接声明变量，计算表达式，执行语句。
+Java终于拥有了像Python之类的REPL工具（交互式编程环境，read-evaluate-print-loop）：`jShell`。以交互式的方式对语句和表达式进行求值。`即写即得`、`快速运行`。利用jShell在没有创建类的情况下，在命令行里直接声明变量，计算表达式，执行语句。
 
 ### 4.2 局部变量类型推断
 
 **JDK 10的新特性**
 
 ```java
-//1.局部变量的实例化
+// 1. 局部变量的实例化
 var list = new ArrayList<String>();
-
 var set = new LinkedHashSet<Integer>();
 
-//2.增强for循环中的索引
+// 2. 增强for循环中的索引
 for (var v : list) {
     System.out.println(v);
 }
 
-//3.传统for循环中
+// 3. 传统for循环中
 for (var i = 0; i < 100; i++) {
     System.out.println(i);
 }
 
-//4. 返回值类型含复杂泛型结构
+// 4. 返回值类型含复杂泛型结构
 var iterator = set.iterator();
 //Iterator<Map.Entry<Integer, Student>> iterator = set.iterator();
 ```
@@ -3914,16 +3913,11 @@ var iterator = set.iterator();
 - var不是一个关键字，而是一个类型名，将它作为变量的类型。不能使用var作为类名。
 - 这不是JavaScript。var并不会改变Java是一门静态类型语言的事实。编译器负责推断出类型，并把结果写入字节码文件，就好像是开发人员自己敲入类型一样。
 
-
-
 ### 4.3 文本块
 
-**JDK13的新特性**
+**JDK 13的新特性**
 
-使用`"""作为文本块的开始符和结束符，在其中就可以放置多行的字符串，不需要进行任何转义。因此，文本块将提高Java程序的可读性和可写性。
-
-
-举例：JSON字符串
+使用`"""`作为文本块的开始符和结束符，在其中就可以放置多行的字符串，不需要进行任何转义。因此，文本块将提高Java程序的可读性和可写性。我们以JSON字符串来举例：
 
 原有方式：
 
@@ -3950,26 +3944,26 @@ System.out.println(myJson1);
 
 ### 4.4 Optional类
 
-**JDK8的新特性**
+**JDK 8的新特性**
 
-到目前为止，臭名昭著的空指针异常是导致Java应用程序失败的最常见原因。以前，为了解决空指针异常，Google在著名的Guava项目引入了Optional类，通过检查空值的方式避免空指针异常。受到Google的启发，Optional类已经成为Java 8类库的一部分。
+Optional类，可以通过检查空值的方式避免空指针异常。`Optional<T>`类是一个容器类，它可以保存类型T的值，代表这个值存在；或者仅仅保存null，表示这个值不存在。如果值存在，则`isPresent()`方法会返回true，调用`get()`方法会返回该对象。
 
-`Optional<T>` 类(java.util.Optional) 是一个容器类，它可以保存类型T的值，代表这个值存在。或者仅仅保存null，表示这个值不存在。如果值存在，则isPresent()方法会返回true，调用get()方法会返回该对象。
-
-Optional提供很多有用的方法，这样我们就不用显式进行空值检测。
+Optional提供很多有用的API，使得我们不用显式进行空值检测。
 
 **创建Optional类对象的方法**：
-- `static <T> Optional<T> empty()`：用来创建一个空的Optional实例
-- `static <T> Optional<T> of(T value)`：用来创建一个Optional实例，value必须非空
-- `static <T> Optional<T> ofNullable(T value)` ：用来创建一个Optional实例，value可能是空，也可能非空
+
+- `static Optional<T> empty()`：用来创建一个空的Optional实例
+- `static Optional<T> of(T value)`：用来创建一个Optional实例，value必须非空
+- `static Optional<T> ofNullable(T value)` ：用来创建一个Optional实例，value可以是null
   
 **判断Optional容器中是否包含对象**：
 
-- `boolean isPresent()`: 判断Optional容器中的值是否存在
-- `void ifPresent(Consumer<? super T> consumer)`：判断Optional容器中的值是否存在，如果存在，就对它进行Consumer指定的操作，如果不存在就不做
+- `boolean isPresent()`：判断Optional容器中的值是否存在
+- `void ifPresent(Consumer consumer)`：判断Optional容器中的值是否存在，如果存在，就对它进行Consumer指定的操作，如果不存在就不做
 
 **获取Optional容器的对象**：
-- `T get()`: 如果调用对象包含值，返回该值。否则抛异常。T get()与of(T value)配合使用
-- `T orElse(T other) `：orElse(T other) 与ofNullable(T value)配合使用，如果Optional容器中非空，就返回所包装值，如果为空，就用orElse(T other)other指定的默认值（备胎）代替
-- `T orElseGet(Supplier<? extends T> other)`：如果Optional容器中非空，就返回所包装值，如果为空，就用Supplier接口的Lambda表达式提供的值代替
-- `T orElseThrow(Supplier<? extends X> exceptionSupplier)`：如果Optional容器中非空，就返回所包装值，如果为空，就抛出你指定的异常类型代替原来的NoSuchElementException
+
+- `T get()`：如果调用对象包含值，返回该值；否则就抛异常。该方法通常与`of(T value)`配合使用。
+- `T orElse(T other) `：如果Optional容器中非空，就返回其保存的值；如果为空，就返回other。该方法通常与`ofNullable(T value)`配合使用。
+- `T orElseGet(Supplier other)`：如果Optional容器中非空，就返回其保存的值；如果为空，就返回other所提供的值。
+- `T orElseThrow(Supplier exceptionSupplier)`：如果Optional容器中非空，就返回其保存的值；如果为空，就抛出exceptionSupplier所提供的异常类型。

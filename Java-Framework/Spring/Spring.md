@@ -112,6 +112,12 @@ Spring IoC 容器使用多种形式的配置元数据，此配置元数据表示
 
 **总结**：为了迎合SpringBoot，我们推荐使用**配置类+注解**的方式。
 
+### 2.3.4 IOC容器底层原理
+
+当我们根据配置文件或配置类创建一个IOC容器后，就会通过BeanDefinitionReader接口(有xml方式、配置类方式等)来解析里面定义的bean的id属性和class属性等。然后保存到DefaultListableBeanFactory类的beanDefinitionMap属性中，这个属性是一个`Map<String, BeanDefinition>`类型，其中key保存bean的id(唯一标识)，而value保存bean的定义信息(如beanClassName、scope等)。
+
+Spring会通过BeanFactory和反射机制，调用无参构造器来实例化对象，然后进行初始化，就得到了最终的可用对象。
+
 
 ## 2.4 基于XML管理bean
 
@@ -866,12 +872,15 @@ public class BeanTwo {
 
 ### 2.5.3 引用类型的自动装配
 
+**注意**：如果类只有一个有参构造器，则构造器形参可以不用标注任何注解，只要该形参类型的bean在容器中，就会自动注入。
+
 #### 1、@Autowired的标记位置
 
-我们可以使用注解 `@Autowired` 实现自动装配功能。该注解能够标识的位置为以下三种之一：
+我们可以使用注解 `@Autowired` 实现自动装配功能。该注解能够标识的位置为以下四种之一：
 - 标识在成员变量上，此时不需要设置该成员变量的setXxx()方法
 - 标识在setXxx()方法上
 - 标识在为当前成员变量赋值的有参构造器上
+- 标识在有参构造器上的形参位置(如果类只有一个有参构造器，则可以省略该注解)
 
 #### 2、@Autowired的工作流程
 
@@ -973,7 +982,7 @@ public class CommonComponent {
 
 ## 2.6 基于配置类管理bean
 
-Java配置类的作用就是替代spring的xml配置文件，基于配置类管理bean，就是**完全注解开发**，这是为了给将来学习 SpringBoot 打基础。因为在 SpringBoot 中，就是完全舍弃 XML 配置文件，全面使用注解来完成主要的配置。
+Java配置类的作用就是替代spring的xml配置文件，基于配置类管理bean，就是**完全注解开发**。
 
 1. 用@Configuration标记的Java类就是配置类，其作用是代替xml配置文件
 2. @ComponentScan注解用于配置包的扫描，即代替`<context:component-scan>`标签
@@ -1193,14 +1202,45 @@ public class JavaConfig {
 - 注1：如果IOC容器中没有类型匹配的Bean，则会报异常
 - 注2：如果IOC容器中有多个类型匹配的Bean，则根据形参的名称去匹配对应的bean id (若匹配不到，同样会报异常)
 
-### 2.6.4 @Import注解
+### 2.6.4 深入理解@Configuration注解
 
-@Import注解用于加载其他配置类的配置信息：
+@Configuration注解的源码如下：
+
+```java
+@Target({ElementType.TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Component
+public @interface Configuration {
+    @AliasFor(
+        annotation = Component.class
+    )
+    String value() default "";
+
+    boolean proxyBeanMethods() default true;
+
+    boolean enforceUniqueMethods() default true;
+}
+```
+
+可见，它被标注了@Component注解，所以被@Configuration标注的**配置类，也是IOC容器中的组件**。
+
+除此之外，它有一个属性proxyBeanMethods，**默认为true**，即通过方法调用会获得代理bean。也就是说，假如该配置类用@Bean注解标注了一个方法，那么当外部其他程序调用这个方法时，返回的对象始终就是IOC容器中的同一个对象(即代理bean)。如果将其设置为false，则外部调用@Bean标注的方法时，返回的对象将是不同的(new出来的对象，而不是IOC容器中的对象)。
+
+> 总结：
+> @Configuration(proxyBeanMethods = true) 开启Full模式，即每个@Bean方法的调用会从IOC容器中寻找组件。
+> @Configuration(proxyBeanMethods = false) 开启Lite模式，即每个@Bean方法的调用会直接new一个对象返回。
+
+### 2.6.5 @Import注解
+
+@Import注解一般标注在配置类上，可以导入一些类，注册到IOC容器中，注册的**组件bean id默认是该类的全类名**。
+
+- 使用场景1：更方便地导入一些第三方的组件
+- 使用场景2：可以导入一些配置类，方便IOC容器的实例化，如下所示：
 
 ```java
 @Configuration
 @Import({ConfigB.class, ConfigC.class})
-// 注意，上述ConfigB，ConfigC都是配置类
 public class ConfigA {
 
 }
@@ -1211,6 +1251,8 @@ public class ConfigA {
 ```java
 ApplicationContext ioc = new AnnotationConfigApplicationContext(ConfigA.class);
 ```
+
+> 补充：还有一个注解@ImportResource一般也标注在配置类上，用于导入Spring的原生xml配置文件，例如`@ImportResource("classpath:application-context.xml")`。但现在很少使用xml配置文件的方式了，所以该注解不常用。
 
 ## 2.7 Spring整合JUnit搭建测试环境
 

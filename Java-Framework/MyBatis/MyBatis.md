@@ -205,14 +205,15 @@ Logback要求配置文件名称必须是logback.xml，存放路径在main/resour
 
 |注解|作用|
 |---|---|
-|@Data|生成getXxx()方法、setXxx()方法、toString()、equals()、canEqual()、hashCode()方法|
-|@AllArgsConstructor|生成全参构造器|
-|@NoArgsConstructor|生成无参构造器|
-|@Slf4j|生成日志对象|
-|@Getter|生成getXxx()方法|
-|@Setter|生成setXxx()方法|
-|@ToString|生成toString()方法|
-
+|`@Data`|生成getXxx()方法、setXxx()方法、toString()、equals()、canEqual()、hashCode()方法|
+|`@AllArgsConstructor`|生成全参构造器|
+|`@NoArgsConstructor`|生成无参构造器|
+|`@Slf4j`|生成日志对象|
+|`@Getter`|生成getXxx()方法|
+|`@Setter`|生成setXxx()方法|
+|`@ToString`|生成toString()方法|
+|`@Accessors(chain = true)`|字段的`setXxx()`方法调用后会返回当前对象，即开启setter方法的链式调用|
+|`@Builder`|开启建造者模式|
 
 # 3. Mybatis基本用法
 
