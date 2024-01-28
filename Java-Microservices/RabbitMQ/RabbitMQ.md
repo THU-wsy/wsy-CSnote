@@ -92,13 +92,19 @@ docker pull rabbitmq:management
 **2、创建一个数据卷，专门用于持久化RabbitMQ的所有数据**
 
 ```shell
-mkdir -p /thuwsy/rabbitmq
+mkdir -p /docker/rabbitmq
 ```
 
 **3、启动容器实例，并创建用户**
 
 ```shell
-docker run -id --name=rabbitmq -v /thuwsy/rabbitmq:/var/lib/rabbitmq -p 15672:15672 -p 5672:5672 -e RABBITMQ_DEFAULT_USER=admin -e RABBITMQ_DEFAULT_PASS=abc666 rabbitmq:management
+docker run -d --name rabbitmq \
+-p 15672:15672 -p 5672:5672 \
+--restart=always \
+-v /docker/rabbitmq:/var/lib/rabbitmq \
+-e RABBITMQ_DEFAULT_USER=admin \
+-e RABBITMQ_DEFAULT_PASS=abc666 \
+rabbitmq:management
 ```
 
 说明：
