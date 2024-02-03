@@ -265,6 +265,9 @@ CREATE DATABASE `xuetang_media` DEFAULT CHARACTER SET utf8mb4;
 USE `xuetang_media`;
 # 然后执行脚本xuetang_media.sql
 
+CREATE DATABASE `xuetang_users` DEFAULT CHARACTER SET utf8mb4;
+USE `xuetang_users`;
+# 然后执行脚本xuetang_users.sql
 
 ```
 
