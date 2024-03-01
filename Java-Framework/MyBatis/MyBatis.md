@@ -464,8 +464,6 @@ public class MyBatisTest {
 }
 ```
 
-
-
 ## 3.2 给sql语句传参
 
 给sql语句传参有两种方式：`${}`和`#{}`
@@ -582,7 +580,7 @@ int updateNameById(@Param("name") String name, @Param("id") Integer id);
 </select>
 ```
 
-注意：在MyBatis中，对于Java中常用的类型都设置了类型别名。例如，若返回值为Integer，则resultType中可以写Integer、int(不区分大小写)；若返回值为int，则resultType中可以写_Integer、_int(不区分大小写)。当然写全类名如`java.lang.Integer`肯定也是没问题的。
+注意：在MyBatis中，对于Java中常用的类型都设置了类型别名。例如，若返回值为Integer，则resultType中可以写`Integer`、`int`(不区分大小写)；若返回值为int，则resultType中可以写`_Integer`、`_int`(不区分大小写)。当然写全类名如`java.lang.Integer`肯定也是没问题的。
 
 ### 3.3.4 查询一条数据为map集合
 
@@ -664,7 +662,7 @@ Map<String, Object> getAllUserToMap2();
 
 ### 3.4.4 主键回显
 
-#### 1、获取自增长的主键
+获取自增长的主键：
 
 ```xml
 <!-- void insertUser(User user);-->
@@ -675,32 +673,6 @@ Map<String, Object> getAllUserToMap2();
 
 - 设置`useGeneratedKeys="true"`表示使用主键回显功能
 - keyProperty表明要将主键的值放在实体类对象的哪个属性中。必须设置该属性是因为，增删改操作统一的返回值是受影响的行数，因此**只能将获取的自增主键值放在传输的参数User对象的某个属性中**。
-
-#### 2、获取非自增长的主键
-
-对于不支持自增型主键的数据库（例如Oracle）或者字符串类型主键，则可以使用 selectKey 子元素：让selectKey标签中的语句先执行并设置id，然后再执行插入语句。
-
-使用 selectKey 帮助插入UUID作为字符串类型主键示例：
-
-```xml
-<insert id="insertUser" parameterType="User">
-    <selectKey keyProperty="id" resultType="java.lang.String" order="BEFORE">
-        SELECT UUID() as id
-    </selectKey>
-    INSERT INTO user (id, username, password) 
-    VALUES (
-        #{id},
-        #{username},
-        #{password}
-    )
-</insert>
-```
-
-如上，我们使用`selectKey`来查询UUID并设置到`id`字段中。通过`keyProperty`属性来指定查询到的 UUID 赋值给对象中的`id`属性，而`resultType`属性指定了UUID的类型为 `java.lang.String`。
-
-需要注意的是，`order="BEFORE"`表示先执行selectKey标签中的语句，然后再执行接下来的插入语句。在插入语句中，我们将 `User` 对象插入到 `user` 表中时，直接使用对象中的 `id` 属性来插入主键值。
-
-使用这种方式，我们可以方便地插入 UUID 作为字符串类型主键。当然，还有其他插入方式可以使用，如使用Java代码生成UUID并在类中显式设置值等。需要根据具体应用场景和需求选择合适的插入方式。
 
 # 4. 使用Mybatis映射关联关系
 
@@ -721,7 +693,7 @@ Map<String, Object> getAllUserToMap2();
 
 ### 4.1.2 方式2：全局配置映射关系
 
-方式2：当字段符合MySQL的规范(即使用_)，而属性符合Java的规范(即使用小驼峰)，此时可以在MyBatis的核心配置文件中设置一个全局配置，可以自动将下划线映射为驼峰。
+方式2：当字段符合MySQL的规范(即使用下划线连接)，而属性符合Java的规范(即使用小驼峰)，此时可以在MyBatis的核心配置文件中设置一个全局配置，可以自动将下划线映射为驼峰。
 
 ```xml
 <settings>
@@ -1431,7 +1403,6 @@ private <E> List<E> queryFromDatabase(MappedStatement ms, Object parameter, RowB
 
 ![](images/20230806173208.png)
 
-
 # 7. 逆向工程
 
 ## 7.1 ORM思维
@@ -1473,37 +1444,7 @@ MyBatis的逆向工程是一种**自动化生成持久层代码和映射文件�
 
 ![](images/20230912220227.png)
 
-## 7.4 QBC查询
 
-QBC：Query By Criteria。QBC查询最大的特点就是将SQL语句中的WHERE子句进行了组件化的封装，让我们可以通过调用Criteria对象的方法自由的拼装查询条件。
-
-```java
-@Test
-public void testMBG(){
-    try {
-        InputStream is = Resources.getResourceAsStream("mybatis-config.xml");
-        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(is);
-        SqlSession sqlSession = sqlSessionFactory.openSession(true);
-        EmpMapper mapper = sqlSession.getMapper(EmpMapper.class);
-        //查询所有数据
-        /*List<Emp> list = mapper.selectByExample(null);
-        list.forEach(emp -> System.out.println(emp));*/
-        
-        //根据条件查询
-        /*EmpExample example = new EmpExample();
-        example.createCriteria().andEmpNameEqualTo("张
-        三").andAgeGreaterThanOrEqualTo(20);
-        example.or().andDidIsNotNull();
-        List<Emp> list = mapper.selectByExample(example);
-        list.forEach(emp -> System.out.println(emp));*/
-        
-        mapper.updateByPrimaryKeySelective(new
-        Emp(1,"admin",22,null,"456@qq.com",3));
-    } catch (IOException e) {
-        e.printStackTrace();
-    }
-}
-```
 
 # 8. 分页插件PageHelper
 

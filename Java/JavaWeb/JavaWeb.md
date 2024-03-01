@@ -403,7 +403,7 @@ sec-ch-ua-platform: "Windows"
 - Accept: 告诉服务器，客户端可以接收的数据类型
 - Accept-Encoding: 告诉服务器，客户端可以接收的数据编码(压缩)格式
 - Accept-Language: 告诉服务器，客户端可以接收的语言类型。zh-CN表示中文中国，en-US表示英文美国。
-- Connection: 告诉服务器请求连接如何处理。keep-alive：告诉服务器回传数据不要马上关闭，保持一小段时间的连接；closed：马上关闭。
+- Connection: 告诉服务器是否使用持续连接。keep-alive表示使用持续连接（默认），closed表示使用非持续连接。
 - Host: 表示请求的服务器ip和端口号
 - User-Agent: 表示客户端浏览器的信息
 - Cookie: 浏览器访问服务器时携带的Cookie数据
@@ -453,7 +453,7 @@ username=wsy&password=lrd666
 
 说明2：POST请求体有两种格式：
 
-- form data：当前请求体是一个表单提交的请求参数，每一组请求参数是一个键值对，键和值中间是等号，键值对之间是&号
+- form data：当前请求体是一个表单提交的请求参数，每一组请求参数是一个键值对，键和值中间是等号，键值对之间是`&`号
 - Request Payload：整个请求体以某种特定格式来组织数据，例如JSON格式
 
 

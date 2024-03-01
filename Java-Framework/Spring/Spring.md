@@ -900,8 +900,6 @@ public class BeanTwo {
 @Qualifier("userServiceImpl")
 private UserService userService;
 ```
-(补充：如上的`@Autowired`和`@Qualifier`也可以合并成一个注解`@Resource(name = "userServiceImpl")`)
-
 注2：基于注解的自动装配，默认情况下装配失败就会抛出异常，如果想要让装配失败就自动赋默认值null，则可以设置 `@Autowired(required = false)`(不推荐使用，容易出现空指针异常)
 
 #### 3、@Resource
@@ -1251,8 +1249,6 @@ public class ConfigA {
 ```java
 ApplicationContext ioc = new AnnotationConfigApplicationContext(ConfigA.class);
 ```
-
-> 补充：还有一个注解@ImportResource一般也标注在配置类上，用于导入Spring的原生xml配置文件，例如`@ImportResource("classpath:application-context.xml")`。但现在很少使用xml配置文件的方式了，所以该注解不常用。
 
 ## 2.7 Spring整合JUnit搭建测试环境
 
