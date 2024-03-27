@@ -1235,14 +1235,12 @@ public class MyListener implements ServletContextListener{
 
 ### 1.1 Cookie简介
 
-- Cookie是服务器通知客户端保存键值对的一种技术。
-- 客户端有了Cookie后，每次请求会把Cookie都发送给服务器。
-- 每个Cookie的大小不能超过4KB。
+Cookie是服务器通知**客户端保存键值对**的一种技术。客户端有了Cookie后，每次请求会把Cookie都发送给服务器。注意每个Cookie的大小不能超过4KB。
 
 ### 1.2 服务器创建Cookie
 
-- 客户端浏览器发起请求后，服务器通过`Cookie cookie = new Cookie("key1", "value1");`创建Cookie对象，然后通过`resp.addCookie(cookie);`来通知客户端保存该Cookie。
-- 其原理是在HTTP响应报文中通过设置响应头`Set-Cookie: key1=value1`来通知客户端保存Cookie的。
+- 客户端浏览器发起请求后，服务器可以通过`Cookie cookie = new Cookie("key1", "value1");`创建Cookie对象，然后通过`resp.addCookie(cookie);`来通知客户端保存该Cookie。
+- 其原理是在HTTP响应报文中通过设置响应头`Set-Cookie: key1=value1`来通知客户端保存Cookie。
 - 当客户端收到响应后，发现有Set-Cookie响应头，就去查看自己有没有这个Cookie，没有则创建，有则修改。
 
 ```java
@@ -1254,7 +1252,7 @@ public class CookieServlet extends BaseServlet{
 }
 ```
 
-说明：服务器可以一次创建多个Cookie，多次调用`resp.addCookie()`添加即可，响应报文中就会有多个Set-Cookie响应头
+> 说明：服务器可以一次创建多个Cookie，多次调用`resp.addCookie()`添加即可
 
 ### 1.3 服务器获取客户端的Cookie
 
@@ -1388,7 +1386,7 @@ protected void testPath(HttpServletRequest req, HttpServletResponse resp) throws
 
 ### 2.1 Session简介
 
-由于HTTP是无状态的协议，所以无法区分两次请求是否是同一个客户端发来的，所以需要会话跟踪技术。Session指的是一个接口(HttpSession)，它就是会话，是用来维护一个客户端和服务器之间关联的一种技术。每个客户端都有自己的一个Session会话。Session会话中，我们经常用来保存用户登录之后的信息。(注意Cookie是保存在客户端，而Session是保存在服务器端)
+由于HTTP是无状态的协议，所以无法区分两次请求是否是同一个客户端发来的，所以需要会话跟踪技术。Session指的是一个接口(HttpSession)，它就是会话，是用来维护一个客户端和服务器之间关联的一种技术。Session会话中，我们经常用来保存用户登录之后的信息。(**注意Cookie是保存在客户端，而Session是保存在服务器端**)
 
 ### 2.2 创建和获取Session
 
@@ -1465,7 +1463,7 @@ protected void deleteNow(HttpServletRequest req, HttpServletResponse resp) throw
 
 ### 2.5 Session的底层原理
 
-**Session技术，底层其实是基于Cookie技术来实现的**！
+**Session技术，底层通常是基于Cookie技术来实现的**！
 
 服务器端如果没调用`request.getSession()`方法，那么什么都不会发生。而如果服务器端调用了`request.getSession()`方法，那么服务器端就会检查当前请求中是否携带了JSESSIONID的Cookie：
 
