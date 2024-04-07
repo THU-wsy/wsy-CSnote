@@ -184,8 +184,8 @@ public void test04() {
 
 （3）分页查询
 
-- `IPage<T> selectPage(IPage<T> page, Wrapper<T> queryWrapper)`：根据wrapper条件查询多条记录（并翻页）
-- `IPage<Map<String, Object>> selectMapsPage(IPage<T> page, Wrapper<T> queryWrapper)`：根据wrapper条件查询多条记录（并翻页）
+- `IPage<T> selectPage(IPage<T> page, Wrapper<T> queryWrapper)`：根据wrapper条件查询多条记录（并分页）
+- `IPage<Map<String, Object>> selectMapsPage(IPage<T> page, Wrapper<T> queryWrapper)`：根据wrapper条件查询多条记录（并分页）
 
 （4）查询记录数
 

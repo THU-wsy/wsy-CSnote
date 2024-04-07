@@ -403,7 +403,7 @@ sec-ch-ua-platform: "Windows"
 - Accept: 告诉服务器，客户端可以接收的数据类型
 - Accept-Encoding: 告诉服务器，客户端可以接收的数据编码(压缩)格式
 - Accept-Language: 告诉服务器，客户端可以接收的语言类型。zh-CN表示中文中国，en-US表示英文美国。
-- Connection: 告诉服务器请求连接如何处理。keep-alive：告诉服务器回传数据不要马上关闭，保持一小段时间的连接；closed：马上关闭。
+- Connection: 告诉服务器是否使用持续连接。keep-alive表示使用持续连接（默认），closed表示使用非持续连接。
 - Host: 表示请求的服务器ip和端口号
 - User-Agent: 表示客户端浏览器的信息
 - Cookie: 浏览器访问服务器时携带的Cookie数据
@@ -453,7 +453,7 @@ username=wsy&password=lrd666
 
 说明2：POST请求体有两种格式：
 
-- form data：当前请求体是一个表单提交的请求参数，每一组请求参数是一个键值对，键和值中间是等号，键值对之间是&号
+- form data：当前请求体是一个表单提交的请求参数，每一组请求参数是一个键值对，键和值中间是等号，键值对之间是`&`号
 - Request Payload：整个请求体以某种特定格式来组织数据，例如JSON格式
 
 
@@ -1235,14 +1235,12 @@ public class MyListener implements ServletContextListener{
 
 ### 1.1 Cookie简介
 
-- Cookie是服务器通知客户端保存键值对的一种技术。
-- 客户端有了Cookie后，每次请求会把Cookie都发送给服务器。
-- 每个Cookie的大小不能超过4KB。
+Cookie是服务器通知**客户端保存键值对**的一种技术。客户端有了Cookie后，每次请求会把Cookie都发送给服务器。注意每个Cookie的大小不能超过4KB。
 
 ### 1.2 服务器创建Cookie
 
-- 客户端浏览器发起请求后，服务器通过`Cookie cookie = new Cookie("key1", "value1");`创建Cookie对象，然后通过`resp.addCookie(cookie);`来通知客户端保存该Cookie。
-- 其原理是在HTTP响应报文中通过设置响应头`Set-Cookie: key1=value1`来通知客户端保存Cookie的。
+- 客户端浏览器发起请求后，服务器可以通过`Cookie cookie = new Cookie("key1", "value1");`创建Cookie对象，然后通过`resp.addCookie(cookie);`来通知客户端保存该Cookie。
+- 其原理是在HTTP响应报文中通过设置响应头`Set-Cookie: key1=value1`来通知客户端保存Cookie。
 - 当客户端收到响应后，发现有Set-Cookie响应头，就去查看自己有没有这个Cookie，没有则创建，有则修改。
 
 ```java
@@ -1254,7 +1252,7 @@ public class CookieServlet extends BaseServlet{
 }
 ```
 
-说明：服务器可以一次创建多个Cookie，多次调用`resp.addCookie()`添加即可，响应报文中就会有多个Set-Cookie响应头
+> 说明：服务器可以一次创建多个Cookie，多次调用`resp.addCookie()`添加即可
 
 ### 1.3 服务器获取客户端的Cookie
 
@@ -1388,7 +1386,7 @@ protected void testPath(HttpServletRequest req, HttpServletResponse resp) throws
 
 ### 2.1 Session简介
 
-由于HTTP是无状态的协议，所以无法区分两次请求是否是同一个客户端发来的，所以需要会话跟踪技术。Session指的是一个接口(HttpSession)，它就是会话，是用来维护一个客户端和服务器之间关联的一种技术。每个客户端都有自己的一个Session会话。Session会话中，我们经常用来保存用户登录之后的信息。(注意Cookie是保存在客户端，而Session是保存在服务器端)
+由于HTTP是无状态的协议，所以无法区分两次请求是否是同一个客户端发来的，所以需要会话跟踪技术。Session指的是一个接口(HttpSession)，它就是会话，是用来维护一个客户端和服务器之间关联的一种技术。Session会话中，我们经常用来保存用户登录之后的信息。(**注意Cookie是保存在客户端，而Session是保存在服务器端**)
 
 ### 2.2 创建和获取Session
 
@@ -1465,7 +1463,7 @@ protected void deleteNow(HttpServletRequest req, HttpServletResponse resp) throw
 
 ### 2.5 Session的底层原理
 
-**Session技术，底层其实是基于Cookie技术来实现的**！
+**Session技术，底层通常是基于Cookie技术来实现的**！
 
 服务器端如果没调用`request.getSession()`方法，那么什么都不会发生。而如果服务器端调用了`request.getSession()`方法，那么服务器端就会检查当前请求中是否携带了JSESSIONID的Cookie：
 
@@ -1480,148 +1478,6 @@ protected void deleteNow(HttpServletRequest req, HttpServletResponse resp) throw
 ```http
 Set-Cookie: JSESSIONID=63C4D016F6516AB97CD11AB60401DC4B;
 ```
-
-## 3. Token和JWT
-
-### 3.1 Token介绍
-
-令牌（Token）：在计算机领域，令牌是一种代表某种访问权限或身份认证信息的令牌。它可以是一串随机生成的字符或数字，用于验证用户的身份或授权用户对特定资源的访问。普通的令牌可能以各种形式出现，如访问令牌、身份令牌、刷新令牌等。
-
-![](images/20230927130453.png)
-
-> 简单理解：每个用户生成的唯一字符串标识，可以进行用户识别和校验
-> 
-> 优势：token验证标识无法直接识别用户的信息，盗取token后也无法`登录`程序，相对安全!
-
-### 3.2 JWT介绍
-
-Token是一项规范和标准(接口)，而JWT(JSON Web Token)是具体可以**生成、校验、解析**Token的技术(实现类)。
-
-![](images/20230927130724.png)
-
-**JWT的工作流程**：
-
-- 用户提供其凭据（通常是用户名和密码）进行身份验证。
-- 服务器对这些凭据进行验证，并在验证成功后创建一个JWT。
-- 服务器将JWT发送给客户端，并客户端在后续的请求中将JWT附加在请求头或参数中。
-- 服务器接收到请求后，验证JWT的签名和有效性，并根据JWT中的声明进行身份验证和授权操作
-
-**JWT数据的组成**：
-
-JWT由三部分组成: `header(头部).payload(载荷).signature(签名)`
-
-![](images/20230927131409.png)
-
-JWT可以携带很多信息，一般情况下至少都包含：有效时间，签名秘钥，其他用户标识信息：
-
-- 有效时间为了保证token的时效性，过期可以重新登录获取
-- 签名秘钥为了防止其他人随意解析和校验token数据
-- 用户信息为了我们自己解析的时候，知道Token对应的具体用户
-
-### 3.3 JWT的使用
-
-**（1）导入依赖**
-
-```xml
-<dependency>
-    <groupId>io.jsonwebtoken</groupId>
-    <artifactId>jjwt</artifactId>
-    <version>0.9.1</version>
-</dependency>
-<dependency>
-    <groupId>javax.xml.bind</groupId>
-    <artifactId>jaxb-api</artifactId>
-    <version>2.3.0</version>
-</dependency>
-```
-
-**（2）编写配置**
-
-```properties
-# jwt配置
-## token有效时间，单位分钟
-jwt.token.token-expiration=120
-## 当前程序自定义签名秘钥
-jwt.token.token-sign-key=headline654321
-```
-
-**（3）编写封装JWT技术的工具类**
-
-```java
-@Data
-@Component
-@ConfigurationProperties(prefix = "jwt.token")
-public class JwtHelper {
-
-    private long tokenExpiration; //有效时间
-    private String tokenSignKey;  //当前程序签名秘钥
-
-    //生成token字符串
-    public String createToken(Long userId) {
-        System.out.println("tokenExpiration = " + tokenExpiration);
-        System.out.println("tokenSignKey = " + tokenSignKey);
-        String token = Jwts.builder()
-                .setSubject("YYGH-USER")
-                .setExpiration(new Date(System.currentTimeMillis() + tokenExpiration*1000*60)) //单位分钟
-                .claim("userId", userId)
-                .signWith(SignatureAlgorithm.HS512, tokenSignKey)
-                .compressWith(CompressionCodecs.GZIP)
-                .compact();
-        return token;
-    }
-
-    //从token字符串获取userid
-    public Long getUserId(String token) {
-        if(StringUtils.isEmpty(token)) return null;
-        Jws<Claims> claimsJws = Jwts.parser().setSigningKey(tokenSignKey).parseClaimsJws(token);
-        Claims claims = claimsJws.getBody();
-        Integer userId = (Integer)claims.get("userId");
-        return userId.longValue();
-    }
-
-    //判断token是否有效
-    public boolean isExpiration(String token){
-        try {
-            boolean isExpire = Jwts.parser()
-                    .setSigningKey(tokenSignKey)
-                    .parseClaimsJws(token)
-                    .getBody()
-                    .getExpiration().before(new Date());
-            //没有过期，有效，返回false
-            return isExpire;
-        }catch(Exception e) {
-            //过期出现异常，返回true
-            return true;
-        }
-    }
-}
-```
-
-**（4）使用和测试**
-
-```java
-@SpringBootTest
-class MicroHeadlinesBootApplicationTests {
-    @Autowired
-    private JwtHelper jwtHelper;
-
-    @Test
-    public void testJwtHelper() {
-        //生成 传入用户标识
-        String token = jwtHelper.createToken(1L);
-        System.out.println("token = " + token);
-
-        //解析用户标识
-        int userId = jwtHelper.getUserId(token).intValue();
-        System.out.println("userId = " + userId);
-
-        //校验是否到期! false 未到期 true到期
-        boolean expiration = jwtHelper.isExpiration(token);
-        System.out.println("expiration = " + expiration);
-    }
-}
-```
-
 
 # 第4章 Filter
 

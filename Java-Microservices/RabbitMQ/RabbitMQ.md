@@ -38,7 +38,7 @@ MQ(message queue)是一个FIFO的队列，其中存放的内容是message，MQ�
 
 Kafka是专为**大数据**而生的消息中间件，百万级TPS吞吐量，基于Pull的模式来处理消息消费。
 
-优点：吞吐量高极高，高可用，在日志领域非常成熟。
+优点：吞吐量百万级，高可用，在日志领域非常成熟。
 
 缺点：Kafka单机超过64个队列/分区，Load会发生明显的飙高现象，导致发送消息响应时间变长。
 
@@ -64,22 +64,35 @@ RabbitMQ采用Erlang语言编写，是一个实现AMQP(高级消息队列协议)
 
 ### 2.1 三大核心概念
 
-- 生产者：发送消息的应用
-- 消息队列：存储消息的缓存
-- 消费者：接收消息的应用
+- 生产者：发送消息的一方
+- 消息队列：存储消息的容器
+- 消费者：接收消息的一方
+
+> RabbitMQ 整体上是一个生产者与消费者模型，主要负责接收、存储和转发消息。
 
 ### 2.2 RabbitMQ工作模型
 
 ![](images/Snipaste20231217122744.png)
 
 - **Broker**：消息服务器，即RabbitMQ Server
-- **Virtual host**：虚拟主机，即一个虚拟分组，类似于网络中的namespace概念。当多个不同的用户使用同一个 RabbitMQ Server时，可以划分出多个Virtual host，每个用户在自己的Virtual host创建exchange或queue等。这样做可以使分类更清晰，且相互隔离。
+- **Virtual host**：虚拟主机，即一个虚拟分组，类似于网络中的namespace概念。当多个不同的用户使用同一个RabbitMQ Server时，可以划分出多个Virtual host，每个用户在自己的Virtual host创建exchange或queue等。这样做可以使分类更清晰，且相互隔离。
 - **Connection**：连接RabbitMQ服务器的TCP长连接
-- **Channel**：信道，即连接中的一个虚拟通道，发送和接收消息都是通过信道进行的。Channel是轻量级的，能大幅减少操作系统建立TCP Connection的开销。
+- **Channel**：信道（Channel）是生产者、消费者与 RabbitMQ 通信的渠道，发送和接收消息都是通过信道进行的。信道是建立在 TCP 连接上的虚拟连接，每条 TCP 连接上的信道数量没有限制。就是说 RabbitMQ 在一条 TCP 连接上建立成百上千个信道来达到多个线程处理，这个 TCP 被多个线程共享，每个信道在 RabbitMQ 都有唯一的 ID，保证了信道私有性，每个信道对应一个线程使用。**Channel是轻量级的，能大幅减少操作系统建立TCP连接的开销**。
 - **Exchange**：交换机负责从生产者接收消息，并根据交换机类型分发到对应的消息队列中，起到一个路由的作用
-- **Routing Key**：交换机根据路由键来决定消息分发到哪个队列，路由键是消息的目的地址
+- **Routing Key**：交换机根据路由键来决定消息分发到哪个队列，路由键就相当于消息的目的地址
 - **Binding**：绑定是队列和交换机的一个关联关系
 - **Queue**：队列，即存储消息的缓存
+
+### 2.3 RabbitMQ的工作模式
+
+RabbitMQ有以下6种工作模式：
+
+- work queues（工作队列模式）：多个消费者共同消费同一个队列中的消息（**轮询分发消息**的方式）。一般对于任务较多的场景，可以使用work queues模式提高任务处理的速度。
+- publish/subscribe（发布订阅模式）：生产者将消息发给交换机（Fanout类型），由交换机将消息转发到绑定此交换机的每个队列，**每个绑定此交换机的队列都将接收到消息**。
+- routing（路由模式）：生产者将消息发给交换机（Direct类型），由交换机根据routingKey来**转发消息到指定的队列**。
+- topics（主题模式）：生产者将消息发给交换机（Topic类型），由交换机根据routingKey来转发消息到指定的队列，注意，队列绑定交换机时设置的绑定key可以**带有通配符**。
+- header：生产者将消息发给交换机（Headers类型），交换机基于消息属性中的headers进行匹配。
+- RPC：使用MQ实现RPC的异步调用，基于Direct型交换机实现，具体流程为：客户端向**RPC请求队列**发送调用消息，服务端监听**RPC请求队列**并处理消息，然后服务端将结果发送给**RPC响应队列**，客户端监听**RPC响应队列**并获取结果。
 
 ## 3. Docker安装RabbitMQ
 
@@ -92,13 +105,19 @@ docker pull rabbitmq:management
 **2、创建一个数据卷，专门用于持久化RabbitMQ的所有数据**
 
 ```shell
-mkdir -p /thuwsy/rabbitmq
+mkdir -p /docker/rabbitmq
 ```
 
 **3、启动容器实例，并创建用户**
 
 ```shell
-docker run -id --name=rabbitmq -v /thuwsy/rabbitmq:/var/lib/rabbitmq -p 15672:15672 -p 5672:5672 -e RABBITMQ_DEFAULT_USER=admin -e RABBITMQ_DEFAULT_PASS=abc666 rabbitmq:management
+docker run -d --name rabbitmq \
+-p 15672:15672 -p 5672:5672 \
+--restart=always \
+-v /docker/rabbitmq:/var/lib/rabbitmq \
+-e RABBITMQ_DEFAULT_USER=admin \
+-e RABBITMQ_DEFAULT_PASS=abc666 \
+rabbitmq:management
 ```
 
 说明：
@@ -579,6 +598,8 @@ public class MessageConsumer {
 ### 5.1 Headers介绍
 
 Headers类型的交换机，基于消息属性中的headers进行匹配，所以其routingKey并没有作用。
+
+> 说明：Headers类型的交换机性能很差，而且很不实用，实际生产中不推荐使用。
 
 ### 5.2 Headers实战
 
@@ -1128,7 +1149,7 @@ spring.rabbitmq.listener.simple.acknowledge-mode=manual
 **产生死信的情况**：
 
 - 消息TTL过期(TTL即Time To Live，生存时间)
-- 队列达到最大长度，无法再向MQ中添加消息
+- 队列达到最大长度（即队列已满）
 - 消息被拒绝(否定确认)，即`channel.basicReject()`或`channel.basicNack()`，并且没有重新入队(`requeue=false`)
 
 ## 2. 消息TTL过期-案例演示
@@ -1296,9 +1317,9 @@ public class Consumer1 {
 
 ### 1.1 延迟队列概念
 
-延迟队列就是用来存放需要在指定时间被处理的元素的队列。例如，让订单在十分钟之内未支付则自动取消，就可以使用延迟队列来实现。
+延迟队列用于存放需要在指定时间被处理的消息（延迟消息）。例如，让订单在十分钟之内未支付则自动取消，就可以使用延迟队列来实现。
 
-最简单实现延迟队列的方式，就是基于TTL的死信机制。我们设置TTL即可实现延迟队列，即给消息设置TTL、或给队列设置TTL，这样该队列就是一个延迟队列，当队列中的消息达到超时时间后，就变成死信，转发给死信交换机处理。
+AMQP协议以及RabbitMQ本身没有直接支持延迟队列的功能，但是我们可以通过基于TTL的死信机制来实现延迟队列。也就是给消息设置TTL、或给队列设置TTL，这样该队列就是一个延迟队列，当队列中的消息达到超时时间后，就变成死信，转发给死信交换机处理。
 
 ### 1.2 TTL
 
@@ -1665,7 +1686,9 @@ public class Consumer {
 
 ### 1.1 轮询分发消息
 
-默认情况下，RabbitMQ采用**轮询分发消息**，即如果有多个消费者连接到同一个队列，则该队列中的消息会轮流分发给每个消费者。
+默认情况下，RabbitMQ采用**轮询分发消息**，即如果有多个消费者订阅（连接）同一个队列，则该队列中的消息会轮流分发给每个消费者，而并不是广播地分发给每个消费者。
+
+> 说明：RabbitMQ支持交换机层面的广播，但不支持队列层面的广播，也就是一个队列中的消息无法广播分发给所有订阅它的消费者。
 
 测试如下：
 
@@ -1938,101 +1961,26 @@ public Queue lazyQueue() {
 
 > 注：内存开销对比大致如下，在发送一百万条1KB消息的情况下，default队列占用内存约1.2GB，而惰性队列仅占用内存约1.5MB。
 
-# 第08章_RabbitMQ集群
+## 5. RabbitMQ集群
 
-## 1. 简介
+RabbitMQ 是**基于主从**做高可用性的，而并非采用数据分片。RabbitMQ 有三种模式：单机模式、普通集群模式、镜像集群模式。
 
-为了防止单台RabbitMQ服务器出现故障，并且提高吞吐量，我们需要搭建RabbitMQ集群。集群模式分为默认集群模式和镜像集群模式。
+### 5.1 单机模式
 
-RabbitMQ的默认集群模式，只会把交换机、队列、虚拟主机等**元数据信息**在各个节点同步，而具体队列中的消息内容不会在各个节点中同步、只会存储在一个节点中。
+仅适用于Demo级别，在生产上不会使用单机模式
 
-RabbitMQ的镜像集群模式，会把所有数据完全同步，包括元数据信息和消息数据信息，显然这会降低一定的性能、并且占用更多的空间，但是可靠性更高。
+### 5.2 普通集群模式
 
-## 2. 默认集群模式
+普通集群模式，也是默认的集群模式，它只会把交换机、队列、虚拟主机等**元数据信息**在各个节点同步，而具体队列中的消息内容不会在各个节点中同步、只会存储在一个节点中。
 
-搭建步骤如下：
+当消费者消费消息时，如果连接的节点并不存储queue中的消息内容，那么这个节点会根据queue的元数据信息，找到真正存储消息内容的queue所在的节点，然后将消息数据拉取过来并交给消费者消费。
 
-（1）修改3台机器的主机名称：`vim /etc/hostname`
+因此，普通集群模式主要是**提高吞吐量**的，也就是让集群中多个节点来服务某个queue的读写操作。所以，普通集群模式同样**无法保证高可用性**，一旦真正存储消息内容的节点宕机了，就无法继续提供服务。
 
-（2）配置各个节点的 hosts 文件，让各个节点都能互相识别对方：`vim /etc/hosts`
+### 5.3 镜像集群模式
 
-```vim
-10.211.55.74 node1
-10.211.55.75 node2
-10.211.55.76 node3
-```
+镜像集群模式，才是RabbitMQ的**高可用模式**，它会把所有数据完全同步，包括元数据信息和消息数据信息，所以每一个RabbitMQ节点都是一个完整镜像。
 
-（3）确保各个节点的 cookie 文件使用的是同一个值，在 node1 上执行远程操作命令：
+我们在创建队列时，只需在管理控制台指定一个策略，就能让该队列成为**镜像队列**。每当我们写消息到这个queue时，它就会自动把消息同步到所有其他节点中（同步的过程中会阻塞，无法对外提供服务，直到同步完毕）。所以，即使一个节点宕机了，也能切换到另一个节点去消费数据，保证了服务的高可用性。
 
-```shell
-scp /var/lib/rabbitmq/.erlang.cookie root@node2:/var/lib/rabbitmq/.erlang.cookie
-scp /var/lib/rabbitmq/.erlang.cookie root@node3:/var/lib/rabbitmq/.erlang.cookie
-```
-
-（4）启动 RabbitMQ 服务，顺带启动 Erlang 虚拟机和 RbbitMQ 应用服务(在三台节点上分别执行以下命令)：
-
-```shell
-rabbitmq-server -detached
-```
-
-（5）在节点 2 执行：
-
-```shell
-rabbitmqctl stop_app  # rabbitmqctl stop 会将 Erlang 虚拟机关闭，rabbitmqctl stop_app 只关闭 RabbitMQ 服务
-rabbitmqctl reset
-rabbitmqctl join_cluster rabbit@node1
-rabbitmqctl start_app  # 只启动应用服务
-```
-
-（6）在节点 3 执行：
-
-```shell
-rabbitmqctl stop_app
-rabbitmqctl reset
-rabbitmqctl join_cluster rabbit@node2
-rabbitmqctl start_app
-```
-
-（7）查看集群状态：
-
-```shell
-rabbitmqctl cluster_status
-```
-
-（8）重新设置用户
-
-- 创建账号：`rabbitmqctl add_user admin 123`
-- 设置用户角色：`rabbitmqctl set_user_tags admin administrator`
-- 设置用户权限：`rabbitmqctl set_permissions -p "/" admin ".*" ".*" ".*"`
-
-（9）解除集群节点(node2 和 node3 机器分别执行)
-
-```shell
-rabbitmqctl stop_app
-rabbitmqctl reset
-rabbitmqctl start_app
-rabbitmqctl cluster_status
-rabbitmqctl forget_cluster_node rabbit@node2 # node1机器上执行
-```
-
-## 3. 镜像集群模式
-
-引入镜像队列(Mirror Queue)的机制，可以将队列镜像到集群中的其他 Broker 节点之上，如果集群中的一个节点失效了，队列能自动地切换到镜像中的另一个节点上以保证服务的可用性。
-
-搭建步骤如下：
-
-（1）启动三台集群节点
-
-（2）随便找一个节点添加 policy
-
-![](images/20231005202432.png)
-
-（3）在 node1 上创建一个队列发送一条消息，队列存在镜像队列
-
-![](images/20231005202513.png)
-
-（4）停掉 node1 之后发现 node2 成为镜像队列
-
-![](images/20231005202550.png)
-
-（5）就算整个集群只剩下一台机器了，依然能消费队列里面的消息，说明队列里面的消息被镜像队列传递到相应机器里面了。
+这种模式虽然保证了高可用性，但是占用了更多的空间，而且降低了性能，消息同步到所有节点上会导致很高的网络带宽压力。

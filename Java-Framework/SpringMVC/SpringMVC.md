@@ -2,17 +2,11 @@
 
 ## 1.1 MVC
 
-MVC是一种软件架构的思想，将软件按照模型、视图、控制器来划分。
+MVC是一种软件架构的思想，将软件按照模型、视图、控制器来划分，其核心思想是通过将业务逻辑、数据、显示分离来组织代码。
 
-（1）M：**Model，模型层**，指工程中的JavaBean，作用是处理数据。JavaBean分为两类：
-  - 一类称为实体类Bean：专门存储业务数据的，如 Student、User 等
-  - 一类称为业务处理Bean：指 Service 或 Dao 对象，专门用于处理业务逻辑和数据访问。
-
-（2）V：**View，视图层**，指工程中的html或jsp等页面，作用是与用户进行交互，展示数据。
-
-（3）C：**Controller，控制层**，指工程中的servlet，作用是接收请求和响应浏览器。
-
-**MVC的工作流程**：用户通过视图层发送请求到服务器，在服务器中请求被Controller接收，Controller调用相应的Model层处理请求，处理完毕将结果返回到Controller，Controller再根据请求处理的结果找到相应的View视图，渲染数据后最终响应给浏览器。
+- M：**Model，模型**，用于保存系统中涉及的数据，例如bean
+- V：**View，视图**，用于展示模型中的数据，例如html页面
+- C：**Controller，控制器**，用于接收请求和响应浏览器，例如Servlet
 
 ## 1.2 SpringMVC
 
@@ -20,25 +14,35 @@ Spring Web MVC是基于Servlet API构建的原始Web框架，从一开始就包�
 
 **SpringMVC最主要的作用**：简化前端参数的接收、简化后端数据的响应。
 
-**SpringMVC优势**：
-- **Spring 家族原生产品**，与IOC容器等基础设施无缝对接
-- **基于原生的Servlet**，通过了功能强大的**前端控制器DispatcherServlet**，对请求和响应进行统一处理
-- 表述层各细分领域需要解决的问题**全方位覆盖**，提供**全面解决方案**
-- **代码清新简洁**，大幅度提升开发效率
-- 内部组件化程度高，可插拔式组件**即插即用**，想要什么功能配置相应组件即可
-- **性能卓著**，尤其适合现代大型、超大型互联网项目要求
+## 1.3 SpringMVC的核心组件
 
-## 1.3 SpringMVC核心组件和调用流程
+1. `DispatcherServlet`: **核心的中央处理器**，所有请求都经过它的**处理和分发**。
+2. `HandlerMapping`: **处理器映射器**，它内部缓存handler方法和对应访问路径，主要**用于根据URL匹配对应的handler**，除此之外，它还会将请求涉及到的拦截器和handler一起封装。
+3. `HandlerAdapter`: **处理器适配器**，它根据HandlerMapping找到的handler，来适配对应的handler。它可以**处理请求参数和处理响应数据**，每次DispatcherServlet都是**通过HandlerAdapter间接调用handler方法**。
+4. `handler`: **请求处理器**，指的是Controller类内部的方法，用于处理实际请求。它是由程序员自己定义的。
+5. `ViewResovler`: **视图解析器**，根据返回的逻辑视图，查找真正的视图。注意，在前后端分离项目中，不使用视图解析器，因为返回给前端的是JSON数据。
+
+## 1.4 SpringMVC的简要工作流程
 
 ![](images/20230913130735.png)
 
-1. `DispatcherServlet`: SpringMVC提供，前端控制器，它是整个流程处理的核心，**所有请求都经过它的处理和分发**。我们需要使用web.xml配置或者Web初始化类使其生效。
-2. `HandlerMapping`: SpringMVC提供，我们需要进行IoC配置使其加入IoC容器方可生效，它**内部缓存handler方法和handler访问路径数据**，被DispatcherServlet调用，**用于查找路径对应的handler**。
-3. `HandlerAdapter`: SpringMVC提供，我们需要进行IoC配置使其加入IoC容器方可生效，它可以**处理请求参数和处理响应数据**，每次DispatcherServlet都是**通过HandlerAdapter间接调用handler**，所以它是handler和DispatcherServlet之间的适配器。
-4. `handler`: handler又称处理器，它是Controller类内部的方法简称，是由我们自己定义，用来接收参数，向后调用业务，最终返回响应结果。
-5. `ViewResovler`: SpringMVC提供，我们需要进行IoC配置使其加入IoC容器方可生效。视图解析器主要作用**简化模板视图页面查找**，但是需要注意，前后端分离项目，后端只返回JSON数据，不返回页面，那就不需要视图解析器。所以，视图解析器，相对其他的组件不是必须的。
+1. 客户端（浏览器）发送请求， `DispatcherServlet`拦截请求。
 
-# 2. 实战案例整体流程
+2. `DispatcherServlet` 根据请求信息调用 `HandlerMapping` 。`HandlerMapping` 根据 URL 去匹配查找能处理的 `Handler`，并会将请求涉及到的拦截器和 `Handler` 一起封装。
+
+3. `DispatcherServlet` 调用 `HandlerAdapter`适配器执行 `Handler` 。
+
+4. `Handler` 完成对用户请求的处理后，会返回一个 `ModelAndView` 对象给`DispatcherServlet`。
+
+   > `ModelAndView`包含了数据模型以及相应的视图的信息。`Model` 是返回的数据对象，`View` 是个逻辑上的视图。
+
+5. `ViewResolver` 会根据逻辑 `View` 查找实际的 `View`。
+6. `DispaterServlet` 把返回的 `Model` 传给 `View`（视图渲染）。
+7. 把 `View` 返回给请求者（浏览器）
+
+
+
+# 2. 实战案例
 
 ## 2.1 创建Maven JavaEE工程并引入依赖
 
@@ -108,6 +112,7 @@ public class HelloController {
 > @RequestMapping注解用于指定**处理请求和控制器方法之间的映射关系**，其value属性可以通过请求地址匹配请求，`/`表示的当前工程的上下文路径，如：`http://localhost:8080/mvcdemo/`
 
 **说明**：SpringMVC 对处理请求的类并没有特殊要求，但我们自己习惯上有两种命名方式：
+
 - XxxHandler：意思是 Xxx 处理器的意思
 - XxxController：意思是 Xxx 控制器的意思
 
@@ -1057,7 +1062,7 @@ REST风格提倡**URL地址使用统一的风格设计**，从前到后**各个�
 - 当前请求的请求方式必须为`post`
 - 当前请求必须传输请求参数`_method`，对应的值必须为`put`、`delete`或`patch`三者之一
 
-根据源码可知，只有满足以上条件，HiddenHttpMethodFilter过滤器才会将当前请求的请求方式转换为请求参数_method的值，因此请求参数_method的值才是最终的请求方式。
+根据源码可知，只有满足以上条件，HiddenHttpMethodFilter过滤器才会将当前请求的请求方式转换为请求参数`_method`的值，因此请求参数`_method`的值才是最终的请求方式。
 
 ```html
 <form th:action="@{/user}" method="post">
@@ -1141,23 +1146,14 @@ public String deleteUserById(@PathVariable("id") Integer id) {
 
 # 6. 异常处理器
 
-## 6.1 异常处理的两种方式
+- **编程式异常处理**：在代码中显式地编写处理异常的逻辑，例如使用try-catch块。
+- **声明式异常处理**：将异常处理的逻辑从具体的业务逻辑中分离出来，通过配置等方式进行统一的管理和处理。
 
-**编程式异常处理**：在代码中显式地编写处理异常的逻辑，例如使用try-catch块。
+在Spring MVC中，我们推荐使用声明式异常处理，编写一个**统一的全局异常处理器**来处理异常，具体步骤如下：
 
-**声明式异常处理**：将异常处理的逻辑从具体的业务逻辑中分离出来，通过配置等方式进行统一的管理和处理。在声明式异常处理中，开发人员只需要为方法或类标注相应的注解，就可以处理特定类型的异常。
+## 6.1声明异常处理控制器类
 
-## 6.2 配置异常处理器
-
-SpringMVC提供了一个处理控制器方法执行过程中所出现的异常的接口：HandlerExceptionResolver。该接口的实现类有：
-- DefaultHandlerExceptionResolver
-- SimpleMappingExceptionResolver：用于自定义异常处理器
-
-我们使用注解自定义异常处理器的步骤如下：
-
-**1、声明异常处理控制器类**
-
-使用`@ControllerAdvice`注解将当前类标识为异常处理的组件，里面统一定义异常处理handler方法。也可以使用`@RestControllerAdvice`注解，它就相当于`@ControllerAdvice`加上`@ResponseBody`。
+使用`@ControllerAdvice`注解将当前类标识为异常处理的组件，里面统一定义异常处理handler方法。前后端分离项目中，使用`@RestControllerAdvice`注解，它相当于`@ControllerAdvice`加上`@ResponseBody`。
 
 ```java
 @RestControllerAdvice
@@ -1165,27 +1161,37 @@ public class GlobalExceptionHandler {
 }
 ```
 
-**2、声明异常处理handler方法**
+## 6.2 声明异常处理handler方法
 
-- 在handler方法上使用注解@ExceptionHandler来指定要处理的异常
-- 在handler方法的形参位置，使用异常类型的对象(如Throwable)来接收所出现的异常
+- 在handler方法上使用注解`@ExceptionHandler`来指定要处理的异常
+- 在handler方法的形参位置，使用相应的异常类型的对象来接收所出现的异常
 
 ```java
-@ControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler {
+    @ExceptionHandler(RuntimeException.class)
+    public String handlerRuntimeException(RuntimeException e) {
+        e.printStackTrace();
+        return "发生了RuntimeException";
+    }
+
     @ExceptionHandler(Exception.class)
-    public String handlerException(Model model, Throwable e) {
-        model.addAttribute("e", e);
-        return "error"; // 返回逻辑视图名，因为没加@ResponseBody
+    public String handlerException(Exception e) {
+        e.printStackTrace();
+        return "发生了Exception";
     }
 }
 ```
 
-> 注1：一旦发生异常，则会先去找最精确的异常handler方法，如果没有，再往上找其父类异常的handler方法
->
-> 注2：如果类只用@Controller标识，那么该类中标识@ExceptionHandler的方法，默认只能处理该类中出现的异常。而如果类用@ControllerAdvice标识，则是一个全局的异常处理类，可以处理所有出现的异常。
+这种异常处理方式的底层原理是，会给所有Controller织入异常处理的逻辑（AOP），当Controller中的方法抛出异常时，就会被对应的`@ExceptionHandler`修饰的方法进行处理。
 
-**3、一定要在SpringMVC配置类上扫描异常处理类所在的包**
+> 注意：根据底层源码，抛出的异常会**优先匹配最精确的异常handler方法**，如果没有，再往上找其父类异常的handler方法。
+>
+> 说明：如果异常处理类只用`@Controller`标识，那么该类中标识`@ExceptionHandler`的方法，默认只能处理该类中抛出的异常。而如果类用`@ControllerAdvice`标识，则是一个全局的异常处理类，可以处理所有抛出的异常。
+
+## 6.3 将异常处理类扫描到IoC容器中
+
+要在SpringMVC配置类上扫描异常处理类所在的包
 
 ```java
 @ComponentScan({"com.thuwsy.controller", "com.thuwsy.exceptionhandler"})
@@ -1565,7 +1571,7 @@ public class MyWebAppInitializer extends AbstractAnnotationConfigDispatcherServl
 
 # 12. SpringMVC底层原理
 
-## 12.2 DispatcherServlet初始化过程
+## 12.1 DispatcherServlet初始化过程
 
 DispatcherServlet 本质上是一个 Servlet，所以天然的遵循 Servlet 的生命周期。所以宏观上是 Servlet 生命周期来进行调度。
 
@@ -1597,33 +1603,3 @@ FrameworkServlet类中通过调用createWebApplicationContext()方法创建了We
 ### 3、初始化DispatcherServlet
 
 FrameworkServlet类中通过调用onRefresh()方法刷新容器，此方法在DispatcherServlet类中进行了重写，调用了initStrategies(context)方法，初始化DispatcherServlet的各个组件，如请求映射等。
-
-
-
-
-
-
-
-# 13. 补充：ContextLoaderListener
-
-> 以前使用xml配置，需要使用该监听器使得先加载spring的ioc容器。如果使用配置类，则无需考虑它。
-
-Spring提供了监听器ContextLoaderListener，实现ServletContextListener接口，可监听ServletContext的状态，在web服务器的启动，读取Spring的配置文件，创建Spring的IOC容器。web应用中必须在web.xml中配置
-
-```xml
-<!-- 配置Spring的监听器，在服务器启动时加载Spring的配置文件 -->
-<listener>
-    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-</listener>
-<!-- 自定义Spring配置文件的位置和名称 -->
-<context-param>
-    <param-name>contextConfigLocation</param-name>
-    <param-value>classpath:spring.xml</param-value>
-</context-param>
-```
-
-也就是说，DispatcherServlet负责加载 SpringMVC 的配置文件，来创建一个springmvc的 IOC 容器，专门用于管理控制层组件；而ContextLoaderListener负责加载 Spring 的配置文件，来创建一个spring的 IOC 容器，专门用于管理其他组件。正是因为控制层组件自动装配需要依赖其他层的组件，所以我们必须先创建spring的IOC容器，而Tomcat在读取web.xml之后，加载组件的顺序就是监听器、过滤器、Servlet，所以我们通过监听器在服务器启动时加载Spring的配置文件，从而创建spring的IOC容器。
-
-**注意**：两个组件分别创建的 IOC 容器是父子关系。父容器是ContextLoaderListener 创建的 IOC 容器；子容器DispatcherServlet 创建的 IOC 容器。这一点我们从第7章的底层源码中就可以看到。
-- 子容器可以访问父容器中的bean，而父容器则不可以访问子容器中的bean
-- 两个容器扫描同一个包会导致重复创建对象，所以一定要设置让SpringMVC只扫描控制层组件，而Spring则不扫描控制层组件。

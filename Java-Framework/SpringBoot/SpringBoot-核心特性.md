@@ -183,14 +183,6 @@ java -jar boot3-01-demo-1.0-SNAPSHOT.jar
 
 ![](images/20230814233509.png)
 
-> 推荐勾选以下内容：
-> - Spring Web
-> - Thymeleaf
-> - Lombok
-> - MySQL Driver
-> - MyBatis Framework
-> - Spring Data Redis (Access+Driver)
-
 ## 3. 常用注解
 
 ### 3.1 定义配置类
@@ -311,7 +303,7 @@ public class AppConfig2 {
         private Long id;
         private String name;
         private Integer age;
-
+    
         // getXxx、setXxx、toString方法...
     }
     ```
@@ -329,7 +321,7 @@ public class AppConfig2 {
     public class Boot302DemoApplication {
         public static void main(String[] args) {
             var ioc = SpringApplication.run(Boot302DemoApplication.class, args);
-
+    
             Pig pig = ioc.getBean(Pig.class);
             System.out.println(pig);
             // Pig{id=1, name='佩奇', age=5}
@@ -343,7 +335,7 @@ public class AppConfig2 {
     ```java
     @SpringBootConfiguration 
     public class AppConfig {
-
+    
         @ConfigurationProperties(prefix = "pig")
         @Bean
         public Pig pig(){
@@ -363,7 +355,7 @@ public class AppConfig2 {
         private Long id;
         private String name;
         private Integer age;
-
+    
         // getXxx、setXxx、toString方法...
     }
     ```
@@ -373,7 +365,7 @@ public class AppConfig2 {
     @EnableConfigurationProperties(Pig.class)
     @SpringBootConfiguration
     public class AppConfig {
-
+    
     }
     ```
 
@@ -486,7 +478,7 @@ person:
     birth-day: 2018/10/10
     text: ["abc","def"] #数组表示方式1：使用[]
   dogs:
-    - name: 小黑 #数组表示方式2：使用- 表示每个元素
+    - name: 小黑 #数组表示方式2：使用-表示每个元素
       age: 3
     - name: 小白
       age: 2
@@ -958,8 +950,8 @@ spring-boot-starter中导入了一个依赖 spring-boot-autoconfigure，这个�
    - spring-web
    - spring-webmvc
 2. 每个场景启动器还都引入了一个spring-boot-starter，即**核心场景启动器**。
-3. 核心场景启动器引入了spring-boot-autoconfigure依赖，这个jar包里面囊括了**所有场景的自动配置类**。
-4. 但SpringBoot默认却扫描不到spring-boot-autoconfigure下的这些配置类，因为默认只扫描主程序所在的包及其子包。
+3. 核心场景启动器引入了spring-boot-autoconfigure依赖，这个jar包里面囊括了**所有场景的自动配置类**，会利用SPI机制来加载这些自动配置类（但并不是全都注册到IoC容器，因为有条件注解）。
+4. 注意SpringBoot默认扫描不到spring-boot-autoconfigure下的这些配置类，因为默认只扫描主程序所在的包及其子包。
 
 ### 3.2 @SpringBootApplication
 
@@ -1008,7 +1000,7 @@ public @interface EnableAutoConfiguration {
 
 **（1）`@AutoConfigurationPackage`**
 
-该注解的作用是**扫描主程序所在的包及其子包**。查看其源码，会发现它利用了`@Import({AutoConfigurationPackages.Registrar.class})`给容器中导入组件，而且导入的组件是主程序所在的包及其子包。
+它利用了`@Import({AutoConfigurationPackages.Registrar.class})`给容器中导入组件，而且导入的组件是主程序所在的包及其子包。
 
 **（2）`@Import({AutoConfigurationImportSelector.class})`**
 
@@ -1034,7 +1026,7 @@ public @interface EnableAutoConfiguration {
 )
 ```
 
-其作用是**排除扫描**前面已经扫描进来的配置类和自动配置类。
+作用是扫描当前包及其子包，并且**排除扫描**前面已经扫描进来的配置类和自动配置类。
 
 ### 3.3 SPI机制
 
@@ -1078,13 +1070,16 @@ public class ServerProperties {
 ### 4.1 使用SpringBoot整合场景的步骤
 
 1、选场景，导入到项目
+
 - 官方starter
 - 第三方：去仓库搜
 
 2、写配置，改配置文件关键项
+
 - 如数据库参数（连接地址、账号密码等）
 
 3、分析这个场景给我们导入了哪些能用的组件
+
 - 自动装配这些组件进行后续使用
 - 不满意boot提供的自动配好的默认组件，则可以定制化：改配置、自定义组件
 
@@ -4427,5 +4422,4 @@ public class AccountService {
 ## 4. SpringBoot完整的启动流程
 
 ![](images/20230920191403.png)
-
 
