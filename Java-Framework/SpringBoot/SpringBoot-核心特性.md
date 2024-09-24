@@ -1030,11 +1030,13 @@ public @interface EnableAutoConfiguration {
 
 ### 3.3 SPI机制
 
-Java中的**SPI**（Service Provider Interface）是一种**软件设计模式**，用于**在应用程序中动态地发现和加载组件**。SPI的思想是，定义一个接口或抽象类，然后通过在classpath中定义实现该接口的类来实现对组件的动态发现和加载。
+SPI即Service Provider Interface（服务提供者的接口），也就是专门提供给服务提供者或者扩展框架功能的开发者去使用的一个接口。SPI提供了一种服务发现机制，允许在程序外部动态指定具体实现。
 
-在Java中，SPI的默认实现方式是通过在META-INF/services目录下创建一个以服务接口全限定名为名字的文件，文件中包含实现该服务接口的类的全限定名。当应用程序启动时，Java的SPI机制会自动扫描classpath中的这些文件，并根据文件中指定的类名来加载实现类。
+Java中SPI机制主要用于**在应用程序中动态地发现和加载组件**，核心思想是：定义一个接口或抽象类，然后通过在classpath中定义实现该接口的类来实现对组件的动态发现和加载。
 
-而**在SpringBoot中SPI的实现方式**，则是自动加载`META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports`文件中的所有自动配置类。
+**JDK的默认SPI机制**，是通过在`META-INF/services`目录下创建一个**以接口全限定名为名字**的文件，文件中包含**实现该接口的类的全限定名**。当应用程序启动时，JDK的默认SPI机制会自动扫描`META-INF/services`目录下的这些文件，并根据文件中指定的类名来加载实现类。
+
+而**SpringBoot中的SPI机制**，则是自动加载`META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports`文件中的所有自动配置类。
 
 ### 3.4 XxxAutoConfiguration自动配置类的功能
 
