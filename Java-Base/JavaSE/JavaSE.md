@@ -2959,13 +2959,7 @@ public class MyJavaTest {
 - 修改位置1：IDEA安装目录的bin目录（例如：`D:\develop_tools\IDEA\IntelliJ IDEA 2022.1.2\bin`）下的`idea64.exe.vmoptions`文件。 
 - 修改位置2：C盘的用户目录`C:\Users\用户名\AppData\Roaming\JetBrains\IntelliJIdea2022.1`下的`idea64.exe.vmoptions`文件。
 
-### 10.4 定义test测试方法模板
-
-选中自定义的模板组，点击`+`并选择`1. Live Template`来定义模板：
-
-![](images/image-20211229100040505.png)
-
-### 10.5 断言机制
+### 10.4 断言机制
 
 在单元测试中，我们可以使用断言机制。**所谓断言，就是程序员可以预测程序的运行结果，检查程序的运行结果是否与预期一致**。例如
 
