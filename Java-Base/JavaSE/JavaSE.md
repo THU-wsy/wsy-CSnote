@@ -127,6 +127,8 @@ Java程序开发三步骤：**编写**、**编译**、**运行**。
 - 一般适用于大型网站开发，整个架构会比较重
 - 并非适用于所有领域。比如，Objective C、Swift在iOS设备上就有着无可取代的地位。浏览器中的处理几乎完全由JavaScript掌控。Windows程序通常都用C++或C#编写。Java在服务器端编程和跨平台客户端应用领域则很有优势。
 
+
+
 # 第02章_Java基本语法
 
 ## 1. 变量
@@ -328,15 +330,15 @@ System.out.println(m); // 2
 
 ```java
 问题1：下面的代码否有问题？
-  byte x = 10;
-  byte y = 30;
+	byte x = 10;
+	byte y = 30;
 	x = x + y; // 这句代码有问题，因为两个byte类型数据相加，会提升为int类型
 	
 问题2：下面的代码是否有问题？
-	byte x = 10;
-	byte y = 30;
-	x += y; // 这句代码没有问题，因为这里隐含了强制类型转换
-	//x += y; 等价于 x = (byte) (x + y);
+    byte x = 10;
+    byte y = 30;
+    x += y; // 这句代码没有问题，因为这里隐含了强制类型转换
+    //x += y; 等价于 x = (byte) (x + y);
 ```
 
 ### 4.3 比较运算符
@@ -653,8 +655,8 @@ int[][] arr3 = {{1,2,3},{4,5,6},{7,8,9,10}}; // 必须一句完成
 ```java
 // 1. 确定行数和列数
 int[][] arr = new int[m][n];
-	  // m表示这个二维数组有多少个一维数组
-	  // n表示每一个一维数组的元素有多少个
+    // m表示这个二维数组有多少个一维数组
+    // n表示每一个一维数组的元素有多少个
     // 此时数组的行数和列数已经确定，且元素也都有默认值
 // 2. 然后再为元素赋值
 ```
@@ -2959,13 +2961,7 @@ public class MyJavaTest {
 - 修改位置1：IDEA安装目录的bin目录（例如：`D:\develop_tools\IDEA\IntelliJ IDEA 2022.1.2\bin`）下的`idea64.exe.vmoptions`文件。 
 - 修改位置2：C盘的用户目录`C:\Users\用户名\AppData\Roaming\JetBrains\IntelliJIdea2022.1`下的`idea64.exe.vmoptions`文件。
 
-### 10.4 定义test测试方法模板
-
-选中自定义的模板组，点击`+`并选择`1. Live Template`来定义模板：
-
-![](images/image-20211229100040505.png)
-
-### 10.5 断言机制
+### 10.4 断言机制
 
 在单元测试中，我们可以使用断言机制。**所谓断言，就是程序员可以预测程序的运行结果，检查程序的运行结果是否与预期一致**。例如
 
@@ -3098,7 +3094,7 @@ int i = Integer.parseInt("123");
 Integer obj = Integer.parseInt("456");
 ```
 
-注意：如果字符串参数的内容无法正确转换为对应的基本类型，则会抛出`java.lang.NumberFormatException`异常。
+注意：如果字符串参数的内容无法正确转换为对应的基本类型，则会抛出java.lang.NumberFormatException异常。
 
 #### 方式2：使用包装类的valueOf()方法
 
@@ -3334,7 +3330,7 @@ System.out.println(o2); // 1
 
 Throwable有两大子类：Error和Exception。
 
-**Error**指的是Java虚拟机无法解决的严重问题，一般不编写针对性的代码进行处理。例如`StackOverflowError`、`OutOfMemoryError`
+**Error**指的是Java虚拟机无法解决的严重问题，一般不编写针对性的代码进行处理。例如StackOverflowError、OutOfMemoryError
 
 **Exception**指的是其它因编程错误或偶然的外在因素导致的一般性问题，需要使用针对性的代码进行处理，使程序继续运行。
 
@@ -3779,6 +3775,8 @@ public class BelowZeorException extends Exception {
 - 自定义的异常对象只能通过throw手动抛出
 - 自定义异常最重要的是异常类的名字和message属性。当异常出现时，可以见名知义，根据名字判断异常类型。比如：`TeamException("成员已满，无法添加");`
 
+
+
 # 第07章_常用类和API
 
 ## 1. String
@@ -3818,7 +3816,7 @@ String在jdk8及以前内部使用`private final char[] value;`来存储字符�
 
 String代表不可变的字符序列：
 
-- 当对字符串重新赋值时，需要重写指定内存区域赋值，不能使用原有的value进行赋值
+- 当对字符串重新赋值时，需要重新指定内存区域赋值，不能使用原有的value进行赋值
 - 当对现有的字符串进行连接操作时，也需要重新指定内存区域赋值，不能使用原有的value进行赋值
 - 当调用String的replace()方法修改指定字符或字符串时，也需要重新指定内存区域赋值，不能使用原有的value进行赋值
 - 调用字符串的`concat(xxx)`进行拼接。不管是常量调用此方法，还是变量调用，同样不管参数是常量还是变量，总之，调用完`concat()`方法都返回一个新new的对象。
@@ -5222,7 +5220,7 @@ Map接口存储具有映射关系"key-value"对的集合，也称`双列数据�
 
 ## 2. Collection
 
-要求：向集合中添加元素时，元素所属的类需要重写一些方法(equals、hashCode、比较器)，因为Collection中contains()、remove()等方法需要根据以下规则判断两个元素是否相等：
+要求：向集合中添加元素时，元素所属的类可能需要重写一些方法（equals、hashCode、比较器），因为Collection中contains()、remove()等方法需要根据以下规则判断两个元素是否相等：
 
 - 对于List集合：`equals()`返回true则认为两个元素相等
 - 对于HashSet和LinkedHashSet：`hashCode()`相等，且`equals()`返回true则认为两个元素相等
@@ -5290,7 +5288,7 @@ Collection接口继承了Iterable接口，该接口中主要有以下方法：
 - `Iterator<T> iterator()`：用于返回一个Iterator迭代器对象
 - `void forEach(Consumer action)`：用于遍历集合
 
-`Iterator`就是迭代器接口，主要用于遍历集合中的元素(注意**数组没有迭代器**)。
+`Iterator`就是迭代器接口，主要用于遍历集合中的元素（注意**数组没有迭代器**）。
 
 > **注意：集合对象每次调用`iterator()`方法都会得到一个全新的迭代器对象，默认游标在集合的第一个元素之前**。
 
@@ -5298,7 +5296,7 @@ Collection接口继承了Iterable接口，该接口中主要有以下方法：
 
 - `E next()`: 先将迭代器后移，然后返回此时迭代器指向的元素。
 - `boolean hasNext()`: 判断迭代器指向的位置的下一个位置的元素是否存在
-- `void remove()`：从集合中删除此迭代器返回的最后一个元素(即之前调用`next()`返回的最后一个元素)
+- `void remove()`：从集合中删除此迭代器返回的最后一个元素（即之前调用`next()`返回的最后一个元素）
 
 **注1**：在调用`it.next()`方法之前建议调用`it.hasNext()`进行检测判断。若不调用，且下一条记录无效，直接调用`it.next()`会抛出NoSuchElementException异常。
 
@@ -5494,9 +5492,9 @@ Set集合的特点是：元素无序、不重复、无索引。**注意Set集合
 
 HashSet是Set接口的主要实现类，它是线程不安全的。
 
-**HashSet和LinkedHashSet集合判断两个元素相等的标准：两个对象通过 `hashCode()` 方法得到的哈希值相等，并且两个对象的 `equals() `方法返回值为true**。
+**HashSet和LinkedHashSet集合判断两个元素相等的标准：两个对象通过`hashCode()`方法得到的哈希值相等，并且两个对象的`equals()`方法返回值为true**。
 
-因此，对于存放在HashSet和LinkedHashSet容器中的对象，**对应的类一定要重写`hashCode()`和`equals()`方法**，并且要保证两个方法的一致性，即equals返回true的两个对象hashCode必须相同。
+因此，对于存放在HashSet和LinkedHashSet容器中的对象，**对应的类一定要保证`hashCode()`和`equals()`方法的一致性**，即equals返回true的两个对象hashCode必须相同。
 
 > **说明**：为了保证equals和hashCode的一致性，对象中用作equals()方法比较的Field，都应该用来计算hashCode值。开发中直接使用IDEA的快捷键自动重写equals()和hashCode()方法即可。
 
@@ -5589,7 +5587,7 @@ TreeSet集合线程不安全，其元素默认是升序排序的。其底层是�
 
 **注意**：
 
-- 对于TreeSet集合而言，它判断`两个对象是否相等的唯一标准`是：两个对象通过`compareTo(Object obj)或compare(Object o1,Object o2)`方法比较返回值，返回值为0，则认为两个对象相等。因此，hashCode()和equals()方法可以无需重写。
+- 对于TreeSet集合而言，它判断`两个对象是否相等的唯一标准`是：两个对象通过`compareTo(Object obj)或compare(Object o1,Object o2)`方法比较返回值，返回值为0，则认为两个对象相等。
 - 添加到TreeSet中的元素必须是同一个类型的对象，否则会报ClassCastException
 
 **TreeSet必须至少实现两种排序方法之一**：`自然排序`和`定制排序`。对于定制排序，可以通过调用TreeSet集合的有参构造器来设置Comparator。
@@ -5691,7 +5689,7 @@ Map集合称为双列集合，打印格式为：`{key1=value1, key2=value2, key3
 
 Map集合的所有键是不允许重复的，但值可以重复，每一个键只能找到自己对应的值。Map系列集合的特点都是由键决定的：无序、不重复、无索引。**注意如果试图把一个相同的key加入同一个Map集合中，则会直接用新的value替换之前元素的value**。
 
-因此，对于value所属的类，需要重写`equals()`方法。而对于key所属的类，对HashMap来说需要重写`hashCode()`和`equals()`方法，对TreeMap来说需要给出比较器。
+因此，对于value所属的类，通常需要重写`equals()`方法。而对于key所属的类，对HashMap来说通常需要重写`hashCode()`和`equals()`方法，对TreeMap来说需要给出比较器。
 
 ### 7.2 Map接口方法
 
@@ -6845,7 +6843,7 @@ ObjectInputStream：从字节输入流中读取基本数据类型的数据和对
 > 
 > 注2：static变量不会被序列化，因为静态变量不属于某个对象。
 
-**说明**：实际开发中，我们**很少使用JDK的序列化机制**，因为它性能较低、且只适用于Java语言。我们通常使用的都是**JSON方式的序列化**，这时Java类就无需实现`Serializable`接口。
+**说明**：实际开发中，我们**很少使用JDK的序列化机制**，因为它性能较低、序列化后的内容难以阅读、且只适用于Java语言。我们通常使用的都是**JSON方式的序列化**，这时Java类就无需实现`Serializable`接口。
 
 ### 7.4 使用对象流进行序列化的案例
 
@@ -7059,7 +7057,7 @@ public static void main(String[] args) {
 
 ### 10.1 XML文件概述
 
-XML是可扩展的标记语言(全称EXtensible Markup Language)。本质上一种数据格式，可以用来表示复杂的数据关系。应用场景：xml文件经常用来做为系统的配置文件；或者作为一种特殊的数据结构，在网络中进行传输(但现在以JSON为主)。
+XML是可扩展的标记语言(全称EXtensible Markup Language)。本质上是一种数据格式，可以用来表示复杂的数据关系。应用场景：xml文件经常用来作为系统的配置文件；或者作为一种特殊的数据结构，在网络中进行传输(但现在以JSON为主)。
 
 XML文件有如下的特点：
 
@@ -7124,7 +7122,7 @@ XML文件有如下的特点：
 3. 选择lib下的jar文件，右键点击Add As Library
 4. 在类中导包使用
 
-DOM4J解析XML文件的思想：**文档对象模型**（意思是把整个XML文档、每一个标签、每一个属性都等都当做对象来看待）。Document对象表示真个XML文档、Element对象表示标签（元素）、Attribute对象表示属性、标签中的内容就是文本
+DOM4J解析XML文件的思想：**文档对象模型**（意思是把整个XML文档、每一个标签、每一个属性都等都当做对象来看待）。Document对象表示真个XML文档、Element对象表示标签（元素）、Attribute对象表示属性、标签中的内容就是文本。
 
 **XML解析的过程，是从根元素开始，从外层往里层解析**。
 
@@ -7311,7 +7309,7 @@ IDEA中有代码提示的协助，在DTD文档的约束下进行配置非常简�
 - warn：警告信息
 - error：错误信息
 
-Logback只输出高于或者等于核心配置文件配置的日志级别信息。而低于配置级别的日志信息，不被记录。例如：
+Logback只输出**高于或者等于核心配置文件配置的日志级别信息**。而低于配置级别的日志信息，不被记录。例如：
 
 - 配置的是debug，则debug、info、warn、error级别的日志被输出
 - 配置的是info，则info、warn、error级别的日志被输出
@@ -7366,45 +7364,69 @@ public class LogBackTest {
 
 ## 12. UNIX系统的IO模型
 
-当用户进程想要执行IO操作时，必须**发起IO系统调用**，然后由**内核来执行具体的IO操作**：内核会等待IO设备准备好数据，然后将数据从内核空间拷贝到用户空间。UNIX系统有以下5种经典的IO模型：
+当用户进程想要执行IO操作时，必须**发起IO系统调用**，然后由**内核来执行具体的IO操作**：以读操作为例，**内核会等待硬件设备将数据放到内核缓冲区后，再将数据从内核缓冲区拷贝到用户缓冲区**。
 
-- Blocking IO（同步阻塞IO）
-- Non-blocking IO（同步非阻塞IO）
+![image-20241119164554480](images/image-20241119164554480.png)
+
+UNIX系统有以下5种经典的IO模型：
+
+- Blocking IO（阻塞IO）
+- Non-blocking IO（非阻塞IO）
 - IO Multiplexing（IO多路复用）
 - Signal Driven IO（信号驱动IO）
 - Asynchronous IO（异步IO）
 
 ### 12.1 BIO
 
-![image-20240608201957488](images/image-20240608201957488.png)
+![image-20241119164839924](images/image-20241119164839924.png)
 
-同步阻塞IO模型中，当用户调用`read()`后，会一直阻塞，直到内核把数据拷贝到用户空间。
+阻塞IO模型中，用户进程调用`recvfrom()`后会一直阻塞等待，直到内核把数据拷贝到用户空间。
 
-缺点：效率太低，无法处理数十万连接的高并发场景。
+缺点：效率太低。
 
 ### 12.2 NIO
 
-![image-20240608204027822](images/image-20240608204027822.png)
+![image-20241119165828384](images/image-20241119165828384.png)
 
-同步非阻塞IO模型中，当用户调用非阻塞的`read()`后，内核会立即返回结果（准备好了数据就返回数据，否则就告知用户尚未准备好数据），因此用户线程不会被阻塞（但内核拷贝数据到用户空间的这段时间内，用户线程是阻塞的）。
+非阻塞IO模型中，用户进程调用`recvfrom()`后，内核会立即返回结果：如果数据未就绪，则直接返回告知用户；如果数据已就绪，则将数据从内核缓冲区拷贝到用户缓冲区（拷贝的这段时间内用户进程是阻塞等待的）。
 
-缺点：需要用户**不断轮询调用read**，十分消耗CPU资源，而且每次轮询都需要进行内核态和用户态的切换，开销也很大。不仅如此，如果我们需要监听的文件描述符有很多，每次轮询都需要挨个遍历，也会大大影响效率。
+缺点：需要用户进程**不断轮询调用recvfrom()**，十分消耗CPU资源，实际上相比于BIO性能并没有提升。
 
 ### 12.3 IO多路复用
 
-![image-20240608205934348](images/image-20240608205934348.png)
+#### 1、简介
 
-IO多路复用，就是用一个线程来处理多个客户端连接。实现IO多路复用可以使用`select`、`poll`、`epoll`三个函数。
+BIO和NIO有一个很大的**弊端**：例如服务端在处理客户端socket请求时，在**单线程**的情形下，只能依次处理每一个socket，如果正在处理的socket的数据未就绪，那么就会阻塞等待或者不断轮询，导致**所有其他的客户端socket请求都只能等待**，性能非常差。
+
+想要解决上述问题，通常有两种做法：
+
+- 方案一：采用**多线程**的方式，也就是给每个socket请求都分配一个线程去处理。这种方案在请求数特别大的时候会消耗大量资源。
+- 方案二：仍然使用单线程的方式，只不过由这个线程来同时监听多个socket请求，一旦某个socket数据就绪，就通知该线程去处理数据。这种方案正是**IO多路复用（多个socket请求复用一个线程）**。
+
+综上，**IO多路复用**就是利用单个线程来同时监听多个fd，并在某个fd数据就绪时得到通知，从而避免了无效等待，充分利用CPU资源。
+
+> 说明：fd即文件描述符（File Descriptor），是一个从0开始递增的无符号整数，用来关联Linux中的一个文件。网络套接字socket自然也是一种特殊的文件。
+
+#### 2、IO多路复用的实现方式
+
+IO多路复用可以通过select、poll、epoll这三个函数实现。
 
 **select**
 
-select函数实际上就是将NIO中用户态需要遍历的fd数组（监听的文件描述符数组）拷贝到了内核态，交给内核来遍历，从而节省了NIO遍历过程中用户态和内核态切换的开销。
+select是Linux中最早的IO多路复用的实现方案，具体流程如下：
+
+1. 创建需要监听的fd的数组，并调用select函数将其拷贝到内核空间，用户进程阻塞等待select的返回结果；
+2. 内核遍历fd数组，判断fd数据是否已就绪；
+3. 数据就绪或超时后，拷贝fd数组到用户空间（已就绪的fd会进行标识），并返回已就绪的fd的个数；
+4. 用户进程遍历fd数组，找到已就绪的fd，然后挨个调用`recvfrom()`直接读取数据。
+
+![image-20241119185428858](images/image-20241119185428858.png)
 
 缺点：
 
 - fd数组有长度限制，至多为1024
-- 每次轮询调用select函数时，需要将fd数组从用户态拷贝到内核态，开销也不低
-- 其返回值是一个正整数，表示就绪的fd的个数，但具体是哪些fd就绪了，仍需用户自己重新遍历一次确定
+- 每次调用select函数时需要将fd数组从用户空间拷贝到内核空间，select结束时还要再次拷贝回用户空间，开销不低
+- select无法得知具体是哪个fd已就绪，需要用户遍历整个fd数组才能确定
 
 **poll**
 
@@ -7412,25 +7434,25 @@ poll函数和select函数基本相同，只不过select函数最多监听1024个
 
 **epoll**
 
-使用epoll函数实现IO多路复用，是将fd集合注册进epoll，然后epoll帮你监听哪些fd上有消息到达。可见，每个fd从用户态拷贝到内核态只会发生一次（注册进epoll的那一次），开销很小；而且，使用事件通知机制，当fd就绪后就会触发回调，而无需遍历所有fd。
+实现IO多路复用的最佳方案是epoll函数，我们只需将要监听的fd通过`epoll_ctl()`进行注册，底层就会把这些fd添加到**红黑树**中，一旦某个fd已就绪，就会自动将其添加到内核的一个**链表**中，用户进程只需循环调用`epoll_wait()`就可以获取该链表，从而直接得知已就绪的fd。可见，epoll函数的整个模型类似于事件通知机制，它完美解决了select的所有缺点：
 
-**总结**
-
-|            | select         | poll         | epoll                |
-| ---------- | -------------- | ------------ | -------------------- |
-| 操作方式   | 遍历所有fd     | 遍历所有fd   | 回调，即事件通知机制 |
-| 数据结构   | bitmap         | 数组         | 红黑树               |
-| fd拷贝时机 | 每次调用select | 每次调用poll | fd首次注册进epoll    |
+- 通过红黑树保存要监听的fd，没有数量限制
+- 每个fd只会发生一次从用户空间到内核空间的拷贝（fd首次通过`epoll_ctl()`进行注册的时候）
+- `epoll_wait()`会直接返回给用户已就绪的fd集合
 
 ### 12.4 信号驱动IO
 
-当进程发起一个IO操作，会向内核注册一个信号处理函数，然后进程返回不阻塞；当内核数据就绪时会发送一个信号给进程，进程便在信号处理函数中调用IO读取数据。
+![image-20241120141652854](images/image-20241120141652854.png)
+
+信号驱动IO是与内核建立SIGIO的信号关联并设置回调，当内核有fd就绪时，会发出SIGIO信号通知用户进程，期间用户进程可以执行其他业务，无需阻塞等待。
+
+缺点：当有大量IO操作时，信号会很多，SIGIO处理函数如果不能及时处理，就可能导致信号队列溢出；而且内核空间与用户空间的频繁信号交互性能也较低。
 
 ### 12.5 AIO
 
-![image-20240608215624773](images/image-20240608215624773.png)
+![image-20241120142134161](images/image-20241120142134161.png)
 
-异步IO模型中，当进程发起一个IO操作后，会直接返回不阻塞，但也不返回结果；内核把整个IO处理完后，会通知进程结果，如果IO操作成功则进程直接获取到数据。
+异步IO的整个过程都是非阻塞的，用户进程调用完异步API后就可以去做其他事情，内核等待数据就绪并拷贝到用户空间后才会递交信号，通知用户进程。
 
 ## 13. Java的IO模型
 
@@ -8583,6 +8605,8 @@ public class ProxyTest {
 }
 ```
 
+
+
 # 第14章_JDK8-17新特性
 
 ## 1. Java8新特性：Lambda表达式
@@ -9125,7 +9149,7 @@ Collector接口中方法的实现决定了如何对流执行收集的操作(如�
 
 - `Collectors.toList()`：把元素收集到List集合中
 - `Collectors.toSet()`：把元素收集到Set集合中
-- `Collectors.toMap(Function keyMapper, Function valueMapper)`：把元素收集到Map集合中
+- `Collectors.toMap(Function keyMapper, Function valueMapper, BinaryOperator mergeFunction)`：把元素收集到Map集合中。keyMapper是key的映射函数；valueMapper是value的映射函数；mergeFunction是当key产生冲突时所调用的合并方法，注意我们**必须指定mergeFunction**，否则当key冲突时会抛出异常，我们通常采用的mergeFunction为`(k1, k2) -> k1`，它表示当key冲突时会保留原来的数据，即key冲突时新的数据不会覆盖旧的数据。
 - `Collectors.toCollection(Supplier collectionFactory)`：把元素收集到创建的集合中
 
 ```java
@@ -9151,10 +9175,11 @@ public static void main(String[] args) {
     list2.add(new Student("张三", 19));
     list2.add(new Student("李四", 20));
     list2.add(new Student("王五", 21));
+    list2.add(new Student("王五", 27));
     Map<String, Integer> ans = list2.stream()
             .filter(o -> o.getAge() > 20)
             .collect(Collectors.toMap(
-                    a -> a.getName(), a -> a.getAge()
+                    a -> a.getName(), a -> a.getAge(), (k1, k2) -> k1
             ));
     System.out.println(ans); // {王五=21}
 }

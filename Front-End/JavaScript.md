@@ -703,8 +703,6 @@ let n = setInterval(函数, 间隔时间);
 clearInterval(n);
 ```
 
-
-
 ## 4.3 事件
 
 事件是编程语言中的术语，它是用来描述程序的行为或状态的，**一旦行为或状态发生改变，便立即调用一个函数。**
@@ -848,12 +846,6 @@ clearInterval(n);
 
 
 
-
-
-
-
-
-
 # 补充
 
 ### 1.5.1 JS对象
@@ -905,10 +897,6 @@ Array作为一个对象，那么对象是有属性和方法的，所以接下来
 
 
   注意的是，没有元素的内容是不会输出的，因为forEach只会遍历有值的元素 
-
-
-
-
 
 #### 1.5.1.2 String对象
 
@@ -988,8 +976,6 @@ String对象也提供了一些常用的属性和方法，如下表格所示：
   ~~~
 
 
-
-
 #### 1.5.1.3 JSON对象
 
 
@@ -1028,8 +1014,6 @@ alert(obj.name);
 ~~~js
 var str = JSON.stringify(obj); // JS对象转为JSON字符串
 ~~~
-
-
 
 
 ### 1.5.2 BOM对象
@@ -1072,8 +1056,6 @@ window对象提供了获取其他BOM对象的属性：
 | navigator | 对 Navigator 对象的只读引用 |
 | screen    | 用于获取Screen对象    |
 
-
-
 window也提供了一些常用的函数，如下表格所示：
 
 | 函数          | 描述                                               |
@@ -1082,8 +1064,6 @@ window也提供了一些常用的函数，如下表格所示：
 | comfirm()     | 显示带有一段消息以及确认按钮和取消按钮的对话框。   |
 | setInterval() | 按照指定的周期（以毫秒计）来调用函数或计算表达式。 |
 | setTimeout()  | 在指定的毫秒数后调用函数或计算表达式。             |
-
-
 
 - alert()函数：弹出警告框，函数的内容就是警告框的内容
 
@@ -1094,8 +1074,6 @@ window也提供了一些常用的函数，如下表格所示：
       alert("Hello BOM Window");
   </script>
   ~~~
-
-
 
 - confirm()函数：弹出确认框，并且提供用户2个按钮，分别是确认和取消。
 
@@ -1136,8 +1114,6 @@ window也提供了一些常用的函数，如下表格所示：
 
   浏览器打开，3s后弹框，关闭弹框，发现再也不会弹框了。
 
-
-
 #### 1.5.2.2 Location对象
 
 location是指代浏览器的地址栏对象，对于这个对象，我们常用的是href属性，用于获取或者设置浏览器的地址信息，添加如下代码：
@@ -1150,8 +1126,6 @@ location.href = "https://www.itcast.cn";
 ~~~
 
 浏览器效果如下：首先弹框展示浏览器地址栏信息，然后点击确定后，因为我们设置了地址栏信息，所以浏览器跳转到传智首页
-
-
 
 ### 1.5.3 DOM对象
 
@@ -1195,15 +1169,5 @@ HTML中的Element对象可以通过Document对象获取，而Document对象是�
 | document.getElementsByTagName()   | 根据标签名称获取，返回Element对象数组    |
 | document.getElementsByName()      | 根据name属性值获取，返回Element对象数组  |
 | document.getElementsByClassName() | 根据class属性值获取，返回Element对象数组 |
-
-
-
-
-
-
-
-
-
-
 
 

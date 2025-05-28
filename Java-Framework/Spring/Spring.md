@@ -1,18 +1,16 @@
-# 1. Spring
+# 第01章_IoC基本原理
 
-## 1.1 Spring概述
+## 1. Spring简介
 
 官网地址：https://spring.io/
 
-Spring 框架是一个开源的 Java 平台，它最初是由 Rod Johnson 编写的，并且于 2003 年 6 月首次在 Apache 2.0 许可下发布。Spring 框架可以用于开发任何 Java 应用程序，其目标是使 J2EE 开发变得更容易。
+Spring 框架是 Java 平台上的一个开源应用框架，它最初是由 Rod Johnson 编写的，并且于 2003 年 6 月首次在 Apache 2.0 许可下发布。Spring 框架可以用于开发任何 Java 应用程序，其目标是使 J2EE 开发变得更容易。
 
 **广义的Spring**：指的是以 Spring Framework 为基础的整个 Spring 技术栈。
 
 **狭义的Spring**：指的是基础框架 Spring Framework。
 
-## 1.2 Spring Framework
-
-**Spring Framework主要功能模块**
+Spring Framework的主要功能模块有：
 
 |功能模块|功能介绍|
 |-|-|
@@ -22,101 +20,116 @@ Spring 框架是一个开源的 Java 平台，它最初是由 Rod Johnson 编写
 |Web|提供了面向Web应用程序的集成功能|
 |Test|提供对测试框架的支持|
 
-![image-20240304131932836](images/image-20240304131932836.png)
+## 2. IoC
 
-## 1.3 IoC
+**IoC（Inversion of Control，控制反转）**是一种设计思想，而不是一个具体的技术实现。IoC的思想就是将原本在程序中手动管理对象的控制权（创建、获取、销毁等），交由Spring框架来管理。IoC的思想并非Spring特有，在其他语言中也有应用。
 
-**IoC（Inversion of Control，控制反转）** 是一种设计思想，而不是一个具体的技术实现。IoC的思想就是将原本在程序中手动创建对象的控制权，交由 Spring 框架来管理。IoC的思想并非 Spring 特有，在其他语言中也有应用。
+- **控制**：指的是对象创建、获取、销毁等的权力
+- **反转**：控制权交给外部环境，即交给Spring框架的IoC容器
 
-- **控制**：指的是对象创建（实例化、管理）的权力
-- **反转**：控制权交给外部环境（Spring框架的IoC容器）
+将对象之间的相互依赖关系交给IoC容器来管理，并由IoC容器完成对象的自动注入（称为**依赖注入**，DI，Dependency Injection），这样可以很大程度上简化应用的开发，把应用从复杂的依赖关系中解放出来。IoC容器就像是一个工厂一样，当我们需要创建一个对象的时候，只需要添加注解并进行配置即可，完全不用考虑对象是如何被创建出来的。
 
-将对象之间的相互依赖关系交给 IoC 容器来管理，并由 IoC 容器完成对象的注入（称为**依赖注入**，DI，Dependency Injection），这样可以很大程度上简化应用的开发，把应用从复杂的依赖关系中解放出来。IoC 容器就像是一个工厂一样，当我们需要创建一个对象的时候，只需要配置好配置文件或者添加注解即可，完全不用考虑对象是如何被创建出来的。
+> 在Spring中，IoC容器是Spring用来实现IoC思想的载体。被IoC容器所管理的对象，我们称之为**Bean**。
 
-> 在Spring中，IoC容器是Spring用来实现IoC的载体，它实际上就是个Map。IoC是控制反转的思想，而DI是对IoC的一种具体实现。被IoC容器所管理的对象，我们称之为**Bean**。
->
+## 3. IoC容器
 
-## 1.4 IoC容器在Spring中的实现
-
-Servlet 容器能够管理 Servlet、Filter、Listener 这样的组件的一生，所以它是一个复杂容器。我们即将要学习的**IoC容器也是一个复杂容器，是负责实例化、配置和组装Bean的核心容器，它不仅要负责创建组件的对象、存储组件的对象，还要负责调用组件的方法让它们工作，最终在特定情况下销毁组件**。IoC容器通过读取配置元数据来获取有关要实例化、配置和组装组件的指令。
-
-### 1.4.1 IoC容器的接口和具体实现类
+Servlet容器（Tomcat）能够管理 Servlet、Filter、Listener 这样的组件的一生，所以它是一个复杂容器。而**IoC容器也是一个复杂容器，是负责实例化、配置、组装、管理Bean的核心容器**。Spring中与IoC容器相关的继承体系如下：
 
 **1、BeanFactory接口**
 
-这是 IoC 容器的标准化超接口，是 Spring 内部使用的接口，不提供给开发人员使用。
+这是IoC容器的标准化超接口，是Spring框架内部使用的接口，不提供给开发人员使用。
 
 **2、ApplicationContext接口**
 
-BeanFactory 的子接口，提供了更多高级特性。面向 Spring 的使用者，几乎所有场合都使用ApplicationContext而不是底层的BeanFactory。
-
-> 以后在 Spring 环境下看到一个类或接口的名称中包含 ApplicationContext，那基本就可以断定，这个类或接口与 IoC 容器有关。对我们开发人员来说，ApplicationContext就是代表整个IoC容器技术体系的顶级接口。
->
+BeanFactory的子接口，提供了更多高级特性，面向Spring的使用者。对我们开发人员来说，可以认为ApplicationContext就是代表整个IoC容器技术体系的顶级接口。
 
 **3、ApplicationContext的主要实现类**
 
 - `ClassPathXmlApplicationContext`：通过读取类路径下的 XML 格式的配置文件创建 IoC 容器
-- `FileSystemXmlApplicationContext`：(不推荐使用)通过文件系统路径读取 XML 格式的配置文件创建 IoC 容器
-- `AnnotationConfigApplicationContext`：通过读取Java配置类创建 IoC 容器
+- `FileSystemXmlApplicationContext`：通过文件系统路径读取 XML 格式的配置文件创建 IoC 容器
+- `AnnotationConfigApplicationContext`：通过读取 Java 配置类创建 IoC 容器
 - `WebApplicationContext`：专门为 Web 应用准备，基于 Web 环境创建 IoC 容器，并将对象存入 ServletContext 域中。
 
-### 1.4.2 IoC容器的配置方式
+> 说明：在Spring早期，通常使用XML配置文件的方式来让IoC容器管理Bean。但是，读取和解析XML文件的效率非常低。现在，我们推荐使用**注解+配置类**的方式来让IoC容器管理Bean。
 
-Spring IoC 容器使用多种形式的配置元数据，此配置元数据表示您作为应用程序开发人员如何告诉 Spring 容器实例化、配置和组装应用程序中的对象。
+## 4. IoC容器底层原理
 
-- XML配置方式：是Spring框架最早的配置方式之一，通过在XML文件中定义Bean及其依赖关系、Bean的作用域等信息，让Spring IoC容器来管理Bean之间的依赖关系。该方式从Spring框架的第一版就开始提供支持。
-- 注解方式：从Spring 2.5版本开始提供支持，可以通过在Bean类上使用注解来代替XML配置文件中的配置信息。通过在Bean类上加上相应的注解（如@Component等），将Bean注册到Spring IoC容器中，这样Spring IoC容器就可以管理这些Bean之间的依赖关系。
-- Java配置类方式：从Spring 3.0版本开始提供支持，通过Java类来定义Bean与Bean之间的依赖关系和配置信息，从而代替XML配置文件的方式。Java配置类是一种使用Java编写配置信息的方式，通过@Configuration、@Bean等注解来实现Bean和依赖关系的配置。
+### 4.1 保存Bean定义信息的流程
 
-**总结**：为了迎合Spring Boot，我们推荐使用**配置类+注解**的方式。
+1. 指定配置类或配置文件后创建IoC容器
+2. BeanDefinitionReader接口会解析其中定义的Bean的id信息以及类型信息
+3. 然后保存到DefaultListableBeanFactory类的beanDefinitionMap属性中
+4. **beanDefinitionMap属性**是一个`Map<String, BeanDefinition>`，其中key保存Bean的id，而value保存Bean的定义信息（如beanClass、scope等）
 
-### 1.4.3 IoC容器底层原理
+### 4.2 获取Bean实例的流程
 
-当我们根据配置文件或配置类创建一个IoC容器后，就会通过BeanDefinitionReader接口（有xml方式、配置类方式等）来解析里面定义的Bean的id属性和class属性等。然后保存到DefaultListableBeanFactory类的beanDefinitionMap属性中，这个属性是一个`Map<String, BeanDefinition>`类型，其中key保存Bean的id(唯一标识)，而value保存Bean的定义信息(如beanClassName、scope等)。
+获取单例Bean实例的核心源码为：
 
-Spring会通过BeanFactory和反射机制，调用无参构造器来实例化对象，然后进行初始化，就得到了最终的可用对象。
+![image-20241002212913845](images/image-20241002212913845.png)
 
-# 2. 基于XML管理bean
+流程如下：
 
-## 2.1 创建bean
+![image-20241002215950245](images/image-20241002215950245.png)
 
-**1、创建Maven Module并引入依赖**
+说明：
 
-```xml
-<dependencies>
-    <!-- spring context依赖，是Spring的基础依赖 -->
-    <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-context</artifactId>
-        <version>6.0.6</version>
-    </dependency>
-    <!-- junit5测试 -->
-    <dependency>
-        <groupId>org.junit.jupiter</groupId>
-        <artifactId>junit-jupiter-api</artifactId>
-        <version>5.3.1</version>
-        <scope>test</scope>
-    </dependency>
-</dependencies>
-```
+- 单例工厂的设计思想类似于FactoryBean机制，主要是用于获取那些由工厂创建出来的Bean对象
+- 双重检查锁的作用是在并发场景下也能保证单例
 
-**2、创建需要由IoC容器管理的类(组件类)，如HelloWorld**
+**三级缓存机制主要是为了解决循环依赖的问题**。单例对象池相当于一个成品区，所有创建完成并且属性赋值完成的对象会保存在这里；而早期单例对象池相当于一个半成品区，所有创建完成但尚未完成属性赋值的对象会保存在这里，等它们完成属性赋值后才会移动到单例对象池。因此，由于在属性注入时会依次查询这三级缓存，所以发生循环依赖时也能正确进行属性赋值，而不会报错，如下图所示：
 
-**3、创建Spring的配置文件applicationContext.xml**
+![image-20241003130323181](images/image-20241003130323181.png)
 
-![](images/20230807125323.png)
+### 4.3 IoC容器启动流程
 
-**4、配置组件**
+IoC容器启动的核心源码在`AbstractApplicationContext`类的`refresh()`方法中，共有12个核心步骤：
+
+![image-20241003132914373](images/image-20241003132914373.png)
+
+
+
+# 第02章_IoC-配置文件
+
+使用Spring框架需要引入spring-context依赖，它是Spring的基础依赖：
 
 ```xml
-<bean id="helloWorld" class="com.thuwsy.spring.pojo.HelloWorld"></bean>
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-context</artifactId>
+    <version>6.0.6</version>
+</dependency>
 ```
 
-- bean标签：通过配置bean标签告诉IoC容器需要创建对象的组件是什么
+> 说明：基于XML配置文件来让IoC管理Bean的方式只在Spring早期使用较多，现在已经不推荐使用，本章内容只需做简单了解即可。
+
+## 1. Bean的创建
+
+（1）首先创建一个需要交给IoC容器管理的类，如`com.ioc.Student`
+
+（2）在`resources`目录下创建Spring的xml配置文件`applicationContext.xml`
+
+![image-20241002144049367](images/image-20241002144049367.png)
+
+（3）在xml配置文件中配置Bean
+
+```xml
+<bean id="student" class="com.ioc.Student"></bean>
+```
+
 - id属性：Bean的唯一标识
 - class属性：组件类的全类名
 
-**5、创建测试类**
+（4）测试
+
+```xml
+<!-- junit5测试 -->
+<dependency>
+    <groupId>org.junit.jupiter</groupId>
+    <artifactId>junit-jupiter-api</artifactId>
+    <version>5.3.1</version>
+    <scope>test</scope>
+</dependency>
+```
 
 ```java
 @Test
@@ -124,300 +137,236 @@ public void test() {
     // 指定配置文件并实例化IoC容器，可以传入多个配置文件
     ApplicationContext ioc = new ClassPathXmlApplicationContext("applicationContext.xml");
     // 获取IoC容器中的bean
-    HelloWorld helloworld = (HelloWorld) ioc.getBean("helloWorld");
-    helloworld.sayHello();
+    Student student = ioc.getBean(Student.class);
+    student.sayHello();
 }
 ```
 
-上述方式在实例化IoC容器的同时指定配置文件，而在很多底层源码中更多采用以下方式来创建IoC容器：
+## 2. Bean的获取
 
-```java   
-@Test
-public void test() {
-    // springmvc源码方式：
-    // 1. 先实例化
-    ClassPathXmlApplicationContext ioc = new ClassPathXmlApplicationContext();
-    // 2. 再指定配置文件(可以传入多个配置文件)
-    ioc.setConfigLocations("applicationContext.xml");
-    // 3. 最后调用refresh()方法刷新容器，触发Bean实例化操作
-    ioc.refresh();
+### 2.1 根据id获取Bean
 
-    HelloWorld helloworld = (HelloWorld) ioc.getBean("helloWorld");
-    helloworld.sayHello();
-}    
-```
-
-> **注意**：Spring底层默认通过反射技术调用组件类的无参构造器来创建组件对象。所以对一个Java实体类来说，无参构造器和getter、setter方法通常是必须存在的。
-
-**补充：基于工厂方法的实例化**。除了以上所示的使用构造器实例化对象，还可以通过工厂模式实例化对象：
-
-（1）基于静态工厂方法实例化
+由于id属性指定了bean的唯一标识，所以根据bean id可以精确获取到一个组件对象
 
 ```java
-public class HelloWorldFactory {
-    private static final HelloWorld obj = new HelloWorld();
-    private HelloWorldFactory() {}
-    public static HelloWorld createInstance() {
-        return obj;
-    }
-}
+Student student = (Student) ioc.getBean("student");
 ```
 
-```xml
-<bean id="helloWorld1" class="com.thuwsy.spring.factory.HelloWorldFactory"
-      factory-method="createInstance" />
-```
+### 2.2 根据类型获取Bean
 
-- class属性：指定工厂类的全类名
-- factory-method：指定静态工厂方法名，注意该方法必须是static方法
-
-（2）基于实例工厂方法实例化
-
-```java
-public class HelloWorldFactory {
-    private static final HelloWorld obj = new HelloWorld();
-    private HelloWorldFactory() {}
-    public HelloWorld createInstance() {
-        return obj;
-    }
-}
-```
-
-```xml
-<!-- 将工厂类进行配置 -->
-<bean id="helloWorldFactory" class="com.thuwsy.spring.factory.HelloWorldFactory" />
-<!-- 根据工厂对象的实例工厂方法进行实例化组件对象 -->
-<bean id="helloWorld2"
-      factory-bean="helloWorldFactory"
-      factory-method="createInstance"/>
-```
-
-- factory-bean属性：指定当前容器中工厂Bean的id
-- factory-method：指定实例工厂方法名，注意该方法必须是非static方法
-
-## 2.2 获取bean
-
-**方式1：根据id获取**
-
-由于 id 属性指定了 bean 的唯一标识，所以根据 bean 标签的 id 属性可以精确获取到一个组件对象。
-
-```java
-Student student = (Student) ioc.getBean("studentOne");
-```
-
-**方式2(推荐)：根据类型获取**
-
-这种方式要求IoC容器中有且只有一个类型匹配的bean。由于在实际开发中，我们为同一个类往往只会配置一个bean，所以推荐使用这种方式。
+这种方式要求IoC容器中有且仅有一个类型匹配的bean。由于在实际开发中，我们为同一个类往往只会配置一个bean，所以我们推荐使用这种方式获取Bean。
 
 ```java
 Student student = ioc.getBean(Student.class);
 ```
 
-**方式3：根据id和类型获取**
-
-```java
-Student student = ioc.getBean("studentOne", Student.class);
-```
-
 **注意**：
 
-**1、如果组件类实现了接口，则我们可以根据接口类型来获取bean（前提是bean唯一）。而且这种方式，我们开发中也推荐使用**。
+1. 如果组件类实现了接口，则我们可以**根据接口类型来获取bean**（前提是bean唯一）。而且这种方式，我们开发中也推荐使用。
 
-```java
-// Student类实现了Person接口
-Person student = ioc.getBean(Person.class);
-```
+   ```java
+   // Student类实现了Person接口
+   Person student = ioc.getBean(Person.class);
+   ```
 
-**2、如果一个接口有多个实现类，这些实现类都配置了bean，那么我们不能根据接口类型来获取bean，因为bean不唯一**。
+2. 如果一个接口有多个实现类，且这些实现类都在IoC容器中配置了bean，那么我们不能根据接口类型来获取bean，因为bean不唯一。
 
 **结论**：根据类型来获取bean时，在满足bean唯一性的前提下，其实只是看`对象 instanceof 指定的类型`的返回结果，只要返回的是true就可以认定为和类型匹配，能够获取到。
 
-## 2.3 属性的setter注入
+### 2.3 根据id和类型获取Bean
+
+```java
+Student student = ioc.getBean("student", Student.class);
+```
+
+## 3. 属性注入方式
+
+### 3.1 setter方式注入
 
 通过property标签配置的属性值会通过setter方法注入
 
-- name：设置需要赋值的属性名(和settter方法有关)
+- name：设置需要赋值的属性名（和settter方法有关）
 - value：设置为属性所赋的值（字面量）
 
 ```xml
-<bean id="studentTwo" class="com.thuwsy.spring.pojo.Student">
-    <property name="sid" value="1001"></property>
-    <property name="sname" value="张三"></property>
-    <property name="age" value="23"></property>
-    <property name="gender" value="男"></property>
+<bean id="student" class="com.ioc.Student">
+    <property name="studentId" value="1001" />
+    <property name="studentName" value="张三" />
+    <property name="age" value="23" />
+    <property name="gender" value="男" />
 </bean>
 ```
 
-## 2.4 属性的构造器注入
+### 3.2 构造器方式注入
 
-通过constructor-arg标签会调用有参构造器来注入属性值。
+通过constructor-arg标签会调用有参构造器来注入属性值
 
 ```xml
-<bean id="studentThree" class="com.thuwsy.spring.pojo.Student">
-    <constructor-arg value="1002"></constructor-arg>
-    <constructor-arg value="李四"></constructor-arg>
-    <constructor-arg value="24"></constructor-arg>
-    <constructor-arg value="女"></constructor-arg>
+<bean id="student" class="com.ioc.Student">
+    <constructor-arg value="1002" />
+    <constructor-arg value="李四" />
+    <constructor-arg value="24" />
+    <constructor-arg value="女" />
 </bean>
 ```
 
-## 2.5 特殊值处理
+## 4. 属性赋值
 
-**1、字面量赋值**
+### 4.1 特殊字符赋值
+
+如果一个字符串内容中包含`<`等特殊字符，则不能直接赋值，因为`<`在XML文件中用于定义标签的开始。我们有以下两种方式来处理特殊字符赋值：
 
 ```xml
-<!-- 使用value属性给bean的属性赋值时，Spring会把value属性的值看做字面量 -->
-<property name="name" value="张三"/>
+<!-- 方式一：使用XML实体来代替 -->
+<property name="studentName" value="&lt;王五&gt;" />
 ```
 
-**2、null**
-
 ```xml
-<property name="gender">
-    <null />
-</property>
-```
-
-> 注意：`<property name="gender" value="null" />`是错误的，因为它表示给gender赋的值是一个字符串`"null"`
-
-**3、xml实体**
-
-```xml
-<!-- 小于号在XML文档中用来定义标签的开始，不能随便使用 -->
-<!-- 解决方案一：使用XML实体来代替 -->
-<property name="sname" value="&lt;王五&gt;" />
-```
-
-**4、CDATA节**
-
-```xml
-<!-- 解决方案二：使用CDATA节 -->
-<!-- XML解析器看到CDATA节就知道这里是纯文本，就不会当作XML标签来解析 -->
-<property name="sname">
+<!-- 方式二：使用CDATA节（XML解析器会将CDATA节中的内容视为纯文本） -->
+<property name="studentName">
     <value><![CDATA[<王五>]]></value>
 </property>
 ```
 
-## 2.6 为类类型属性赋值
+### 4.2 类类型赋值
 
-### 方式1：外部bean
-
-使用ref属性可以引用外部bean的id。注意不能使用value属性，因为对于value属性中的内容，Spring只把它看做一个普通的字符串。
+使用ref属性可以引用其他bean的id来对类类型的属性赋值：
 
 ```xml
-<!-- 为Student类中Clazz类型的属性clazz赋值 -->
-<bean id="studentFive" class="com.thuwsy.spring.pojo.Student">
-    <!-- ref：引用IoC容器中的某个bean的id -->
-    <property name="clazz" ref="clazzOne"></property>
+<bean id="student" class="com.ioc.Student">
+    <property name="studentName" value="张三" />
+    <property name="teacher" ref="teacherWang" />
 </bean>
 
-<!-- 配置Clazz类型的bean -->
-<bean id="clazzOne" class="com.thuwsy.spring.pojo.Clazz">
-    <property name="cid" value="1111"></property>
-    <property name="cname" value="最强王者班"></property>
+<bean id="teacherWang" class="com.ioc.Teacher">
+    <property name="teacherName" value="王老师" />
 </bean>
 ```
 
-### 方式2：内部bean
+### 4.3 数组类型赋值
 
 ```xml
-<bean id="studentFive_2" class="com.thuwsy.spring.pojo.Student">
-    <property name="clazz">
-        <!-- 内部bean，只能在当前bean的内部使用，不能直接通过IoC容器获取 -->
-        <bean id="clazzInner" class="com.thuwsy.spring.pojo.Clazz">
-            <property name="cid" value="2222"></property>
-            <property name="cname" value="远大前程班"></property>
-        </bean>
-    </property>
-</bean>
-```
-
-## 2.7 为数组类型属性赋值
-
-```xml
+<bean id="student" class="com.ioc.Student">
     <!-- hobby的类型是String[] -->
     <property name="hobby">
         <array>
-            <value>抽烟</value>
-            <value>喝酒</value>
-            <value>烫头</value>
+            <value>java</value>
+            <value>c++</value>
+            <value>python</value>
         </array>
     </property>
+</bean>
 ```
 
-## 2.8 为集合类型属性赋值
+### 4.4 集合类型赋值
 
-### 1、List集合
-
-**方式1：**
+#### 1、List
 
 ```xml
-<bean id="clazzTwo" class="com.thuwsy.spring.pojo.Clazz">
-    <property name="students">
+<bean id="teacherWang" class="com.ioc.Teacher">
+    <property name="teacherName" value="王老师" />
+    <property name="studentList">
         <list>
-            <ref bean="studentOne"></ref>
-            <ref bean="studentTwo"></ref>
-            <ref bean="studentThree"></ref>
+            <ref bean="student1" />
+            <ref bean="student2" />
+            <ref bean="student3" />
         </list>
     </property>
+</bean>
+
+<bean id="student1" class="com.ioc.Student">
+    <property name="studentName" value="小张三"/>
+</bean>
+<bean id="student2" class="com.ioc.Student">
+    <property name="studentName" value="小小张三"/>
+</bean>
+<bean id="student3" class="com.ioc.Student">
+    <property name="studentName" value="小小小张三"/>
 </bean>
 ```
 
 > 说明：若为Set集合类型属性赋值，方式类似，只需要将其中的list标签改为set标签即可
 
-**方式2：配置一个集合类型的bean，需要使用util的约束**
+#### 2、Map
 
 ```xml
-<util:list id="studentList">
-    <ref bean="studentOne"></ref>
-    <ref bean="studentTwo"></ref>
-    <ref bean="studentThree"></ref>
-</util:list>
-<bean id="clazzTwo_2" class="com.thuwsy.spring.pojo.Clazz">
-    <property name="students" ref="studentList"></property>
-</bean>
-```
-
-### 2、Map集合
-
-**方式1：**
-
-```xml
-<bean id="studentSix" class="com.thuwsy.spring.pojo.Student">
-    <property name="teacherMap">
+<bean id="student" class="com.ioc.Student">
+    <property name="scores">
         <map>
-            <entry key="语文" value-ref="teacherOne"></entry>
-            <entry key="数学" value-ref="teacherTwo"></entry>
+            <entry key="语文" value="120" />
+            <entry key="数学" value="150" />
+            <entry key="英语" value="135" />
         </map>
     </property>
 </bean>
-<bean id="teacherOne" class="com.thuwsy.spring.pojo.Teacher">
-    <property name="tid" value="10086"></property>
-    <property name="tname" value="大宝"></property>
-</bean>
-<bean id="teacherTwo" class="com.thuwsy.spring.pojo.Teacher">
-    <property name="tid" value="10010"></property>
-    <property name="tname" value="小宝"></property>
-</bean>
 ```
 
-**方式2：配置一个集合类型的bean，需要使用util的约束**
 
-```xml
-<util:map id="teacherMap">
-    <entry key="语文" value-ref="teacherOne"></entry>
-    <entry key="数学" value-ref="teacherTwo"></entry>
-</util:map>
-<bean id="studentSix_2" class="com.thuwsy.spring.pojo.Student">
-    <property name="teacherMap" ref="teacherMap"></property>
-</bean>
+
+# 第03章_IoC-注解和配置类
+
+## 1. 配置类
+
+### 1.1 组件的标记与扫描
+
+#### 标记组件
+
+我们可以对想要放入IoC容器中的组件使用注解标记，于是Spring框架在检测到该注解标记后，就会按对应的功能执行具体操作。常用的标记注解如下：
+
+- `@Component` 将类标识为普通组件
+- `@Controller` 将类标识为控制层组件
+- `@Service` 将类标识为业务层组件
+- `@Repository` 将类标识为持久层组件
+
+> 注意：通过源码得知，后面三个注解只是在`@Component`注解的基础上起了三个新的名字，所以没有任何区别。这些注解只是为了便于程序员从名称上分辨组件的作用。
+
+使用上述注解标记的组件，默认情况下其对应Bean的id是**类的小驼峰命名**，即类名的首字母小写的名称。当然我们也可以通过注解的value属性值来自定义Bean的id，例如`@Controller("UserController")`
+
+#### 扫描组件
+
+Spring框架通过扫描的方式来寻找上述标记注解，然后将对应组件注册进IoC容器。在**配置类**上使用`@ComponentScan`注解就可以指定扫描的包路径。该注解的value属性或basePackages属性是一个`String[]`，用于指定扫描的包路径，例如
+
+```java
+@ComponentScan({"com.thuwsy.spring", "com.thuwsy.mvc"})
+@Configuration
+public class SpringConfig {
+}
 ```
 
-> **注意**：使用`util:list`、`util:map`标签必须引入相应的命名空间，可以通过idea的提示功能选择
+**注意**：如果`@ComponentScan`中不指定扫描的包路径，则**默认扫描该配置类所在的包及其子包**。
 
-## 2.9 引入外部属性文件
+> 说明：该注解中还有如excludeFilters等属性，用于排除扫描某些组件，在Spring Boot源码中经常用到。
 
-**1、加入依赖**
+### 1.2 配置类的基本使用
+
+1. **创建配置类**：使用`@Configuration`注解将一个普通的类标记为Spring的配置类。注意，该注解底层也被标注了`@Component`注解，所以被`@Configuration`标注的配置类也是IoC容器中的组件。
+2. 根据需要使用`@ComponentScan`注解配置包扫描路径
+3. 使用`@Bean`注解标注在配置类的成员方法上，其返回值对象会被放入IoC容器中，默认以**方法名**作为Bean的id
+
+```java
+@ComponentScan
+@Configuration
+public class SpringConfig {
+}
+```
+
+测试：
+
+```java
+@Test
+public void test() {
+    // 指定配置类并实例化IoC容器
+    ApplicationContext ioc = new AnnotationConfigApplicationContext(SpringConfig.class);
+    Student student = ioc.getBean(Student.class);
+    student.sayHello();
+}
+```
+
+### 1.3 引用外部属性文件
+
+在配置类上可以使用`@PropertySource`注解来引用外部属性文件。我们以配置一个Druid数据源为例：
+
+（1）引入数据源相关依赖
 
 ```xml
 <dependency>
@@ -432,127 +381,67 @@ Person student = ioc.getBean(Person.class);
 </dependency>
 ```
 
-**2、创建外部属性文件jdbc.properties**
+（2）创建外部属性文件`jdbc.properties`
 
-**3、引入外部属性文件并配置bean**
-
-```xml
-<!-- 引入jdbc.properties，之后可以通过${key}的方式访问value -->
-<context:property-placeholder location="jdbc.properties" />
-
-<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
-    <property name="driverClassName" value="${jdbc.driver}"></property>
-    <property name="url" value="${jdbc.url}"></property>
-    <property name="username" value="${jdbc.username}"></property>
-    <property name="password" value="${jdbc.password}"></property>
-</bean>
+```properties
+jdbc.driver=com.mysql.cj.jdbc.Driver
+jdbc.url=jdbc:mysql://localhost:3306/ssm
+jdbc.username=root
+jdbc.password=abc666
 ```
 
-## 2.10 FactoryBean机制
-
-### 1、简介
-
-FactoryBean是Spring提供的一种整合第三方框架的常用机制。和普通的bean不同，**配置一个FactoryBean类型的bean，在获取bean的时候得到的并不是class属性中配置的这个类的对象，而是其`getObject()`方法返回的对象**。通过这种机制，Spring可以帮我们把复杂组件创建的详细过程和繁琐细节都屏蔽起来，只把最简洁的使用方式展示给我们。
-
-> 一般情况下，整合第三方框架，都是通过定义FactoryBean实现。例如，**整合MyBatis时，Spring就是通过FactoryBean机制来帮我们创建SqlSessionFactory对象的**。
-
-FactoryBean接口是一个泛型接口，它声明的抽象方法如下：
-
-![](images/20230807184445.png)
-
-* `getObject()`：提供一个对象交给IoC容器管理
-* `getObjectType()`：设置所提供对象的类型
-* `isSingleton()`：所提供的的对象是否单例
-
-**我们需要创建一个类实现FactoryBean接口，然后将这个类配置为bean时，就会将这个类中`getObject()`所返回的对象交给IoC容器管理**。
-
-### 2、实现FactoryBean接口
+（3）配置类
 
 ```java
-// 泛型类型就是当前工厂要生产的对象的类型
-public class HelloWorldFactoryBean implements FactoryBean<HelloWorld> {
-    @Override
-    public HelloWorld getObject() throws Exception {
-        // 实际上有些对象的创建流程是很复杂的，这里我们的情况很简单，直接new即可
-        return new HelloWorld();
-    }
+@PropertySource("classpath:jdbc.properties")
+@ComponentScan
+@Configuration
+public class SpringConfig {
+    @Value("${jdbc.driver}")
+    private String driver;
+    @Value("${jdbc.url}")
+    private String url;
+    @Value("${jdbc.username}")
+    private String username;
+    @Value("${jdbc.password}")
+    private String password;
 
-    @Override
-    public Class<?> getObjectType() {
-        // 返回要生产的对象的类型
-        return HelloWorld.class;
+    @Bean
+    public DataSource dataSource() {
+        // 实现具体的实例化过程
+        DruidDataSource dataSource = new DruidDataSource();
+        dataSource.setDriverClassName(driver);
+        dataSource.setUrl(url);
+        dataSource.setUsername(username);
+        dataSource.setPassword(password);
+        return dataSource;
     }
 }
 ```
 
-### 3、配置bean
+### 1.4 @Import注解
 
-以下bean标签中class属性指定的是HelloWorldFactoryBean，但是将来从这里获取的bean是HelloWorld对象
-
-```xml
-<bean id="helloWorld3" class="com.thuwsy.spring.factory.HelloWorldFactoryBean" />
-```
-
-注意：
-- 在xml中配置FactoryBean时，class属性指定的是FactoryBean接口的实现类，而从这个bean中获取到的则是`getObject()`返回的对象，所以id属性表示的是这个对象的bean的id
-- 事实上，上述的HelloWorldFactoryBean对象也被放入到了IoC容器，它的bean的id默认为`&helloWorld3`
-
-### 4、测试
+@Import注解一般标注在配置类上，用于导入一些类注册到IoC容器中，注册的**组件Bean id默认是该类的全类名**。该注解的主要作用就是**更方便地导入一些第三方的组件**：
 
 ```java
-@Test
-public void test() {
-    ApplicationContext ioc = new ClassPathXmlApplicationContext("applicationContext.xml");
-    // 根据类型获取bean，传入HelloWorld.class
-    HelloWorld helloWorld = ioc.getBean(HelloWorld.class);
-    helloWorld.sayHello();
-}
-```
-
-# 3. 基于注解管理bean
-
-## 3.1 标记与扫描
-
-**标记**：和 XML 配置文件一样，注解本身并不能执行，它只是做一个标记，具体的功能是在框架检测到注解标记的位置后，针对这个位置按照注解标记的功能来执行具体操作。
-
-**扫描**：Spring 为了知道程序员在哪些地方标记了什么注解，就需要通过扫描的方式进行检测。
-
-### 1、标记组件
-
-- `@Component` 将类标识为普通组件
-- `@Controller` 将类标识为控制层组件
-- `@Service` 将类标识为业务层组件
-- `@Repository` 将类标识为持久层组件
-
-> 注意：通过源码得知，后面三个注解只是在`@Component`注解的基础上起了三个新的名字，所以没有任何区别。这些注解只是为了便于程序员从名称上分辨组件的作用。
-
-使用上述注解标记的组件，默认情况下其对应Bean的id是**类的小驼峰命名**，即类名的首字母小写的名称。当然我们也可以通过注解的value属性值来自定义Bean的id，例如`@Controller("UserController")`
-
-### 2、扫描组件
-
-在**配置类**上使用`@ComponentScan`注解就可以指定扫描的包路径。该注解的value属性或basePackages属性是一个`String[]`，用于指定扫描的包路径，例如
-
-```java
-@ComponentScan({"com.thuwsy.spring", "com.thuwsy.mvc"})
+@Import(DataTypeUtil.class)
 @Configuration
 public class SpringConfig {
 }
 ```
 
-**注意**：如果不指定扫描的包路径，则**默认扫描该配置类所在的包及其子包**。
+## 2. 深入理解Bean
 
-> 说明：该注解中还有如excludeFilters的属性，用于排除扫描某些组件，在Spring Boot源码中用到。
-
-## 3.2 Bean的作用域
+### 2.1 Bean的作用域
 
 Bean的作用域主要有以下几种：
 
-- singleton：**默认值**，在IoC容器中，这个bean的对象始终为单实例，它在IoC容器初始化时创建。
+- singleton：**默认值**，在IoC容器中这个bean的对象始终为**单实例**，**它在IoC容器初始化时就创建**
 - prototype：每次获取bean时都会创建一个新的对象
 - request：每次HTTP请求都会创建一个新的对象，该对象只在当前HTTP request内有效
 - session：每次来自新session的HTTP请求都会创建一个新的对象，该对象只在当前HTTP session内有效
 
-配置Bean作用域的方式：
+使用`@Scope`注解可以配置Bean的作用域，该注解既可以结合`@Component`使用，也可以结合`@Bean`使用：
 
 ```java
 // @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) // 单例(默认值)
@@ -562,40 +451,68 @@ public class User {
 }
 ```
 
-> 事实上，在绝大多数情况下我们用的都是单例的Bean
+> 事实上，在绝大多数情况下我们用的都是单例的Bean。
 
-## 3.3 Bean的生命周期
+**补充**：对于单例的Bean，默认会在IoC容器初始化时创建对象；但如果我们标注了`@Lazy`注解，该单例对象的创建时机则是**在该Bean被第一次使用时创建**。所以`@Lazy`注解意味着懒加载，通常用于解决循环依赖的问题。
 
-![image-20240304193248572](images/image-20240304193248572.png)
+- `@Lazy`可以标注在类上，通常与`@Component`配合使用
+- `@Lazy`可以标注在方法上，通常与`@Bean`配合使用
+- `@Lazy`可以标注在成员变量上，通常与`@Autowired`配合使用
 
-1. 实例化bean对象：Spring找到Bean的定义，然后利用反射调用无参构造器创建对象
-2. 设置对象属性：如果对象有属性值，就会调用属性对应的setter方法进行设置
-3. 检查Aware相关接口并设置相关依赖：
-   - 如果Bean实现了`BeanNameAware`接口，则调用`setBeanName()`方法，传入Bean的名字
-   - 如果Bean实现了`BeanClassLoaderAware`接口，则调用`setBeanClassLoader()`方法，传入`ClassLoader`对象的实例
-   - 如果Bean实现了`BeanFactoryAware`接口，则调用`setBeanFactory()`方法，传入`BeanFactory`对象的实例
-   - 如果Bean实现了其他`*Aware`接口，则类似地调用相应方法
-4. BeanPostProcessor前置处理：如果该IoC容器中有`BeanPostProcessor`对象，则调用其`postProcessBeforeInitialization()`方法
-5. 如果Bean实现了`InitializingBean`接口，则调用`afterPropertiesSet()`方法
-6. 如果Bean在配置文件中的定义包含init-method属性，则执行指定的方法
-7. BeanPostProcessor后置处理：如果该IoC容器中有`BeanPostProcessor`对象，则调用其`postProcessAfterInitialization()`方法
-8. 此时Bean对象就绪，可以正常使用
-9. 当要销毁Bean之前，如果Bean实现了`DisposableBean`接口，则调用`destroy()`方法
-10. 当要销毁Bean之前，如果Bean在配置文件中的定义包含destroy-method属性，执行指定的方法
+### 2.2 Bean的生命周期
 
-在实际应用中，可以在Bean的生命周期中增加一些回调方法，比较常用的有以下两个注解：
+**创建周期**：
+
+（1）实例化Bean对象：Spring找到Bean的定义信息，然后利用反射调用构造器创建对象
+
+（2）注入对象属性值
+
+（3）检查Aware相关接口并设置相关依赖：
+
+- 如果Bean实现了`BeanNameAware`接口，则调用`setBeanName()`方法，传入Bean的名字
+- 如果Bean实现了`BeanClassLoaderAware`接口，则调用`setBeanClassLoader()`方法，传入`ClassLoader`对象的实例
+- 如果Bean实现了`BeanFactoryAware`接口，则调用`setBeanFactory()`方法，传入`BeanFactory`对象的实例
+- 如果Bean实现了其他`*Aware`接口，则类似地调用相应方法
+
+**初始化周期**：
+
+（4）BeanPostProcessor前置处理：如果IoC容器中有`BeanPostProcessor`对象，则调用其`postProcessBeforeInitialization()`方法
+
+（5）执行`@PostConstruct`标注的方法
+
+（6）如果Bean实现了`InitializingBean`接口，则调用`afterPropertiesSet()`方法
+
+（7）执行Bean配置的initMethod方法
+
+（8）BeanPostProcessor后置处理：如果IoC容器中有`BeanPostProcessor`对象，则调用其`postProcessAfterInitialization()`方法
+
+**运行周期**：
+
+（9）此时Bean对象就绪，可以正常使用
+
+**销毁周期**：
+
+（10）当要销毁Bean之前，执行`@PreDestroy`标注的方法
+
+（11）当要销毁Bean之前，如果Bean实现了`DisposableBean`接口，则调用`destroy()`方法
+
+（12）当要销毁Bean之前，执行Bean配置的destroyMethod方法
+
+![image-20240930211608350](images/image-20240930211608350.png)
+
+在实际开发中，**使用较多的就是`@PostConstruct`和`@PreDestroy`标注的回调方法**：
 
 ```java
 @Component
 public class User {
     // 以下两个注解标注的方法，方法名随意，但必须是 public void 无形参列表
     
-    @PostConstruct // 该方法自动调用的时机是在上述生命周期第4和第5步之间
+    @PostConstruct
     public void init() {
         // 一般用于在Bean对象创建完成后，进行一些初始化逻辑
     }
 
-    @PreDestroy // 该方法自动调用的时机是在上述生命周期第9和第10步之间
+    @PreDestroy
     public void clean() {
         // 一般用于在Bean销毁前，进行一些释放资源逻辑
     }
@@ -604,14 +521,105 @@ public class User {
 
 > 注意：使用以上两个注解，还需额外引入`jakarta.annotation-api`的依赖，而在Spring Boot应用中则无需手动引入。
 
-## 3.4 自动装配Bean
+### 2.3 Bean的线程安全性
 
-注入Bean的注解主要有`@Autowired`和`@Resource`，两者的主要区别如下：
+如果Bean的作用域是prototype，那么它自然是线程安全的，因为每次获取Bean时都会创建一个新的对象实例，所以不会存在操作共享资源的问题。
+
+如果Bean的作用域是singleton，则要分情况讨论：
+
+- 如果这个Bean是**无状态**的（没有定义可变的成员变量），则它是**线程安全**的。事实上大部分Bean都是无状态的，例如Service、Mapper。
+- 如果这个Bean是**有状态**的（定义了可变的成员变量），则它就是**线程不安全**的。为了解决线程安全问题，通常的做法是在类中定义一个`ThreadLocal`成员变量，将所有可变成员变量都保存在`ThreadLocal`中。
+
+### 2.4 @Bean注解
+
+#### 1、指定Bean的名称
+
+@Bean注解默认以**方法名**作为Bean的id，但我们可以用其value属性来自己指定Bean的id：
+
+```java
+@Configuration
+public class SpringConfig {
+    @Bean("zhangsan")
+    public Student student() {
+        return new Student();
+    }
+}
+```
+
+#### 2、指定生命周期方法
+
+使用@Bean注解注册组件时，可以通过其initMethod和destroyMethod属性来指定对应的生命周期方法：
+
+```java
+public class Car {
+    public void init() {
+        System.out.println("汽车创建了");
+    }
+    public void clean() {
+        System.out.println("汽车销毁了");
+    }
+}
+
+@Configuration
+public class SpringConfig {
+    @Bean(initMethod = "init", destroyMethod = "clean")
+    public Car car() {
+        return new Car();
+    }
+}
+```
+
+#### 3、引用其他Bean
+
+**方式1（不推荐）**：直接调用其他@Bean方法即可获取Bean实例（**虽然是方法调用，但实际也是从IoC容器中获取对应的Bean，并不是重新new一个**）
+
+```java
+@Configuration
+public class SpringConfig {
+    @Bean
+    public Car car() {
+        return new Car();
+    }
+
+    @Bean
+    public Student student() {
+        // 直接调用方法即可获取IoC容器中的Bean实例
+        Car car = car();
+        System.out.println(car);
+        return new Student();
+    }
+}
+```
+
+**方式2**：可以通过@Bean方法的形参列表直接自动注入IoC容器中的Bean
+
+```java
+@Configuration
+public class SpringConfig {
+    @Bean
+    public Car car() {
+        return new Car();
+    }
+
+    @Bean
+    public Student student(Car car) {
+        System.out.println(car);
+        return new Student();
+    }
+}
+```
+
+- 注1：如果IoC容器中没有类型匹配的Bean，则会抛出异常
+- 注2：如果IoC容器中有多个类型匹配的Bean，则根据形参的名称去匹配对应的Bean的id（若匹配不到，同样会抛出异常）
+
+## 3. 自动装配Bean
+
+自动注入Bean的注解主要有`@Autowired`和`@Resource`，两者的主要区别如下：
 
 **（1）提供者不同**
 
 - `@Autowired` 是 Spring 提供的注解
-- `@Resource` 是 JDK 提供的注解（是JSR-250系列注解）
+- `@Resource` 是 JDK 提供的注解（JSR-250系列注解）
 
 **（2）注入方式不同**
 
@@ -640,14 +648,14 @@ public class User {
 
 **（3）标注位置不同**
 
-- `@Autowired` 支持在成员变量、setter方法、有参构造器、参数上使用
-- `@Resource` 支持在成员变量、setter方法上使用，但不支持在构造器、参数上使用
+- `@Autowired` 支持在成员变量、setter方法、有参构造器、方法参数上使用
+- `@Resource` 仅支持在成员变量、setter方法上使用
 
 > 注1：注解标识在成员变量上，此时就无需设置该成员变量的setter方法
 >
-> 注2：如果类只有一个有参构造器，则该构造器和其形参上都可以不用标注`@Autowired`，只要该形参类型的bean在容器中，就会自动注入。
+> 注2：如果类只有一个有参构造器（且没有无参构造器），则该构造器和其形参上都可以不用标注`@Autowired`，只要该形参类型的bean在容器中，就会自动注入。
 
-## 3.5 基本类型的属性赋值
+## 4. 基本类型的属性赋值
 
 使用`@Value`注解可以为基本类型的成员变量注入属性，最常见的作用是注入外部化属性：
 
@@ -664,284 +672,87 @@ public class CommonComponent {
 
 > 说明：`${key:defaultValue}`写法的含义是，如果没有这个key的话，则用默认值defaultValue赋值。
 
-## 3.6 Bean的线程安全性
+## 5. FactoryBean机制
 
-如果Bean的作用域是prototype，那么它自然是线程安全的，因为每次获取Bean时都会创建一个新的对象实例，所以不会存在操作共享资源的问题。
+FactoryBean机制是Spring提供的一种整合第三方框架的常用机制。和普通的bean不同，**注册一个FactoryBean类型的bean，还会自动将其`getObject()`方法返回的对象一并注册到IoC容器中**。
 
-如果Bean的作用域是singleton，则要分情况讨论：
-
-- 如果这个Bean是**无状态**的（没有定义可变的成员变量），则它是**线程安全**的。事实上大部分Bean都是无状态的，例如Service、Mapper
-- 如果这个Bean是**有状态**的（定义了可变的成员变量），则它就是**线程不安全**的。为了解决线程安全问题，通常的做法是在类中定义一个`ThreadLocal`成员变量，将所有可变成员变量都保存在`ThreadLocal`中
-
-# 4. 基于配置类管理bean
-
-Java配置类的作用就是替代Spring的xml配置文件，基于配置类管理Bean，就是**完全注解开发**。
-
-1. 用@Configuration标记的Java类就是配置类，其作用是代替xml配置文件
-2. @ComponentScan注解用于配置包的扫描
-3. @PropertySource注解用于引用外部的配置文件
-4. @Bean注解标记在成员方法上，用于代替`<bean>`标签
-
-## 4.1 配置类的基本使用
-
-**创建配置类**：使用`@Configuration`注解将一个普通的类标记为Spring的配置类
+FactoryBean接口定义如下：
 
 ```java
-@PropertySource("classpath:jdbc.properties")
-@ComponentScan("com.thuwsy.spring")
-@Configuration
-public class SpringConfig {
+public interface FactoryBean<T> {
+    // 生产一个对象，并将其注册到IoC容器
+    T getObject() throws Exception;
+
+    // 设置要生产的对象的类型
+    Class<?> getObjectType();
+
+    // 生产的对象是否单例，默认为单例
+    default boolean isSingleton() {
+        return true;
+    }
 }
 ```
 
-**根据配置类创建IoC容器**
+FactoryBean机制使用示例如下：
+
+（1）自定义一个工厂类并实现FactoryBean接口
+
+```java
+// 泛型类型就是当前工厂要生产的对象的类型
+public class FruitFactory implements FactoryBean<Fruit> {
+    @Override
+    public Fruit getObject() throws Exception {
+        // 返回要生产的对象
+        return new Fruit("苹果");
+    }
+
+    @Override
+    public Class<?> getObjectType() {
+        // 返回要生产的对象的类型
+        return Fruit.class;
+    }
+}
+```
+
+（2）将上述工厂类注册到IoC容器中
+
+```java
+@Configuration
+public class SpringConfig {
+    @Bean
+    public FruitFactory fruitFactory() {
+        return new FruitFactory();
+    }
+}
+```
+
+（3）测试
 
 ```java
 @Test
 public void test() {
-    // 通过配置类获取ioc容器(方式1)
-    ApplicationContext ioc1 = new AnnotationConfigApplicationContext(SpringConfig.class);
+    ApplicationContext ioc = new AnnotationConfigApplicationContext(SpringConfig.class);
 
-    // 通过配置类获取ioc容器(方式2)
-    AnnotationConfigApplicationContext ioc2 = new AnnotationConfigApplicationContext();
-    ioc2.register(SpringConfig.class);
-    ioc2.refresh();
+    Map<String, FruitFactory> fruitFactoryMap = ioc.getBeansOfType(FruitFactory.class);
+    // fruitFactoryMap = {&fruitFactory=com.ioc.FruitFactory@7d9d0818}
+    System.out.println("fruitFactoryMap = " + fruitFactoryMap); 
 
-    // 获取Bean
-    HelloWorld hello1 = ioc1.getBean(HelloWorld.class);
-    System.out.println(hello1);
-    HelloWorld hello2 = ioc2.getBean(HelloWorld.class);
-    System.out.println(hello2);
+    Map<String, Fruit> fruitMap = ioc.getBeansOfType(Fruit.class);
+    // fruitMap = {fruitFactory=Fruit(name=苹果)}
+    System.out.println("fruitMap = " + fruitMap); 
 }
 ```
 
-## 4.2 在配置类中配置Bean
+细节：
 
-使用`@Bean`注解标记在成员方法上就可以代替`<bean>`标签。`@Bean`注解标记的方法的返回值对象会被放入IoC容器中，默认以**方法名**作为Bean的id
-```java
-@PropertySource("classpath:jdbc.properties")
-@ComponentScan("com.thuwsy.spring")
-@Configuration
-public class SpringConfig {
-    @Value("${jdbc.url}")
-    private String url;
-    @Value("${jdbc.driver}")
-    private String driver;
-    @Value("${jdbc.username}")
-    private String username;
-    @Value("${jdbc.password}")
-    private String password;
+- 注册FruitFactory时我们指定的bean id为`fruitFactory`，实际上这是其生产的`Fruit`的bean id
+- 而FruitFactory在IoC容器中的bean id为`&fruitFactory`
 
-    @Bean
-    public DataSource dataSource() {
-        // 实现具体的实例化过程
-        DruidDataSource dataSource = new DruidDataSource();
-        dataSource.setUrl(url);
-        dataSource.setDriverClassName(driver);
-        dataSource.setUsername(username);
-        dataSource.setPassword(password);
-        return dataSource;
-    }
-}
-```
+## 6. Spring整合单元测试
 
-补充：如果`@Value`注入的属性，只在某个`@Bean`方法中用到，也可以将`@Value`注解标记在该方法的形参位置，如下所示：
+使用Spring整合单元测试，可以更方便于我们进行测试。我们无需再手动创建IoC容器，而且任何需要的Bean都可以在测试类中直接自动装配使用。
 
-```java
-@PropertySource("classpath:jdbc.properties")
-@ComponentScan("com.thuwsy.spring")
-@Configuration
-public class SpringConfig {
-    @Bean
-    public DataSource dataSource(
-            @Value("${jdbc.url}") String url,
-            @Value("${jdbc.driver}") String driver,
-            @Value("${jdbc.username}") String username,
-            @Value("${jdbc.password}") String password
-    ) {
-        // 实现具体的实例化过程
-        DruidDataSource dataSource = new DruidDataSource();
-        dataSource.setUrl(url);
-        dataSource.setDriverClassName(driver);
-        dataSource.setUsername(username);
-        dataSource.setPassword(password);
-        return dataSource;
-    }
-}
-```
-
-## 4.3 深入理解@Bean注解
-
-@Bean注解的源码：
-
-```java
-public @interface Bean {
-    // 前两个属性可以指定Bean的id
-    @AliasFor("name")
-    String[] value() default {};
-    @AliasFor("value")
-    String[] name() default {};
-    boolean autowireCandidate() default true;
-    // 指定init方法
-    String initMethod() default "";
-    // 指定destroy方法
-    String destroyMethod() default "(inferred)";
-}
-```
-
-### 1、指定@Bean的名称
-
-@Bean注解默认以方法名作为Bean的id，我们可以用其name属性或value属性来指定Bean的id：
-
-```java
-@Configuration
-public class AppConfig {
-    @Bean("myThing") // 指定Bean的id
-    public Thing thing() {
-        return new Thing();
-    }
-}
-```
-
-### 2、指定生命周期方法
-
-使用@Bean注解注册组件时，可以使用其initMethod和destroyMethod属性来指定对应的生命周期方法，分别对应Bean生命周期中的第6步和第10步：
-
-```java
-public class BeanOne {
-    public void init() {
-        // initialization logic
-    }
-    public void cleanup() {
-        // destruction logic
-    }
-}
-
-@Configuration
-public class AppConfig {
-    @Bean(initMethod = "init", destroyMethod = "cleanup")
-    public BeanOne beanOne() {
-        return new BeanOne();
-    }
-}
-```
-
-### 3、指定作用域
-
-可以用@Scope注解在@Bean标识的方法上指定作用域：
-
-```java
-@Configuration
-public class AppConfig {
-    @Bean
-    @Scope(scopeName = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    public Thing thing() {
-        return new Thing();
-    }
-}
-```
-
-### 4、引用其他的IoC组件
-
-**方式1(不推荐)**：直接调用其他@Bean方法即可获取Bean实例（虽然是方法调用，但实际也是从IoC容器中获取对应的Bean，并不是重新new一个）
-
-```java
-@Configuration
-public class JavaConfig {
-    @Bean
-    public BeanOne beanOne() {
-        return new BeanOne();
-    }
-
-    @Bean
-    public BeanTwo beanTwo() {
-        // 直接调用方法即可获取Bean实例
-        BeanOne obj = beanOne();
-        System.out.println(obj);
-        return new BeanTwo();
-    }
-}
-```
-
-**方式2**：可以通过@Bean方法的形参列表直接注入IoC容器中的Bean
-
-```java
-@Configuration
-public class JavaConfig {
-    @Bean
-    public BeanOne beanOne(){
-        return new BeanOne();
-    }
-
-    @Bean
-    public BeanTwo beanTwo(BeanOne obj){
-        System.out.println(obj);
-        return new BeanTwo();
-    }
-}
-```
-
-- 注1：如果IoC容器中没有类型匹配的Bean，则会报异常
-- 注2：如果IoC容器中有多个类型匹配的Bean，则根据形参的名称去匹配对应的Bean的id（若匹配不到，同样会报异常）
-
-## 4.4 深入理解@Configuration注解
-
-@Configuration注解的源码如下：
-
-```java
-@Target({ElementType.TYPE})
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-@Component
-public @interface Configuration {
-    @AliasFor(
-        annotation = Component.class
-    )
-    String value() default "";
-
-    boolean proxyBeanMethods() default true;
-
-    boolean enforceUniqueMethods() default true;
-}
-```
-
-可见，它被标注了@Component注解，所以被@Configuration标注的**配置类，也是IoC容器中的组件**。
-
-除此之外，它有一个属性proxyBeanMethods，**默认为true**，即通过方法调用会获得代理Bean。也就是说，假如该配置类用@Bean注解标注了一个方法，那么当外部其他程序调用这个方法时，返回的对象始终就是IoC容器中的同一个对象（即代理bean）。如果将其设置为false，则外部调用@Bean标注的方法时，返回的对象将是不同的（new出来的对象，而不是IoC容器中的对象）。
-
-总结：
-
-- `@Configuration(proxyBeanMethods = true)`开启Full模式，即每个@Bean方法的调用会从IoC容器中寻找组件。
-- `@Configuration(proxyBeanMethods = false)`开启Lite模式，即每个@Bean方法的调用会直接new一个对象返回。
-
-## 4.5 @Import注解
-
-@Import注解一般标注在配置类上，可以导入一些类注册到IoC容器中，注册的**组件Bean id默认是该类的全类名**。
-
-- 使用场景1：更方便地导入一些第三方的组件
-- 使用场景2：可以导入一些配置类，便于创建IoC容器，如下所示：
-
-```java
-@Configuration
-@Import({ConfigB.class, ConfigC.class})
-public class ConfigA {
-}
-```
-
-这样，我们在创建IoC容器时，只需提供ConfigA一个配置类即可，因为它自动导入了其他配置类ConfigB和ConfigC：
-
-```java
-ApplicationContext ioc = new AnnotationConfigApplicationContext(ConfigA.class);
-```
-
-## 4.6 Spring整合JUnit搭建测试环境
-
-整合测试环境的好处：
-
-- 不需要自己手动创建IoC容器了
-- 任何需要的Bean都可以在测试类中直接自动装配使用
-
-**1、加入依赖**
+（1）引入依赖
 
 ```xml
 <!--junit5测试-->
@@ -960,26 +771,30 @@ ApplicationContext ioc = new AnnotationConfigApplicationContext(ConfigA.class);
 </dependency>
 ```
 
-**2、创建测试类**
+（2）创建测试类
 
 ```java
-//@SpringJUnitConfig(locations = {"classpath:spring-context.xml"}) //指定xml配置文件
-@SpringJUnitConfig(value = {SpringConfig.class}) //指定配置类
-public class SpringTests {
+@SpringJUnitConfig(SpringConfig.class) // 指定配置类
+public class StudentTest {
     @Autowired
-    private HelloWorld helloWorld;
+    private Student student;
+
     @Test
     public void test() {
-        helloWorld.sayHello();
+        student.sayHello();
     }
 }
 ```
 
-# 5. AOP
 
-## 5.1 情景设定
 
-**1、声明接口**
+# 第04章_AOP
+
+## 1. 代理模式
+
+### 1.1 情景设定
+
+我们有一个Calculator及其实现类：
 
 ```java
 public interface Calculator {
@@ -990,79 +805,49 @@ public interface Calculator {
 }
 ```
 
-**2、创建实现类**
-
 ```java
 public class CalculatorImpl implements Calculator {
     @Override
     public int add(int i, int j) {
-        int result = i + j;
-        System.out.println("方法内部，result: " + result);
-        return result;
+        return i + j;
     }
-
     @Override
     public int sub(int i, int j) {
-        int result = i - j;
-        System.out.println("方法内部，result: " + result);
-        return result;
+        return i - j;
     }
-
     @Override
     public int mul(int i, int j) {
-        int result = i * j;
-        System.out.println("方法内部，result: " + result);
-        return result;
+        return i * j;
     }
-
     @Override
     public int div(int i, int j) {
-        int result = i / j;
-        System.out.println("方法内部，result: " + result);
-        return result;
+        return i / j;
     }
 }
 ```
 
-**3、新增需求**
+现在想在加减乘除方法前后都打印一个日志。如果我们直接在CalculatorImpl中添加日志，则会有以下问题：
 
-我们现在想在加减乘除方法前后都打印一个日志，如
+- **对核心业务功能有干扰**
+- 附加的日志功能分散在各个业务方法中，**不利于统一维护**
 
-```java
-public int add(int i, int j) {
-    System.out.println("[日志] add 方法开始了，参数是：" + i + "," + j);
-    int result = i + j;
-    System.out.println("方法内部 result: " + result);
-    System.out.println("[日志] add 方法结束了，结果是：" + result);
-    return result;
-}
-```
+一个较好的解决方案就是使用**代理模式**来进行**解耦**，将附加功能单独抽取出来，不影响业务核心代码。
 
-**4、提出问题**
+### 1.2 代理模式简介
 
-- 现有代码缺陷：针对带日志功能的实现类，我们发现有如下缺陷：
-  - **对核心业务功能有干扰**，导致程序员在开发核心业务时分散了精力
-  - 附加的日志功能分散在各个业务功能方法中，**不利于统一维护**
-- 解决思路：要解决这两个问题，核心就是**解耦**，我们需要把附加功能从业务功能代码中抽取出来。
-- 难点：要抽取的代码在方法内部，比较困难，需要引入新的技术。
+代理模式是二十三种设计模式中的一种，属于结构型模式。它的思想就是通过提供一个**代理类**，让我们在调用目标方法的时候，不再是通过目标类直接调用，而是通过代理类间接调用。从而让不属于目标方法核心逻辑的代码从目标方法中剥离出来——解耦。
 
-## 5.2 代理模式
+- 代理类：将非核心逻辑剥离出来以后，封装这些非核心逻辑的类。
+- 目标类：被代理的类。
 
-### 5.2.1 概念
+### 1.3 静态代理
 
-代理模式是二十三种设计模式中的一种，属于结构型模式。它的作用就是通过提供一个代理类，让我们在调用目标方法的时候，不再是直接对目标方法进行调用，而是通过代理类间接调用。让不属于目标方法核心逻辑的代码从目标方法中剥离出来——解耦。
-
-- 代理：将非核心逻辑剥离出来以后，封装这些非核心逻辑的类、对象、方法。
-- 目标：被代理的类、对象、方法。
-
-### 5.2.2 静态代理
-
-创建静态代理类：
+静态代理类：
 
 ```java
 public class CalculatorStaticProxy implements Calculator {
     // 将被代理的目标对象声明为成员变量
-    private CalculatorImpl target;
+    private final CalculatorImpl target;
 
     public CalculatorStaticProxy(CalculatorImpl target) {
         this.target = target;
@@ -1070,48 +855,48 @@ public class CalculatorStaticProxy implements Calculator {
 
     @Override
     public int add(int i, int j) {
-        System.out.println("日志，方法：add，参数：" + i + "，" + j);
+        System.out.printf("【%s】方法开始, 参数: %d,%d%n", "add", i, j);
         int result = target.add(i, j);
-        System.out.println("日志，方法：add，结果：" + result);
+        System.out.printf("【%s】方法返回, 结果: %d%n", "add", result);
         return result;
     }
 
     @Override
     public int sub(int i, int j) {
-        System.out.println("日志，方法：sub，参数：" + i + "，" + j);
+        System.out.printf("【%s】方法开始, 参数: %d,%d%n", "sub", i, j);
         int result = target.sub(i, j);
-        System.out.println("日志，方法：sub，结果：" + result);
+        System.out.printf("【%s】方法返回, 结果: %d%n", "sub", result);
         return result;
     }
 
     @Override
     public int mul(int i, int j) {
-        System.out.println("日志，方法：mul，参数：" + i + "，" + j);
+        System.out.printf("【%s】方法开始, 参数: %d,%d%n", "mul", i, j);
         int result = target.mul(i, j);
-        System.out.println("日志，方法：mul，结果：" + result);
+        System.out.printf("【%s】方法返回, 结果: %d%n", "mul", result);
         return result;
     }
 
     @Override
     public int div(int i, int j) {
-        System.out.println("日志，方法：div，参数：" + i + "，" + j);
+        System.out.printf("【%s】方法开始, 参数: %d,%d%n", "div", i, j);
         int result = target.div(i, j);
-        System.out.println("日志，方法：div，结果：" + result);
+        System.out.printf("【%s】方法返回, 结果: %d%n", "div", result);
         return result;
     }
 }
 ```
 
-静态代理确实实现了解耦，但是由于代码都写死了，完全不具备任何的灵活性。就拿日志功能来说，将来其他地方也需要附加日志，那还得再声明更多个静态代理类，这就产生了大量重复的代码，日志功能还是分散的，没有统一管理。因此，我们推荐使用**动态代理**。
+静态代理虽然实现了解耦，但是由于代码都写死了，完全不具备任何的灵活性。就拿日志功能来说，将来其他地方也需要附加日志，那还得再声明更多个静态代理类，这就产生了大量重复的代码，且日志功能还是分散的，没有统一管理。因此，我们推荐使用**动态代理**，而不是静态代理。
 
-### 5.2.3 动态代理
+### 1.4 动态代理
 
-JDK本身就支持动态代理，这是反射技术的一部分。我们需要创建一个生产代理对象的工厂类（基于jdk动态代理技术）：
+使用**JDK的动态代理**，需要创建一个生产代理对象的工厂类：
 
 ```java
 public class ProxyFactory {
     // 将被代理的目标对象声明为成员变量
-    private Object target;
+    private final Object target;
 
     public ProxyFactory(Object target) {
         this.target = target;
@@ -1138,23 +923,19 @@ public class ProxyFactory {
              */
             @Override
             public Object invoke(Object proxy, Method method, Object[] args) {
-                Object result = null;
+                String name = method.getName();
                 try {
-                    System.out.println("日志，方法：" + method.getName() +
-                            "，参数：" + Arrays.toString(args));
+                    System.out.printf("【%s】方法开始, 参数: %s%n", name, Arrays.toString(args));
                     // 通过反射，调用目标对象中的对应方法
-                    result = method.invoke(target, args);
-                    System.out.println("日志，方法：" + method.getName() +
-                            "，结果：" + result);
+                    Object result = method.invoke(target, args);
+                    System.out.printf("【%s】方法返回, 结果: %s%n", name, result);
+                    return result;
                 } catch (Exception e) {
-                    e.printStackTrace();
-                    System.out.println("日志，方法：" + method.getName() +
-                            "，异常：" + e);
+                    System.out.printf("【%s】方法异常, 原因: %s%n", name, e.getMessage());
+                    throw new RuntimeException(e);
                 } finally {
-                    System.out.println("日志，方法：" + method.getName() +
-                            "，方法执行完毕！");
+                    System.out.printf("【%s】方法结束!%n", name);
                 }
-                return result;
             }
         };
         return Proxy.newProxyInstance(classLoader, interfaces, h);
@@ -1175,26 +956,21 @@ public void test() {
     // 3. 通过工厂生产目标对象的代理对象
     Calculator proxy = (Calculator) proxyFactory.getProxy();
     // 4. 通过代理对象调用方法
-    proxy.div(1, 2);
+    proxy.add(1, 2);
 }
 ```
 
-## 5.3 AOP简介
+> 显然手动使用JDK动态代理的过程十分繁琐，所以Spring AOP框架就是为了帮我们简化动态代理的实现。
 
-### 5.3.1 概述
+## 2. AOP简介
 
-AOP（Aspect Oriented Programming）是一种设计思想，是软件设计领域中的**面向切面编程**，它是面向对象编程的一种补充和完善。它能够将那些与业务无关，却为业务模块所共同调用的逻辑（例如事务处理、日志管理、权限控制等）封装起来，便于减少系统的重复代码，降低模块间的耦合度，并有利于未来的可拓展性和可维护性。
+### 2.1 概述
 
-### 5.3.2 Spring AOP
+AOP（Aspect Oriented Programming）是一种设计思想，是软件设计领域中的**面向切面编程**，它是面向对象编程的一种补充和完善。它能够**将那些与业务无关，却为业务模块所共同调用的逻辑（例如事务管理、日志记录、权限控制、统一异常处理等）抽取并封装起来**，便于减少系统的重复代码，降低模块间的耦合度，有利于未来的可拓展性和可维护性。
 
-Spring AOP是一个框架，底层使用**动态代理**来实现AOP思想，它采用的动态代理技术有以下两种：
+### 2.2 AspectJ框架
 
-- 如果要代理的目标对象实现了某个接口，那么Spring AOP就会使用**JDK动态代理**去创建代理对象。生成的代理类会和目标类实现相同的接口，且该代理类在`com.sun.proxy`包下，类名是`$proxy+数字`，如`$proxy4`
-- 如果要代理的目标对象没有实现任何接口，那么Spring AOP就会使用**Cglib动态代理**去创建代理对象。生成的代理类会继承目标类，且该代理类和目标类在相同的包下
-
-### 5.3.3 AspectJ
-
-AspectJ是早期的AOP框架，也是功能最完整的AOP框架。它与Spring AOP框架的区别有：
+AspectJ是早期的AOP框架，它与Spring AOP框架的区别有：
 
 - Spring AOP是**运行时增强**，而AspectJ是**编译时增强**
 - Spring AOP基于**动态代理**，而AspectJ基于**字节码操作**
@@ -1202,23 +978,42 @@ AspectJ是早期的AOP框架，也是功能最完整的AOP框架。它与Spring 
 
 > 说明：Spring AOP框架中借用了AspectJ中的一些AOP注解
 
-### 5.3.4 AOP的术语
+### 2.3 Spring AOP框架
+
+Spring AOP框架底层使用**动态代理**来实现AOP思想，它采用的动态代理技术有以下两种：
+
+- 如果要代理的目标对象实现了某个接口，那么Spring AOP默认就会使用**JDK动态代理**去创建代理对象。生成的代理类会和目标类**实现相同的接口**，且该代理类在`jdk.proxy2`包下，类名形如`$Proxy29`
+- 如果要代理的目标对象没有实现任何接口，那么Spring AOP默认就会使用**CGLIB动态代理**去创建代理对象。生成的代理类会**继承目标类**，且该代理类和目标类在相同的包下，类名形如`目标类名$$SpringCGLIB$$0`
+
+> **注意：但在SpringBoot中，默认始终使用CGLIB动态代理去创建代理对象**。因为CGLIB动态代理适用于任何目标类，且性能比JDK动态代理更高。
+
+### 2.4 Spring AOP底层原理
+
+Spring AOP会为每个被切面切入的组件创建代理对象，代理对象中保存了切面类里所有通知方法构成的**增强器链**，当目标方法执行时，会去增强器链中找到需要额外执行的通知方法并执行。
+
+当目标类被Spring AOP代理后，**IoC容器中将不再存在目标类组件，而是会将代理类的Bean放入IoC容器**。如下图所示：
+
+![image-20241003185140424](images/image-20241003185140424.png)
+
+### 2.5 AOP术语
+
+![image-20241001185816690](images/image-20241001185816690.png)
 
 **1、横切关注点**
 
-横切关注点就是从方法中抽取出来的同一类非核心业务，这是一个逻辑层面的概念。例如一个业务方法，既要附加日志功能，又要附加事务功能，那么它就有两个横切关注点。
+横切关注点就是从方法中抽取出来的同一类非核心业务，这是一个逻辑层面的概念。
 
 **2、通知**
 
 每一个横切关注点上要做的事情都需要写一个方法来实现，这样的方法就称为**通知**，也称为**增强**。
 
 - 前置通知：在被代理的目标方法前执行
-- 返回通知：在被代理的目标方法成功结束后执行
+- 返回通知：在被代理的目标方法成功返回后执行
 - 异常通知：在被代理的目标方法异常结束后执行
 - 后置通知：在被代理的目标方法最终结束后执行
-- 环绕通知：使用try...catch...finally结构围绕整个被代理的目标方法，包括上面四种通知对应的所有位置
+- 环绕通知：使用`try...catch...finally`结构围绕整个被代理的目标方法，包含上面四种通知对应的所有位置
 
-**3、切面(aspect)**
+**3、切面(Aspect)**
 
 封装通知方法的类称为切面。根据不同的非核心业务逻辑，我们可以创建不同的切面类，例如：
 
@@ -1232,29 +1027,25 @@ AspectJ是早期的AOP框架，也是功能最完整的AOP框架。它与Spring 
 
 **5、代理(proxy)**
 
-向目标对象应用通知之后创建的代理对象。就JDK动态代理技术而言，它会在运行过程中根据我们提供的接口动态生成接口的实现类(类名如`com.sun.proxy.$proxy4`)。那么我们这里谈到的代理对象就是这个动态生成的类的对象。
+向目标对象应用通知之后创建的代理对象。
 
-**6、连接点(joinpoint)**
+**6、连接点(JoinPoint)**
 
-把所有方法排成一排，每一个横切位置看成x轴方向，把方法从上到下执行的顺序看成y轴方向，那么x轴和y轴的交叉点就是连接点。连接点也是一个逻辑层面的概念。
+把所有方法排成一行，每一个横切位置看成x轴方向，把方法从上到下执行的顺序看成y轴方向，那么x轴和y轴的交叉点就是连接点。连接点也是一个逻辑层面的概念。
 
-**7、切入点(pointcut)**
+**7、切入点(Pointcut)**
 
-切入点就是定位连接点的方式。我们通过切入点，可以将通知方法精准地植入到被代理目标方法的指定位置。Spring AOP中切入点通过`org.springframework.aop.Pointcut`接口进行描述，它使用类和方法作为连接点的查询条件。
+切入点就是连接点中要植入通知方法的位置。通过切入点，可以将通知方法精准地植入到目标方法的指定位置。
 
 **8、织入(weave)**
 
 织入指的是把通知应用到目标上，生成代理对象的过程。可以在编译期织入，也可以在运行期织入，Spring AOP采用后者。
 
-### 5.3.5 AOP的核心流程
+## 3. Spring AOP的使用
 
-![](images/20230809121820.png)
+### 3.1 整体流程
 
-## 5.4 Spring AOP的使用
-
-### 5.4.1 整体流程
-
-#### 1、加入依赖
+#### 1、引入依赖
 
 ```xml
 <dependency>
@@ -1264,72 +1055,23 @@ AspectJ是早期的AOP框架，也是功能最完整的AOP框架。它与Spring 
 </dependency>
 ```
 
-#### 2、要被代理的目标
+#### 2、配置类
 
-接口：
-```java
-public interface Calculator {
-    int add(int i, int j);
-    int sub(int i, int j);
-    int mul(int i, int j);
-    int div(int i, int j);
-}
-```
+Spring AOP的注意事项：
 
-目标类（**必须放在IoC容器中**，才能被AOP代理）：
-```java
-@Component
-public class CalculatorImpl implements Calculator {
-    @Override
-    public int add(int i, int j) {
-        System.out.println("[日志] add 方法开始了，参数是：" + i + "," + j);
-        int result = i + j;
-        System.out.println("方法内部 result: " + result);
-        System.out.println("[日志] add 方法结束了，结果是：" + result);
-        return result;
-    }
-
-    @Override
-    public int sub(int i, int j) {
-        int result = i - j;
-        System.out.println("方法内部，result: " + result);
-        return result;
-    }
-
-    @Override
-    public int mul(int i, int j) {
-        int result = i * j;
-        System.out.println("方法内部，result: " + result);
-        return result;
-    }
-
-    @Override
-    public int div(int i, int j) {
-        int result = i / j;
-        System.out.println("方法内部，result: " + result);
-        return result;
-    }
-}
-```
-
-> 注意：如果目标类没有实现任何接口，Spring AOP则会自动使用cglib技术实现动态代理。
-
-#### 3、创建配置类
-
-AOP的注意事项：
-- **切面类和目标类都需要交给IoC容器管理**，否则无法享受AOP增强
+- **切面类和目标类都需要标注`@Component`交给IoC容器管理**，否则无法享受AOP增强
 - 切面类必须通过`@Aspect`注解标识为一个切面
 - 在配置类上标注`@EnableAspectJAutoProxy`注解，来开启AspectJ的注解支持
 
 ```java
 @Configuration
-@ComponentScan("com.thuwsy.aop")
+@ComponentScan("com.aop")
 @EnableAspectJAutoProxy
-public class AopConfig {
+public class SpringAopConfig {
 }
 ```
 
-#### 4、创建切面类
+#### 3、切面类
 
 ```java
 @Component
@@ -1337,86 +1079,85 @@ public class AopConfig {
 public class LoggerAspect {
 
     // 声明一个公共的切入点表达式
-    @Pointcut("execution(* com.thuwsy.aop.CalculatorImpl.*(..))")
+    @Pointcut("execution(* com.aop.CalculatorImpl.*(..))")
     public void pointCut() {}
 
-    //@Before("execution(public int com.thuwsy.aop.CalculatorImpl.add(int, int))")
+//    @Before("execution(public int com.aop.CalculatorImpl.add(int, int))")
     @Before("pointCut()")
     public void beforeAdviceMethod(JoinPoint joinPoint) {
         // 获取连接点所对应方法的签名信息(修饰符、返回值、方法名、参数、异常等)
         Signature signature = joinPoint.getSignature();
         Object[] args = joinPoint.getArgs();
-        System.out.println("LoggerAspect，方法：" + signature.getName() +
-                "，参数：" + Arrays.toString(args));
+        System.out.printf("【%s】方法开始, 参数: %s%n", signature.getName(), Arrays.toString(args));
     }
 
     @After("pointCut()")
     public void afterAdviceMethod(JoinPoint joinPoint) {
         Signature signature = joinPoint.getSignature();
-        System.out.println("LoggerAspect，方法：" + signature.getName() + "执行完毕");
+        System.out.printf("【%s】方法结束!%n", signature.getName());
     }
 
     @AfterReturning(value = "pointCut()", returning = "result")
     public void afterReturningAdviceMethod(JoinPoint joinPoint, Object result) {
         Signature signature = joinPoint.getSignature();
-        System.out.println("LoggerAspect，方法：" + signature.getName() +
-                "，结果：" + result);
+        System.out.printf("【%s】方法返回, 结果: %s%n", signature.getName(), result);
     }
 
     @AfterThrowing(value = "pointCut()", throwing = "e")
     public void afterThrowingAdviceMethod(JoinPoint joinPoint, Throwable e) {
         Signature signature = joinPoint.getSignature();
-        System.out.println("LoggerAspect，方法：" + signature.getName() +
-                "，异常：" + e);
+        System.out.printf("【%s】方法异常, 原因: %s%n", signature.getName(), e.getMessage());
     }
 
     // 环绕通知的方法的返回值一定要和目标对象方法的返回值一致
     @Around("pointCut()")
     public Object aroundAdviceMethod(ProceedingJoinPoint joinPoint) {
-        Object result = null;
         try {
             System.out.println("环绕通知-->前置通知");
             // 表示目标对象方法的执行
-            result = joinPoint.proceed();
+            Object result = joinPoint.proceed();
             System.out.println("环绕通知-->返回通知");
+            return result;
         } catch (Throwable e) {
-            e.printStackTrace();
             System.out.println("环绕通知-->异常通知");
+            throw new RuntimeException(e); // 建议继续抛出异常，让上层感知
         } finally {
             System.out.println("环绕通知-->后置通知");
         }
-        return result;
     }
 }
 ```
 
-#### 5、测试
+#### 4、测试
 
-**注意**：我们通过接口类型获取Bean，就会自动获取代理对象的Bean。因为启用代理后，目标类CalculatorImpl的Bean就不存在了。
+**注意**：我们通过接口类型获取Bean时，就会自动获取代理对象的Bean。因为被Spring AOP代理后，在IoC容器中就不存在目标类CalculatorImpl的Bean了，而是会将代理类的Bean放入IoC容器。
 
 ```java
-@SpringJUnitConfig(AopConfig.class)
+@SpringJUnitConfig(SpringAopConfig.class)
 public class AopTest {
     @Autowired
     private Calculator calculator;
 
     @Test
     public void test() {
-        calculator.add(2, 3);
+        // 【Test】calculator=class jdk.proxy2.$Proxy29
+        System.out.println("【Test】calculator全类名: " + calculator.getClass());
+        int result = calculator.add(2, 3);
+        System.out.println("【Test】result=" + result);
     }
 }
 ```
 
-### 5.4.2 重用切入点表达式
+### 3.2 重用切入点表达式
 
 在切面中，需要通过指定的注解将方法标识为通知：
-* @Before：前置通知，在目标对象方法执行之前执行
-* @After：后置通知，在目标对象方法的finally子句中执行
-* @AfterReturning：返回通知，在目标对象方法成功返回之后执行
-* @AfterThrowing：异常通知，在目标对象方法的catch子句中执行
-* @Around：环绕通知，使用try...catch...finally结构围绕整个被代理的目标方法，包括上面四种通知对应的所有位置
+* `@Before`：前置通知，在被代理的目标方法前执行
+* `@AfterReturning`：返回通知，在被代理的目标方法成功返回后执行
+* `@AfterThrowing`：异常通知，在被代理的目标方法异常结束后执行
+* `@After`：后置通知，在被代理的目标方法最终结束后执行
+* `@Around`：环绕通知，使用`try...catch...finally`结构围绕整个被代理的目标方法，包含上面四种通知对应的所有位置
 
-各种通知的执行顺序(Spring版本5.3.x以后)：
+各种通知的执行顺序：
 - 前置通知
 - 目标操作
 - 返回通知或异常通知
@@ -1425,33 +1166,30 @@ public class AopTest {
 **在使用注解标识通知的value属性中，需要指定切入点表达式，由切入点表达式控制当前通知方法要作用在哪一个目标方法之上**。最精确的写法如下：
 
 ```java
-//指明方法的 修饰符、返回值类型、方法名、参数类型
-@Before("execution(public int com.thuwsy.aop.CalculatorImpl.add(int, int))")
+// 指明方法的 修饰符、返回值类型、方法名、参数类型
+@Before("execution(public int com.aop.CalculatorImpl.add(int, int))")
 ```
 
-但是采用这样的方式，需要在每一个通知上都加上这一注解，过于繁琐，因此我们可以声明一个公共的切入点表达式，即声明一个自定义的public void的空方法，在其上添加`@PointCut`注解：
+但是采用这样的方式，则需要在每一个通知上都加上这一注解，过于繁琐，因此我们可以声明一个公共的切入点表达式，即声明一个自定义的public void的空方法，在其上添加`@PointCut`注解：
 
 ```java
 // 切入点表达式重用
-@Pointcut("execution(* com.thuwsy.aop.CalculatorImpl.*(..))")
+@Pointcut("execution(* com.aop.CalculatorImpl.*(..))")
 public void pointCut() {}
 ```
 
 - 在同一个类内部引用该切入点表达式：`@Before("pointCut()")`
-- 在不同类中引用该切入点表达式：`@Before("com.thuwsy.aop.LoggerAspect.pointCut()")`
+- 在不同类中引用该切入点表达式：`@Before("com.aop.LoggerAspect.pointCut()")`
 
-> 推荐：定义一个专门存放切入点表达式的类，将整个项目中所有切入点表达式全部集中过来，便于统一管理。
-
-### 5.4.3 切入点表达式语法
+### 3.3 切入点表达式语法
 
 我们下面来分析上述的切入点表达式：
 
 ```java
-execution(* com.thuwsy.aop.CalculatorImpl.*(..))
+execution(* com.aop.CalculatorImpl.*(..))
 ```
 
 ![](images/20230904165800.png)
-
 
 **语法细节**:
 
@@ -1478,11 +1216,11 @@ execution(* com.thuwsy.aop.CalculatorImpl.*(..))
 execution(* *..*ServiceImpl.*(..))
 ```
 
-### 5.4.4 各个通知获取细节信息
+### 3.4 各个通知获取细节信息
 
 #### 1、JoinPoint接口
 
-获取连接点信息可以在通知方法的参数位置设置JoinPoint类型的形参：
+要获取连接点信息，则可以在通知方法的第一个参数位置设置JoinPoint类型的形参：
 
 ```java
 @Before("pointCut()")
@@ -1495,353 +1233,124 @@ public void beforeAdviceMethod(JoinPoint joinPoint) {
     String methodName = signature.getName();
     // 获取外界调用目标方法时传入的实参列表组成的数组
     Object[] args = joinPoint.getArgs();
-    System.out.println("LoggerAspect，方法：" + methodName +
-            "，参数：" + Arrays.toString(args));
+    System.out.printf("【%s】方法开始, 参数: %s%n", methodName, Arrays.toString(args));
 }
 ```
 
 #### 2、方法返回值
 
-在返回通知中，若要获取目标对象方法的返回值，只需通过@AfterReturning注解的returning属性，就可以将通知方法的某个形参名指定为接收目标对象方法的返回值的参数。
+在返回通知中，若要获取目标对象方法的返回值，只需通过`@AfterReturning`注解的returning属性，就可以将通知方法的某个形参名指定为接收目标对象方法的返回值的参数。
 
 ```java
 @AfterReturning(value = "pointCut()", returning = "result")
 public void afterReturningAdviceMethod(JoinPoint joinPoint, Object result) {
     Signature signature = joinPoint.getSignature();
-    System.out.println("LoggerAspect，方法：" + signature.getName() +
-            "，结果：" + result);
+    System.out.printf("【%s】方法返回, 结果: %s%n", signature.getName(), result);
 }
 ```
 
 
 #### 3、目标方法抛出的异常
 
-在异常通知中，若要获取目标对象方法的异常，只需通过@AfterThrowing注解的throwing属性，就可以将通知方法的某个形参名指定为接收目标对象方法出现的异常的参数。
+在异常通知中，若要获取目标对象方法抛出的异常，只需通过`@AfterThrowing`注解的throwing属性，就可以将通知方法的某个形参名指定为接收目标对象方法出现的异常的参数。
 
 ```java
 @AfterThrowing(value = "pointCut()", throwing = "e")
 public void afterThrowingAdviceMethod(JoinPoint joinPoint, Throwable e) {
     Signature signature = joinPoint.getSignature();
-    System.out.println("LoggerAspect，方法：" + signature.getName() +
-            "，异常：" + e);
+    System.out.printf("【%s】方法异常, 原因: %s%n", signature.getName(), e.getMessage());
 }
 ```
 
-### 5.4.5 环绕通知
+### 3.5 环绕通知
 
-环绕通知对应整个 try...catch...finally 结构，包括前面四种通知的所有功能。注意：
+环绕通知对应整个`try...catch...finally`结构，包含前面四种通知的所有功能。注意：
 - 通过在通知方法形参位置声明`ProceedingJoinPoint`类型的形参，我们可以像JoinPoint一样获取连接点所对应目标方法的一些信息
 - 通过调用`ProceedingJoinPoint`对象的`proceed()`方法，表示目标对象方法的执行
 - 环绕通知的方法的返回值一定要和目标对象方法的返回值一致
 
 ```java
-// 环绕通知的方法的返回值一定要和目标对象方法的返回值一致
 @Around("pointCut()")
 public Object aroundAdviceMethod(ProceedingJoinPoint joinPoint) {
-    Object[] args = joinPoint.getArgs();
-    Object result = null;
     try {
         System.out.println("环绕通知-->前置通知");
         // 表示目标对象方法的执行
-        result = joinPoint.proceed(args);
+        Object result = joinPoint.proceed();
         System.out.println("环绕通知-->返回通知");
+        return result;
     } catch (Throwable e) {
-        e.printStackTrace();
         System.out.println("环绕通知-->异常通知");
-        throw new RuntimeException(e);
+        throw new RuntimeException(e); // 建议继续抛出异常，让上层感知
     } finally {
         System.out.println("环绕通知-->后置通知");
     }
-    return result;
 }
 ```
 
-### 5.4.6 切面的优先级
+### 3.6 切面的优先级
 
-相同目标方法上同时存在多个切面时，切面的优先级控制切面的内外嵌套顺序。
+同一目标方法上同时存在多个切面时，则由切面的优先级控制切面的内外嵌套顺序：
 
 - 优先级高的切面：外面
 - 优先级低的切面：里面
 
-使用 `@Order` 注解可以控制切面的优先级：
+使用`@Order`注解可以控制切面的优先级：
 
 - `@Order(较小的数)`：优先级高
 - `@Order(较大的数)`：优先级低
 
-![](images/20230809191812.png)
-
 ```java
 @Component
 @Aspect
-@Order(1) //默认值为Integer的最大值，value属性值越小、优先级越高
+@Order(1) // 默认值为Integer的最大值，value属性值越小、优先级越高
 public class ValidateAspect {
-    @Before("com.thuwsy.aop.LoggerAspect.pointCut()")
+    @Before("com.aop.LoggerAspect.pointCut()")
     public void beforeMethod() {
         System.out.println("ValidateAspect-->前置通知");
     }
 }
 ```
 
-实际开发时，如果有多个切面嵌套的情况，一定要仔细考虑。例如：如果事务切面优先级高，那么在缓存命中数据的情况下，事务切面的操作都浪费了。
+![](images/20230809191812.png)
 
-![](images/20230809192048.png)
 
-此时应该将缓存切面的优先级提高，在事务操作之前先检查缓存中是否存在目标数据。
 
-![](images/20230809192131.png)
+# 第05章_声明式事务
 
-## 5.5 Spring AOP对获取Bean的影响
+## 1. 简介
 
-根据类型获取bean时，会有以下情况：
+### 1.1 编程式事务与声明式事务
 
-**case1**：bean对应的类没有实现任何接口。根据 bean 本身的类型获取 bean，则
+Spring支持两种管理事务的方式：
 
-- 若IoC容器中同类型的 bean 只有一个，可以正常获取
-- 若IoC容器中同类型的 bean 有多个，则会抛出 NoUniqueBeanDefinitionException 异常
+- **编程式事务**：事务功能的相关操作全部通过自己手动编写代码来实现。显然编程式事务对于程序员而言十分繁琐。
 
-**case2**：bean对应的类实现了接口，这个接口也只有这一个实现类。则根据接口类型获取 bean，或者根据类获取 bean，都能够正常获取到 bean，而且是同一个对象。
+  ```java
+  Connection conn = ... ;
+  try {
+      // 开启事务
+      conn.setAutoCommit(false);
+      // 核心操作...
+      // 提交事务
+      conn.commit();
+  } catch (Exception e) {
+      // 回滚事务
+      conn.rollback();
+  } finally {
+      // 释放数据库连接
+      conn.close();
+  }
+  ```
 
-**case3**：声明一个接口，它有多个实现类，且接口所有实现类都放入 IoC 容器，则
+- **声明式事务**：基于注解`@Transactional`控制事务，底层实际是**通过AOP实现**。
 
-- 根据接口类型获取 bean，会抛出 NoUniqueBeanDefinitionException 异常
-- 根据类获取bean可以正常获取
+### 1.2 声明式事务底层原理
 
-**case4**：声明一个接口，它有一个实现类，并且创建一个切面类，对上面接口的实现类应用通知，则
-
-- 根据接口类型获取bean，可以正常获取
-- 根据类获取bean，抛出异常
-
-> 原因：**因为目标类实现了接口，所以采用jdk动态代理技术，因此生成的代理类也实现了同样的接口。应用了切面后，真正放在IoC容器中的是代理类的对象；目标类的对象并没有被放到IoC容器中，所以根据目标类的类型从IoC容器中是找不到的**。
-
-**case5**：声明一个类（不实现接口），并创建一个切面类，对前面的类应用通知。则**根据目标类获取bean，能够获取到，因为代理类是由cglib技术生成的，所以代理类继承了这个目标类，放入IoC容器中的仍是只有代理类的对象，但我们可以根据其父类类型去获取bean**。
-
-总结：
-
-![](images/20230809210647.png)
-
-# 6. 声明式事务
-
-## 6.1 JdbcTemplate
-
-为了在特定领域帮助我们简化代码，Spring封装了很多Template形式的模板类。例如：RedisTemplate、RestTemplate、JdbcTemplate等。Spring框架对 JDBC 进行了封装，使用 JdbcTemplate 可以方便实现对数据库操作。
-
-> 说明：不过我们将来使用更多的还是MyBatis，所以JdbcTemplate只需简单了解即可。
-
-### 6.1.1 准备工作
-
-**1、加入依赖**
-
-```xml
-<dependency>
-    <groupId>org.springframework</groupId>
-    <artifactId>spring-context</artifactId>
-    <version>6.0.6</version>
-</dependency>
-<dependency>
-    <groupId>org.junit.jupiter</groupId>
-    <artifactId>junit-jupiter-api</artifactId>
-    <version>5.3.1</version>
-    <scope>test</scope>
-</dependency>
-<dependency>
-    <groupId>org.springframework</groupId>
-    <artifactId>spring-test</artifactId>
-    <version>6.0.6</version>
-    <scope>test</scope>
-</dependency>
-<dependency>
-    <groupId>mysql</groupId>
-    <artifactId>mysql-connector-java</artifactId>
-    <version>8.0.28</version>
-</dependency>
-<dependency>
-    <groupId>com.alibaba</groupId>
-    <artifactId>druid</artifactId>
-    <version>1.2.8</version>
-</dependency>
-<dependency>
-    <groupId>org.projectlombok</groupId>
-    <artifactId>lombok</artifactId>
-    <version>1.18.30</version>
-</dependency>
-<dependency>
-    <groupId>org.springframework</groupId>
-    <artifactId>spring-orm</artifactId>
-    <version>6.0.6</version>
-</dependency>
-```
-
-**2、创建jdbc.properties**
-
-```properties
-jdbc.driver=com.mysql.cj.jdbc.Driver
-jdbc.url=jdbc:mysql://localhost:3306/ssm
-jdbc.username=root
-jdbc.password=abc666
-```
-
-**3、创建Spring的配置类**
-
-```java
-@PropertySource("classpath:jdbc.properties")
-@ComponentScan("com.thuwsy")
-@Configuration
-public class SpringConfig {
-    @Value("${jdbc.url}")
-    private String url;
-    @Value("${jdbc.driver}")
-    private String driver;
-    @Value("${jdbc.username}")
-    private String username;
-    @Value("${jdbc.password}")
-    private String password;
-
-    @Bean
-    public DataSource dataSource() {
-        DruidDataSource dataSource = new DruidDataSource();
-        dataSource.setUrl(url);
-        dataSource.setDriverClassName(driver);
-        dataSource.setUsername(username);
-        dataSource.setPassword(password);
-        return dataSource;
-    }
-
-    @Bean
-    public JdbcTemplate jdbcTemplate(DataSource dataSource) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate();
-        jdbcTemplate.setDataSource(dataSource);
-        return jdbcTemplate;
-    }
-}
-```
-
-### 6.1.2 测试
-
-**1、在测试类装配JdbcTemplate**
-
-```java
-@SpringJUnitConfig(SpringConfig.class)
-public class SpringTests {
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-}
-```
-
-**2、增删改操作**
-
-```java
-@Test
-public void testUpdate() {
-    String sql = "insert into t_emp values(null,?,?,?)";
-    int result = jdbcTemplate.update(sql, "张三", 23, "男");
-}
-```
-
-**3、查询一条数据为实体类对象**
-
-```java
-@Test
-public void testSelectEmpById() {
-    String sql = "select * from t_emp where id = ?";
-    Emp emp = jdbcTemplate.queryForObject(sql,
-            new BeanPropertyRowMapper<>(Emp.class), 1);
-    System.out.println(emp);
-}
-```
-
-**4、查询多条数据为一个List集合**
-
-```java
-@Test
-public void testSelectList() {
-    String sql = "select * from t_emp";
-    List<Emp> list = jdbcTemplate.query(sql,
-            new BeanPropertyRowMapper<>(Emp.class));
-    list.forEach(System.out::println);
-}
-```
-
-**5、查询单行单列的值**
-
-```java
-@Test
-public void selectCount() {
-    String sql = "select count(1) from t_emp";
-    Integer count = jdbcTemplate.queryForObject(sql, Integer.class);
-    System.out.println(count);
-}
-```
-
-## 6.2 声明式事务
-
-Spring支持以下两种管理事务的方式：
-
-- **编程式事务**：在代码中硬编码，通过`TransactionTemplate`或者`TransactionManager`手动管理事务
-- **声明式事务**：基于注解`@Transactional`控制事务，底层实际是**通过AOP实现**
-
-> 注意：`@Transactional`控制事务主要用于单体应用，在分布式微服务架构中往往需要分布式事务。
-
-### 6.2.1 编程式事务
-
-事务功能的相关操作全部通过自己编写代码来实现：
-
-```java
-Connection conn = ... ;
-try {
-    // 开启事务
-    conn.setAutoCommit(false);
-    // 核心操作...
-    // 提交事务
-    conn.commit();
-} catch (Exception e) {
-    // 回滚事务
-    conn.rollback();
-} finally {
-    // 释放数据库连接
-    conn.close();
-}
-```
-
-> 编程式事务的所有细节都需要程序员自己来完成，非常繁琐。
-
-### 6.2.2 声明式事务
-
-既然事务控制的代码有规律可循，代码的结构基本是确定的，所以框架就可以将固定模式的代码抽取出来，进行相关的封装。我们使用一个注解`@Transactional`，就可以让框架来帮助我们实现事务的功能。
-
-### 6.2.3 事务管理器
-
-**1、Spring声明式事务对应依赖**
-
-- spring-tx: 包含声明式事务实现的基本规范（事务管理器规范接口和事务增强等等）
-- spring-jdbc: 包含DataSource方式事务管理器实现类DataSourceTransactionManager，支持JDBC、JdbcTemplate、MyBatis等
-- spring-orm: 包含其他持久层框架的事务管理器实现类，支持Hibernate、Jpa等
-
-**2、事务管理器顶级接口**
-
-Spring5.2之前：
-
-```java
-public interface PlatformTransactionManager {
-    TransactionStatus getTransaction(TransactionDefinition definition) throws TransactionException;
-    void commit(TransactionStatus status) throws TransactionException;
-    void rollback(TransactionStatus status) throws TransactionException;
-}
-```
-
-Spring5.2之后：PlatformTransactionManager接口本身没有变化，但它继承了TransactionManager接口
-
-```java
-public interface TransactionManager {
-    
-}
-```
-可见TransactionManager接口中什么都没有，但是它还是有存在的意义——定义一个技术体系。
-
-**3、技术体系**
+#### 1、事务管理器
 
 ![](images/20230810121237.png)
 
-我们现在要使用的事务管理器的实现类是`DataSourceTransactionManager`，将来整合MyBatis用的也是这个类。DataSourceTransactionManager类中的主要方法：
+事务管理器的作用是**执行事务的提交、回滚等**。我们常用的事务管理器为DataSourceTransactionManager，它的主要方法有：
 
 - `doBegin()`：开启事务
 - `doSuspend()`：挂起事务
@@ -1849,19 +1358,23 @@ public interface TransactionManager {
 - `doCommit()`：提交事务
 - `doRollback()`：回滚事务
 
-## 6.3 声明式事务的基本使用
+#### 2、事务拦截器
 
-### 6.3.1 准备工作
+事务拦截器TransactionInterceptor是一个**切面类**，其作用是**控制事务提交、回滚的时机**。使用AOP实现声明式事务的底层切面类正是TransactionInterceptor。
 
-**1、加入依赖**
+## 2. 声明式事务的基本使用
+
+### 2.1 情景设定
+
+#### 1、引入依赖
 
 ```xml
 <dependencies>
+    <!-- jdbc依赖，其中包含了声明式事务相关依赖 -->
     <dependency>
-        <groupId>org.junit.jupiter</groupId>
-        <artifactId>junit-jupiter-api</artifactId>
-        <version>5.3.1</version>
-        <scope>test</scope>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-jdbc</artifactId>
+        <version>6.0.6</version>
     </dependency>
     <dependency>
         <groupId>org.springframework</groupId>
@@ -1879,54 +1392,48 @@ public interface TransactionManager {
         <version>1.2.8</version>
     </dependency>
     <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-api</artifactId>
+        <version>5.3.1</version>
+        <scope>test</scope>
+    </dependency>
+    <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-test</artifactId>
         <version>6.0.6</version>
         <scope>test</scope>
     </dependency>
-    <dependency>
-        <groupId>jakarta.annotation</groupId>
-        <artifactId>jakarta.annotation-api</artifactId>
-        <version>2.1.1</version>
-    </dependency>
-    <!-- spring-jdbc -->
-    <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-jdbc</artifactId>
-        <version>6.0.6</version>
-    </dependency>
-    <!-- 声明式事务依赖-->
-    <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-tx</artifactId>
-        <version>6.0.6</version>
-    </dependency>
-    <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-aop</artifactId>
-        <version>6.0.6</version>
-    </dependency>
-    <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-aspects</artifactId>
-        <version>6.0.6</version>
-    </dependency>
 </dependencies>
 ```
 
-**2、创建jdbc.properties**
+#### 2、创建jdbc.properties
 
-**3、创建Spring的配置类**
+```properties
+jdbc.driver=com.mysql.cj.jdbc.Driver
+jdbc.url=jdbc:mysql://localhost:3306/ssm
+jdbc.username=root
+jdbc.password=abc666
+```
+
+#### 3、创建Spring配置类
+
+```java
+@Configuration
+@ComponentScan("com.tx")
+public class SpringConfig {
+}
+```
+
+#### 4、配置数据源和JdbcTemplate
 
 ```java
 @PropertySource("classpath:jdbc.properties")
-@ComponentScan("com.thuwsy")
 @Configuration
-public class SpringConfig {
-    @Value("${jdbc.url}")
-    private String url;
+public class DataSourceConfig {
     @Value("${jdbc.driver}")
     private String driver;
+    @Value("${jdbc.url}")
+    private String url;
     @Value("${jdbc.username}")
     private String username;
     @Value("${jdbc.password}")
@@ -1935,8 +1442,8 @@ public class SpringConfig {
     @Bean
     public DataSource dataSource() {
         DruidDataSource dataSource = new DruidDataSource();
-        dataSource.setUrl(url);
         dataSource.setDriverClassName(driver);
+        dataSource.setUrl(url);
         dataSource.setUsername(username);
         dataSource.setPassword(password);
         return dataSource;
@@ -1951,7 +1458,9 @@ public class SpringConfig {
 }
 ```
 
-**4、创建数据库表**
+> 说明：Spring框架对JDBC进行了封装，使用JdbcTemplate可以简便地操作数据库。但未来我们更多使用的将是MyBatis，所以对JdbcTemplate只需简单了解即可。
+
+#### 5、创建数据库表
 
 ```sql
 CREATE TABLE `t_book` (
@@ -1976,18 +1485,7 @@ insert into `t_user`(`user_id`,`username`,`balance`)
 values (1,'admin',50);
 ```
 
-**5、创建组件**
-
-```java
-@Controller
-public class BookController {
-    @Autowired
-    private BookService bookService;
-    public void buyBook(Integer userId, Integer bookId) {
-        bookService.buyBook(userId, bookId);
-    }
-}
-```
+#### 6、创建组件
 
 ```java
 public interface BookService {
@@ -2047,69 +1545,34 @@ public class BookDaoImpl implements BookDao {
 }
 ```
 
-### 6.3.2 测试无事务情况
-
-创建测试类：
+#### 7、测试
 
 ```java
 @SpringJUnitConfig(SpringConfig.class)
 public class JdbcTest {
     @Autowired
-    private BookController bookController;
+    private BookService bookService;
 
     @Test
-    public void test1() {
-        bookController.buyBook(1, 1);
+    public void test() {
+        bookService.buyBook(1, 1);
     }
 }
 ```
 
-模拟场景：用户购买图书，先查询图书的价格，再更新图书的库存和用户的余额。假设用户id为1的用户，购买id为1的图书，用户余额为50，而图书价格为80，购买图书之后，用户的余额为-30，数据库中余额字段设置了无符号，因此无法将-30插入到余额字段，此时执行sql语句会抛出SQLException。
+模拟场景：用户购买图书，先查询图书的价格，再更新图书的库存和用户的余额。假设用户id为1的用户，购买id为1的图书，用户余额为50，而图书价格为80，购买图书之后，用户的余额为-30，数据库中余额字段设置了无符号，因此无法将-30更新到余额字段，此时执行sql语句会抛出SQLException。
 
-观察结果：因为没有添加事务，图书的库存更新了(从100变为99)，但是用户的余额没有更新。显然这样的结果是错误的，购买图书是一个完整的功能，更新库存和更新余额要么都成功要么都失败。
+观察结果：因为没有添加事务，图书的库存更新了(从100变为99)，但是用户的余额没有更新。显然这样的结果是错误的，购买图书是一个完整的功能，更新库存和更新余额必须要么都成功要么都失败。
 
-### 6.3.3 加入事务
+### 2.2 使用声明式事务
 
-**1、添加事务配置**
-
-配置类中添加事务配置
-
-- 在配置类上添加注解`@EnableTransactionManagement`
-- 装配事务管理器接口的实现类对象
+（1）在配置类上添加注解`@EnableTransactionManagement`，并配置事务管理器
 
 ```java
-@PropertySource("classpath:jdbc.properties")
-@ComponentScan("com.thuwsy")
 @Configuration
+@ComponentScan("com.tx")
 @EnableTransactionManagement
 public class SpringConfig {
-    @Value("${jdbc.url}")
-    private String url;
-    @Value("${jdbc.driver}")
-    private String driver;
-    @Value("${jdbc.username}")
-    private String username;
-    @Value("${jdbc.password}")
-    private String password;
-
-    @Bean
-    public DataSource dataSource() {
-        DruidDataSource dataSource = new DruidDataSource();
-        dataSource.setUrl(url);
-        dataSource.setDriverClassName(driver);
-        dataSource.setUsername(username);
-        dataSource.setPassword(password);
-        return dataSource;
-    }
-
-    @Bean
-    public JdbcTemplate jdbcTemplate(DataSource dataSource) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate();
-        jdbcTemplate.setDataSource(dataSource);
-        return jdbcTemplate;
-    }
-
-    // 装配事务管理器接口的实现类对象
     @Bean
     public TransactionManager transactionManager(DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
@@ -2117,9 +1580,7 @@ public class SpringConfig {
 }
 ```
 
-**2、添加声明式事务注解**
-
-因为service层表示业务逻辑层，一个方法表示一个完整的业务功能，因此一般在service层处理事务。只需在BookServiceImpl的`buybook()`上添加声明式事务注解`@Transactional`即可：
+（2）在需要事务控制的业务方法上标注`@Transactional`注解
 
 ```java
 @Service
@@ -2140,18 +1601,18 @@ public class BookServiceImpl implements BookService {
 }
 ```
 
-此时再进行测试，由于使用了Spring的声明式事务，更新库存和更新余额都没有执行，这正是我们期望的结果。
-
 说明：`@Transactional`注解标识的位置
 
 - 标识在方法上，则只会影响该方法
 - 标识在类上，则会影响类中所有的public方法，即类级别标记的@Transactional注解中设置的事务属性也会延续影响到每个方法执行时的事务属性。如果在某个方法上又设置了@Transactional注解，则会覆盖类级别的注解，即按就近原则生效。
 
-## 6.4 事务属性
+（3）测试：此时再进行测试，库存和余额都没有更新，这正是我们期望的结果。
 
-### 6.4.1 只读事务
+## 3. 事务属性
 
-对一个查询操作来说，如果我们把它设置成只读，就能够明确告诉数据库，这个操作不涉及写操作。这样数据库就能够针对查询操作来进行优化。设置方式如下：
+### 3.1 只读事务
+
+对一个查询操作来说，如果我们把它设置成只读，就能够明确告诉数据库，这个操作不涉及写操作。这样数据库就能够针对查询操作来进行性能优化。设置方式如下：
 
 ```java
 // readOnly = true把当前事务设置为只读
@@ -2160,7 +1621,7 @@ public class BookServiceImpl implements BookService {
 
 > **注意**：针对增删改操作设置只读，会抛出异常SQLException
 
-### 6.4.2 事务的超时时间
+### 3.2 事务的超时时间
 
 事务在执行过程中，有可能因为遇到某些问题导致程序卡住，从而长时间占用数据库资源。我们可以设置事务的超时时间，当它超时后就进行回滚，释放资源。
 
@@ -2170,15 +1631,15 @@ public class BookServiceImpl implements BookService {
 @Transactional(timeout = 3)
 ```
 
-### 6.4.3 回滚策略
+### 3.3 回滚策略
 
-声明式事务**默认只针对RuntimeException和Error回滚，而对于编译时异常（受检异常）则不回滚**。我们可以通过@Transactional中相关属性来修改回滚策略：
+声明式事务**默认只针对RuntimeException和Error回滚，而对于编译时异常则不回滚**。我们可以通过`@Transactional`中相关属性来修改回滚策略：
 - rollbackFor属性：需要设置一个Class类型的对象，表示对哪些类型的异常进行回滚。默认回滚所有RuntimeException和Error。
 - noRollbackFor属性：需要设置一个Class类型的对象，表示对哪些类型的异常不进行回滚。默认没有指定，如果指定，应该在rollbackFor的范围内。
 
 > 实际开发中，我们推荐使用`@Transactional(rollbackFor = Exception.class)`来回滚所有Exception
 
-### 6.4.4 事务隔离级别
+### 3.4 事务隔离级别
 
 ```java
 @Transactional(isolation = Isolation.DEFAULT) // 使用数据库默认的隔离级别
@@ -2188,11 +1649,9 @@ public class BookServiceImpl implements BookService {
 @Transactional(isolation = Isolation.SERIALIZABLE)     // 串行化
 ```
 
-### 6.4.5 事务传播行为
+### 3.5 事务传播行为
 
-**事务传播行为是为了解决业务层方法之间互相调用的事务问题**。当事务方法被另一个事务方法调用时，必须指定事务应该如何传播。例如：方法可能继续在现有事务中运行，也可能开启一个新事务，并在自己的事务中运行。
-
-常用的事务传播行为有以下几种：
+**事务传播行为是为了解决业务层方法之间互相调用的事务问题**。当事务方法被另一个事务方法调用时，必须指定事务应该如何传播。常用的事务传播行为有以下几种：
 
 ```java
 @Transactional(propagation = Propagation.REQUIRED)      // 默认值
@@ -2206,15 +1665,33 @@ public class BookServiceImpl implements BookService {
 - `NESTED`：如果当前存在事务，则创建一个事务作为当前事务的嵌套事务来运行；如果当前没有事务，则创建一个新的事务。
 - `MANDATORY`：如果当前存在事务，则加入该事务；如果当前没有事务，则抛出异常。极少使用。
 
-> 还有一些其他的事务传播行为，极少使用
+> 说明：还有一些其他的事务传播行为，极少使用。
 
 **举例**：
 
-假设有一个CheckoutServiceImpl类的结账方法checkout()被标识了事务注解`@Transactional`，它内部调用了两次BookServiceImpl类的买书方法buyBook()，且买书方法也被标识了事务注解`@Transactional`：
-- 如果buyBook()使用了默认值`REQUIRED`，则只要有一本书买不起，就导致整个结账事务回滚，从而导致两本书都买不了。
-- 如果buyBook()使用了`REQUIRES_NEW`模式，如果第一次买书成功，第二次买书失败，只会导致第二次买书事务的回滚，并不会影响第一次买书。
+假设有一个CheckoutServiceImpl类的结账方法`checkout()`被标识了事务注解`@Transactional`，它内部调用了两次BookServiceImpl类的买书方法`buyBook()`：
 
-**注意，在非事务方法中直接调用本类的事务方法，事务并不会生效**，如下所示：
+```java
+@Service
+public class CheckoutServiceImpl implements CheckoutService {
+    @Autowired
+    private BookService bookService;
+
+    @Transactional
+    @Override
+    public void checkout() {
+        bookService.buyBook(1, 2);
+        bookService.buyBook(1, 2);
+    }
+}
+```
+
+- 如果`buyBook()`使用了默认值`REQUIRED`，则只要有一本书买不起，就导致整个结账事务回滚，从而导致两本书都买不了。
+- 如果`buyBook()`使用了`REQUIRES_NEW`模式，如果第一次买书成功，第二次买书失败，则只会导致第二次买书事务的回滚，并不会影响第一次买书。
+
+## 4. 事务失效的场景
+
+**在非事务方法中直接调用本类的事务方法，会导致事务不生效**。如下所示：
 
 ```java
 public interface BookService {
@@ -2248,10 +1725,10 @@ public class BookServiceImpl implements BookService {
 }
 ```
 
-原因是Spring框架底层使用**动态代理**来实现事务机制：
+原因是声明式事务底层依靠Spring AOP，也就是通过**动态代理**实现。所以：
 
-1. 像上述例子，在IoC容器中不存在目标类BookServiceImpl的Bean，而是存在代理类的Bean，因此在controller中根据接口类型BookService获取的Bean实际是代理类的对象。
-2. 通过代理类对象调用`buyBook()`方法时，由于该方法并没有标注`@Transactional`注解，所以并不会织入事务的相关通知。因此，会直接通过反射，调用目标类对象的`buyBook()`方法。
+1. 像上述例子，在IoC容器中不存在目标类BookServiceImpl的Bean，而是存在代理类的Bean，因此在测试类中根据接口类型BookService获取的Bean实际是代理类的对象。
+2. 通过代理类对象调用`buyBook()`方法时，由于该方法并没有标注`@Transactional`注解，所以并不会织入事务的相关通知方法。因此，会直接通过反射，调用目标类对象的`buyBook()`方法。
 3. 而目标类对象的`buyBook()`方法中又调用了`this.updateDB()`，由于这里的this指的就是目标类对象，所以调用的就是目标类的`updateDB()`方法，而并不是代理类的方法，所以事务失效。
 4. 解决方案是：在Service层中也根据接口类型BookService进行注入，从IoC容器中得到代理对象，于是通过代理对象调用`updateDB()`方法，就能织入事务的相关通知：
 

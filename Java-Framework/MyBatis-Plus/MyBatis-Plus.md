@@ -1,6 +1,6 @@
-# 1. MyBatis-Plus简介
+# 第01章_MyBatis-Plus简介
 
-## 1.1 简介
+## 1. 简介
 
 MyBatis-Plus（简称 MP）是一个MyBatis的**增强工具**，在MyBatis的基础上只做增强不做改变，为简化开发、提高效率而生。特点如下：
 
@@ -8,20 +8,18 @@ MyBatis-Plus（简称 MP）是一个MyBatis的**增强工具**，在MyBatis的�
 - 提供丰富的条件拼接方式
 - 全自动ORM类型持久层框架
 
-## 1.2 快速入门案例
+## 2. 快速入门案例
 
-### 1、创建SpringBoot模块
+### 2.1 引入依赖
 
-### 2、添加依赖
-
-导入MyBatis-Plus的场景启动器，代替MyBatis的场景启动器
+在SpringBoot项目中导入MyBatis-Plus的场景启动器，代替MyBatis的场景启动器：
 
 ```xml
 <!-- mybatis-plus -->
 <dependency>
     <groupId>com.baomidou</groupId>
-    <artifactId>mybatis-plus-boot-starter</artifactId>
-    <version>3.5.3.1</version>
+    <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+    <version>3.5.8</version>
 </dependency>
 <!-- mysql -->
 <dependency>
@@ -31,11 +29,11 @@ MyBatis-Plus（简称 MP）是一个MyBatis的**增强工具**，在MyBatis的�
 </dependency>
 ```
 
-### 3、配置文件
+### 2.2 配置文件
 
 ```properties
-spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 spring.datasource.type=com.zaxxer.hikari.HikariDataSource
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 spring.datasource.url=jdbc:mysql://localhost:3306/ssm
 spring.datasource.username=root
 spring.datasource.password=abc666
@@ -43,37 +41,47 @@ spring.datasource.password=abc666
 mybatis-plus.configuration.log-impl=org.apache.ibatis.logging.stdout.StdOutImpl
 ```
 
-### 4、主启动类
+**说明**：
 
-主启动类上配置Mapper接口的扫描
+1. MyBatis-Plus的自动配置，**默认指定mapper映射文件的位置是类路径下的mapper文件夹内**，即`classpath*:/mapper/**/*.xml`，所以我们无需在配置文件中手动配置。
+2. MyBatis-Plus的自动配置，**默认开启了自动驼峰命名映射**，所以我们无需在配置文件中手动配置。
+
+### 2.3 主启动类
+
+主启动类上配置Mapper接口的包扫描：
 
 ```java
-@MapperScan("com.thuwsy.boot.mapper")
+@MapperScan("com.wsy.mapper")
 @SpringBootApplication
-public class MyBatisPlusApplication {
+public class MybatisPlusDemoApplication {
     public static void main(String[] args) {
-        SpringApplication.run(MyBatisPlusApplication.class, args);
+        SpringApplication.run(MybatisPlusDemoApplication.class, args);
     }
 }
 ```
 
-### 5、实体类和数据库表
+### 2.4 实体类和数据库表
 
 对数据库表user创建对应的实体类User：
 
 ```java
+@TableName("user")
 @Data
 public class User {
+    @TableId("id")
     private Long id;
+
     private String name;
+
     private Integer age;
+
     private String email;
 }
 ```
 
-> MyBatis-Plus中一般使用Long类型的主键id，因为默认会使用雪花算法生成主键id。
+> 注意：MyBatis-Plus中一般使用Long类型的主键，因为默认会使用**雪花算法**生成主键。
 
-### 6、编写Mapper接口继承BaseMapper
+### 2.5 Mapper接口继承BaseMapper
 
 ```java
 public interface UserMapper extends BaseMapper<User> {
@@ -82,11 +90,11 @@ public interface UserMapper extends BaseMapper<User> {
 
 > MyBatis-Plus提供的BaseMapper接口，自带CRUD方法
 
-### 7、测试
+### 2.6 测试
 
 ```java
 @SpringBootTest
-public class MyBatisPlusTests {
+class MybatisPlusDemoApplicationTests {
     @Autowired
     private UserMapper userMapper;
 
@@ -98,11 +106,13 @@ public class MyBatisPlusTests {
 }
 ```
 
-# 2. 基于Mapper接口CRUD
+
+
+# 第02章_基于Mapper接口CRUD
 
 通用CRUD封装在BaseMapper接口中，Mybatis-Plus启动时自动解析实体表关系映射转换为MyBatis内部对象注入容器，内部包含常见的单表操作。
 
-## 2.1 insert
+## 1. insert
 
 - `int insert(T entity)`：插入一条记录，entity就是要插入的实体类对象。注意，若entity中没有指定主键id，则会默认采用**雪花算法**生成主键id，并设置进entity对应的属性中。
 
@@ -117,15 +127,15 @@ public void test02() {
     user.setEmail("xxx");
     int row = userMapper.insert(user);
     System.out.println("row: " + row); // row: 1
-    System.out.println("id: " + user.getId()); // id: 1746467117129883649
+    System.out.println("id: " + user.getId()); // id: 1854412774877265922
 }
 ```
 
-## 2.2 delete
+## 2. delete
 
 - `int deleteById(Serializable id)`：根据主键删除
 - `int deleteByMap(Map<String, Object> columnMap)`：根据columnMap条件进行删除，其中Map的key必须是表中的某个字段
-- `int deleteBatchIds(Collection idList)`：根据主键批量删除
+- `int deleteByIds(Collection idList)`：根据主键批量删除
 - `int delete(Wrapper<T> queryWrapper)`：根据wrapper条件删除
 
 举例：
@@ -143,11 +153,11 @@ public void test03() {
     int row2 = userMapper.deleteByMap(param);
 
     // 3. DELETE FROM user WHERE id IN (3, 4)
-    int row3 = userMapper.deleteBatchIds(Arrays.asList(3L, 4L));
+    int row3 = userMapper.deleteByIds(Arrays.asList(3L, 4L));
 }
 ```
 
-## 2.3 update
+## 3. update
 
 - `int updateById(T entity)`：根据主键进行修改，主键属性必须不为null。
 - `int update(T entity, Wrapper<T> updateWrapper)`：根据wrapper条件进行修改
@@ -167,42 +177,43 @@ public void test04() {
 }
 ```
 
-## 2.4 select
+## 4. select
 
-（1）基本API
+### 4.1 基本API
 
 - `T selectById(Serializable id)`：根据主键查询
-- `List<T> selectBatchIds(Collection idList)`：根据主键批量查询
+- `List<T> selectByIds(Collection idList)`：根据主键批量查询
 - `List<T> selectByMap(Map<String, Object> columnMap)`：根据columnMap条件查询
 
-（2）根据wrapper条件查询
+### 4.2 根据wrapper条件查询
 
 - `T selectOne(Wrapper<T> queryWrapper)`：根据wrapper条件查询一条记录（若结果集为多条记录，会抛出异常）
 - `List<T> selectList(Wrapper<T> queryWrapper)`：根据wrapper条件查询多条记录
 - `List<Map<String, Object>> selectMaps(Wrapper<T> queryWrapper)`：根据wrapper条件查询多条记录
 - `List<Object> selectObjs(Wrapper<T> queryWrapper)`：根据wrapper条件查询多条记录，不过只返回第一个字段
 
-（3）分页查询
+### 4.3 分页查询
 
 - `IPage<T> selectPage(IPage<T> page, Wrapper<T> queryWrapper)`：根据wrapper条件查询多条记录（并分页）
 - `IPage<Map<String, Object>> selectMapsPage(IPage<T> page, Wrapper<T> queryWrapper)`：根据wrapper条件查询多条记录（并分页）
 
-（4）查询记录数
+### 4.4 查询记录数
 
 - `Long selectCount(Wrapper<T> queryWrapper)`：查询满足wrapper条件的记录数
 
-## 2.5 自定义Mapper接口方法
+## 5. 自定义Mapper接口方法
 
-我们可以像使用MyBatis一样自定义Mapper接口方法，然后在mapper.xml中写对应的sql语句。
+我们可以像使用MyBatis一样自定义Mapper接口方法，然后在mapper.xml中写对应的SQL语句。
 
-注意，MyBatis-Plus中给我们配置了**默认指定mapper.xml文件的位置是resources目录下的mapper文件夹内**，即`classpath*:/mapper/**/*.xml`。
+注意，MyBatis-Plus的自动配置，**默认指定mapper映射文件的位置是类路径下的mapper文件夹内**，即`classpath*:/mapper/**/*.xml`。
 
-我们也可以在配置文件中配置`mybatis-plus.mapper-locations`来改变存放mapper.xml的位置。
+当然，我们也可以在配置文件中配置`mybatis-plus.mapper-locations`来改变存放mapper.xml的位置。
 
 
-# 3. 基于Service接口CRUD
 
-## 3.1 简介
+# 第03章_基于Service接口CRUD
+
+## 1. 简介
 
 通用Service的CRUD方法封装在`IService`接口中，它与Mapper接口CRUD的区别在于：
 
@@ -226,24 +237,24 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 }
 ```
 
-> 原因：`IService`接口中的一些方法提供了默认实现，而一些方法仍是抽象方法，在`ServiceImpl`类中才提供了实现，所以需要继承`ServiceImpl`类。
+> 原因：`IService`接口中的一些方法提供了默认实现，而另一些方法仍是抽象方法，在`ServiceImpl`类中才提供了实现，所以需要继承`ServiceImpl`类。
 
-## 3.2 全部API
+## 2. 全部API
 
-### 1、save
+### 2.1 save
 
 - `boolean save(T entity)`：插入一条记录
 - `boolean saveBatch(Collection<T> entityList)`：批量插入记录
 - `boolean saveBatch(Collection<T> entityList, int batchSize)`：批量插入记录，其中batchSize是每次的数量
 
-### 2、saveOrUpdate
+### 2.2 saveOrUpdate
 
 - `boolean saveOrUpdate(T entity)`：主键值不为null则更新该记录，否则插入一条记录
 - `boolean saveOrUpdate(T entity, Wrapper<T> updateWrapper)`：先根据wrapper条件进行更新，如果更新失败，则执行`saveOrUpdate(entity)`
 - `boolean saveOrUpdateBatch(Collection<T> entityList)`：批量修改插入
 - `boolean saveOrUpdateBatch(Collection<T> entityList, int batchSize)`：批量修改插入
 
-### 3、update
+### 2.3 update
 
 - `boolean update(Wrapper<T> updateWrapper)`：根据wrapper条件进行更新，需要设置sqlset
 - `boolean update(T entity, Wrapper<T> updateWrapper)`：根据wrapper条件进行更新
@@ -251,19 +262,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 - `boolean updateBatchById(Collection<T> entityList)`：根据主键批量更新
 - `boolean updateBatchById(Collection<T> entityList, int batchSize)`：根据主键批量更新
 
-### 4、remove
+### 2.4 remove
 
 - `boolean remove(Wrapper<T> queryWrapper)`：根据wrapper条件进行删除
 - `boolean removeById(Serializable id)`：根据主键进行删除
 - `boolean removeByMap(Map<String, Object> columnMap)`：根据columnMap条件进行删除
 - `boolean removeByIds(Collection list)`：根据主键批量删除
 
-### 5、count
+### 2.5 count
 
 - `long count()`：查询总记录数
 - `long count(Wrapper<T> queryWrapper)`：根据wrapper条件查询总记录数
 
-### 6、get
+### 2.6 get
 
 - `T getById(Serializable id)`：根据主键查询
 - `T getOne(Wrapper<T> queryWrapper)`：根据wrapper条件查询一条记录。注意，如果结果集是多条记录，则会抛出异常。
@@ -271,7 +282,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 - `Map<String, Object> getMap(Wrapper<T> queryWrapper)`：根据wrapper条件查询一条记录
 - `V getObj(Wrapper<T> queryWrapper, Function<? super Object, V> mapper)`：根据wrapper条件查询一条记录，参数mapper指定表字段和实体类属性的映射规则
 
-### 7、list
+### 2.7 list
 
 - `List<T> list()`：查询所有记录
 - `List<T> list(Wrapper<T> queryWrapper)`：根据wrapper条件查询
@@ -285,7 +296,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 - `List<V> listObjs(Wrapper<T> queryWrapper, Function<? super Object, V> mapper)`：根据wrapper条件查询
 
 
-## 3.3 常用API举例
+## 3. 常用API举例
 
 ```java
 @SpringBootTest
@@ -352,9 +363,11 @@ public class ServiceTests {
 }
 ```
 
-# 4. 核心注解
 
-## 4.1 @TableName
+
+# 第04章_核心注解
+
+## 1. @TableName
 
 ```java
 @TableName("t_user")
@@ -371,15 +384,15 @@ public class User {
 
 **注意事项**：
 
-- 如果实体类名和表名相同(忽略大小写)，可以省略该注解。
-- 也可以在配置文件中统一配置表名的前缀，如下所示，这样User类对应到t_user表时，同样也可以省略@TableName注解：
+- 如果实体类名和表名相同（忽略大小写），可以省略该注解。
+- 也可以在配置文件中统一配置表名的前缀，如下所示，这样User类对应到`t_user`表时，同样也可以省略@TableName注解：
     ```properties
     mybatis-plus.global-config.db-config.table-prefix=t_
     ```
 
-## 4.2 @TableId
+## 2. @TableId
 
-### 1、作用
+### 2.1 作用
 
 ```java
 @Data
@@ -394,13 +407,13 @@ public class User {
 
 **作用**：标注实体类的**主键**属性。value可以设置对应的主键列名，type设置主键生成策略。
 
-### 2、注意事项
+### 2.2 注意事项
 
 （1）如果主键属性和主键字段名称都为`id`，则可以省略`@TableId`注解，因为MyBatis-Plus默认只把名称为`id`的属性视为主键。
 
 > 说明：我们建议始终添加`@TableId`注解来标明主键属性，可读性更好。
 
-（2）如果实体类主键属性名和对应表的主键列名不一致(不符合下划线转小驼峰命名规则)，则必须**设置value属性**：
+（2）如果实体类主键属性名和对应表的主键列名不一致（不符合下划线转小驼峰命名规则），则必须**设置value属性**：
 
 ```java
 @TableId(value = "user_id")
@@ -415,7 +428,7 @@ private Long uid;
 
 > 说明：由于默认会使用雪花算法生成主键，所以建议**实体类主键属性为Long或String，对应表的字段类型为bigint或varchar(64)**
 >
-> 注意：即使数据库表的主键字段设置为自增，只要Java代码中没配置主键自增策略，则仍会使用默认的雪花算法。
+> 注意：即使数据库表的主键字段设置为自增，只要`@TableId`的type没配置主键自增策略，则仍会使用默认的雪花算法。
 
 （4）在配置文件中也可以全局配置主键策略：
 
@@ -423,11 +436,9 @@ private Long uid;
 mybatis-plus.global-config.db-config.id-type=none
 ```
 
-### 3、雪花算法简介
+### 2.3 雪花算法简介
 
-使用单点数据库会成为系统的性能瓶颈，而在分布式系统中就无法使用主键id自增的策略了，否则在不同的节点上可能会生成相同的主键id。
-
-雪花算法（Snowflake Algorithm）由Twitter公司提出，它能够在分布式系统中生成**全局的唯一ID**，并且在同一个节点的表中能保证主键的**有序性**。
+雪花算法（Snowflake Algorithm）由Twitter公司提出，它能够在分布式系统中生成**全局的唯一ID**，并且在同一个节点上生成的ID能保证**有序性**。
 
 雪花算法生成的ID是一个64位的整数，由以下几个部分组成：
 
@@ -436,9 +447,11 @@ mybatis-plus.global-config.db-config.id-type=none
 3. 节点ID：10bit，用于标识分布式系统中的不同节点
 4. 序列号：12bit，表示在同一毫秒内生成的不同ID的序号，从0开始自增
 
-**注意：雪花算法生成的数，需要使用Long或者String类型保存**
+> **注意：雪花算法生成的数，必须使用Long或者String类型保存**。
 
-## 4.3 @TableField
+事实上，对于MySQL这种数据库，还是更**推荐直接使用主键自增的策略**，因为连续的主键能够大大提高MySQL的查询性能。像雪花算法生成的全局唯一ID，更适合作为业务ID，而并不适合作为MySQL表的主键。不过，当数据量大到需要分库分表时，采用主键自增策略就要格外注意，禁止在相同的多张表中插入记录（只能在主键最大的那张表中继续插入记录），否则会导致主键重复。
+
+## 3. @TableField
 
 ```java
 @Data
@@ -457,12 +470,14 @@ public class User {
 
 **注意事项**：
 
-- MyBatis-Plus**默认会开启下划线转小驼峰的映射**，所以如果属性和字段一致，无需使用@TableField注解
+- MyBatis-Plus**默认开启了自动驼峰命名映射**，所以如果属性和字段一致，则无需使用@TableField注解
 - exist默认为true，代表数据库表中有该属性对应的字段。如果实体类中有一个属性，它在数据库表中并没有对应的字段，需要设置`@TableField(exist = false)`
 
-# 5. 条件构造器
 
-## 5.1 简介
+
+# 第05章_条件构造器
+
+## 1. 简介
 
 使用MyBatis-Plus的条件构造器，可以构建灵活、高效的查询条件，而不需要手动编写复杂的SQL语句。它提供了许多方法来支持各种条件操作符，并且可以通过链式调用来组合多个条件。
 
@@ -470,7 +485,7 @@ public class User {
 
 主要分为两类：QueryWrapper用于封装查询条件，而UpdateWrapper不仅可以封装查询条件、还可以封装要修改的数据。除此之外，它们还有Lambda形式的Wrapper类。
 
-## 5.2 QueryWrapper
+## 2. QueryWrapper
 
 ```java
 @SpringBootTest
@@ -574,7 +589,7 @@ public class QueryWrapperTest {
 }
 ```
 
-## 5.3 UpdateWrapper
+## 3. UpdateWrapper
 
 ```java
 @SpringBootTest
@@ -597,7 +612,7 @@ public class UpdateWrapperTest {
 }
 ```
 
-## 5.4 LambdaQueryWrapper、LambdaUpdateWrapper
+## 4. LambdaQueryWrapper、LambdaUpdateWrapper
 
 Lambda形式的Wrapper使用了实体类的属性引用（例如`User::getName`、`User::getAge`），而不是字符串来表示字段名，这提高了代码的可读性和可维护性。
 
@@ -613,18 +628,20 @@ public void test02() {
 }
 ```
 
-# 6. MyBatis-Plus高级扩展
 
-## 6.1 逻辑删除
 
-### 1、简介
+# 第06章_MyBatis-Plus高级扩展
+
+## 1. 逻辑删除
+
+### 1.1 简介
 
 MyBatis-Plus可以方便地实现对数据库记录进行逻辑删除而不是物理删除。逻辑删除是指通过更改记录的状态或添加标记字段来模拟删除操作，从而保留了删除前的数据，便于后续的数据分析和恢复。
 
-- 物理删除：真实删除，将对应数据从数据库中删除，之后查询不到此条被删除的数据
-- 逻辑删除：假删除，将对应数据中代表是否被删除字段的状态修改为`被删除状态`，之后在数据库中仍旧能看到此条数据记录
+- 物理删除：真实删除，将对应数据从数据库表中删除，之后查询不到此条被删除的数据
+- 逻辑删除：假删除，将对应数据中代表是否被删除字段的状态修改为`被删除状态`，之后在数据库表中仍旧能看到此条数据记录
 
-### 2、逻辑删除的实现
+### 1.2 逻辑删除的实现
 
 （1）数据库表添加一个逻辑删除的字段
 
@@ -635,7 +652,9 @@ ALTER TABLE user ADD deleted INT DEFAULT 0;
 
 （2）实体类添加一个对应的逻辑删除的属性
 
-`private Integer deleted;`
+```java
+private Integer deleted;
+```
 
 （3）指定逻辑删除属性
 
@@ -661,7 +680,7 @@ mybatis-plus.global-config.db-config.logic-delete-field=deleted
 
 > 注意：MyBatis-Plus中，**默认1表示已逻辑删除，0表示未逻辑删除**
 
-### 3、逻辑删除的效果
+### 1.3 逻辑删除的效果
 
 开启逻辑删除后：
 
@@ -677,9 +696,9 @@ UPDATE user SET deleted=1 WHERE id=5 AND deleted=0
 SELECT id,name,age,email,deleted FROM user WHERE deleted=0
 ```
 
-## 6.2 分页查询
+## 2. 分页查询
 
-### 1、首先要在配置类中注册分页插件
+### 2.1 在配置类中注册分页插件
 
 ```java
 @Configuration
@@ -699,7 +718,7 @@ public class MyBatisPlusConfig {
 }
 ```
 
-### 2、使用Mapper接口提供的分页查询API
+### 2.2 使用Mapper接口提供的分页查询API
 
 ```java
 @SpringBootTest
@@ -737,7 +756,7 @@ public class PageTests {
 }
 ```
 
-### 3、使用自定义的分页查询API
+### 2.3 使用自定义的分页查询API
 
 注意：使用自定义的分页查询API，必须保证方法的**第一个参数**以及**返回值**的类型都是`IPage<T>`，其中`T`是对应的实体类类型。
 
@@ -751,8 +770,8 @@ public interface UserMapper extends BaseMapper<User> {
 mapper映射文件：
 
 ```xml
-<mapper namespace="com.thuwsy.boot.mapper.UserMapper">
-    <select id="queryByAge" resultType="com.thuwsy.boot.pojo.User">
+<mapper namespace="com.wsy.mapper.UserMapper">
+    <select id="queryByAge" resultType="com.wsy.pojo.User">
         select * from user where age > #{age}
     </select>
 </mapper>
@@ -772,7 +791,7 @@ public void testMyPage() {
 }
 ```
 
-## 6.3 乐观锁实现
+## 3. 乐观锁实现
 
 MyBatis-Plus中使用版本号实现乐观锁，原理如下：
 
@@ -784,7 +803,7 @@ MyBatis-Plus中使用版本号实现乐观锁，原理如下：
 
 使用方式如下：
 
-### 1、注册乐观锁插件
+### 3.1 注册乐观锁插件
 
 乐观锁的版本号插件，会在每次更新的时候，帮助我们对比版本号字段，更新成功则会让版本号字段自增1。
 
@@ -801,7 +820,7 @@ public class MyBatisPlusConfig {
 }
 ```
 
-### 2、添加乐观锁字段和属性
+### 3.2 添加乐观锁字段和属性
 
 数据库表中添加版本号字段：
 
@@ -823,7 +842,7 @@ public class User {
 }
 ```
 
-### 3、测试
+### 3.3 测试
 
 **注意**：乐观锁机制仅支持`updateById(entity)`与`update(entity, wrapper)`方法
 
@@ -848,18 +867,18 @@ public class OptimisticLockerTests {
 }
 ```
 
-## 6.4 通用枚举
+## 4. 通用枚举
 
 数据库表中的某些字段有时只会取一些固定值，例如性别字段，只会有`男`和`女`，这些字段对应到Java属性就可以使用枚举。
 
-### 1、数据库表中添加sex字段
+### 4.1 数据库表中添加sex字段
 
 ```sql
 # 0表示女，1表示男
 ALTER TABLE USER ADD sex INT;
 ```
 
-### 2、实体类中添加对应枚举属性
+### 4.2 实体类中添加对应枚举属性
 
 枚举类：
 
@@ -870,13 +889,14 @@ public enum SexEnum {
     FEMALE(0, "女"),
     MALE(1, "男");
 
-    @EnumValue // 该注解标注的属性值会被保存到数据库中
+    @EnumValue // 该注解标注的属性值会被保存到数据库表中
     private final Integer sex;
+    
     private final String sexName;
 }
 ```
 
-> 说明：使用`@EnumValue`注解来确定要将哪个属性值保存进数据库。
+> 说明：使用`@EnumValue`注解来确定要将哪个属性值保存进数据库表。
 
 实体类：
 
@@ -891,7 +911,7 @@ public class User {
 }
 ```
 
-### 3、测试
+### 4.3 测试
 
 ```java
 @SpringBootTest
@@ -909,7 +929,7 @@ public class SexTests {
 }
 ```
 
-## 6.5 防止全表更新和删除
+## 5. 防止全表更新和删除
 
 **（1）注册防全表更新和删除的插件**
 
@@ -937,46 +957,48 @@ public void test() {
 
 出现异常报错，说明正确防止了全表删除。全表更新也同样可以防止。
 
-## 6.6 多数据源
+## 6. 多数据源
 
-很多时候我们在业务中需要操作多个数据源，例如操作多个数据库、读写分离操作主库和从库等。MyBatis-Plus为我们提供了简便的操作多数据源的方式。以下是案例实战：
+很多时候我们在业务中需要操作多个数据源，例如操作多个数据库。MyBatis-Plus为我们提供了简便的操作多数据源的方式。以下是案例实战：
 
-### 1、创建SpringBoot模块
-
-### 2、添加依赖
+### 6.1 引入依赖
 
 ```xml
-<!-- dynamic-datasource -->
-<dependency>
-    <groupId>com.baomidou</groupId>
-    <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
-    <version>3.6.1</version>
-</dependency>
-<!-- mybatis-plus -->
-<dependency>
-    <groupId>com.baomidou</groupId>
-    <artifactId>mybatis-plus-boot-starter</artifactId>
-    <version>3.5.3.1</version>
-</dependency>
-<!-- mysql -->
-<dependency>
-    <groupId>com.mysql</groupId>
-    <artifactId>mysql-connector-j</artifactId>
-    <scope>runtime</scope>
-</dependency>
-<!-- test -->
-<dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-test</artifactId>
-</dependency>
-<!-- lombok -->
-<dependency>
-    <groupId>org.projectlombok</groupId>
-    <artifactId>lombok</artifactId>
-</dependency>
+<dependencies>
+    <!-- dynamic-datasource -->
+    <dependency>
+        <groupId>com.baomidou</groupId>
+        <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
+        <version>3.6.1</version>
+    </dependency>
+    <!-- mybatis-plus -->
+    <dependency>
+        <groupId>com.baomidou</groupId>
+        <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+        <version>3.5.8</version>
+    </dependency>
+    <!-- mysql -->
+    <dependency>
+        <groupId>com.mysql</groupId>
+        <artifactId>mysql-connector-j</artifactId>
+        <scope>runtime</scope>
+    </dependency>
+    <!-- test -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <scope>test</scope>
+    </dependency>
+    <!-- lombok -->
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <optional>true</optional>
+    </dependency>
+</dependencies>
 ```
 
-### 3、配置文件
+### 6.2 配置文件
 
 ```yml
 spring:
@@ -985,7 +1007,7 @@ spring:
     dynamic:
       # 设置默认的数据源，默认值即为master
       primary: master
-      # 是否严格匹配数据源，默认为false，即匹配失败则使用默认数据源。如果设为true，则匹配失败会抛出异常
+      # 是否严格匹配数据源，默认为false，即匹配失败则使用默认数据源。若设为true，则匹配失败会抛出异常
       strict: false
       datasource:
         master:
@@ -1000,27 +1022,27 @@ spring:
           driver-class-name: com.mysql.cj.jdbc.Driver
 ```
 
-### 4、主启动类
+### 6.3 主启动类
 
 ```java
-@MapperScan("com.thuwsy.boot.mapper")
+@MapperScan("com.wsy.mapper")
 @SpringBootApplication
-public class DataSourceApplication {
+public class MybatisPlusDataSourceApplication {
     public static void main(String[] args) {
-        SpringApplication.run(DataSourceApplication.class, args);
+        SpringApplication.run(MybatisPlusDataSourceApplication.class, args);
     }
 }
 ```
 
-### 5、实体类和数据库表
+### 6.4 实体类和数据库表
 
-对数据库ssm中的表user创建对应的实体类User：
+对数据库ssm中的表`user`创建对应的实体类User：
 
 ```java
 @Data
 @TableName("user")
 public class User {
-    @TableId
+    @TableId("id")
     private Long id;
     private String name;
     private Integer age;
@@ -1028,19 +1050,19 @@ public class User {
 }
 ```
 
-对数据库test中的表t_order创建对应的实体类Order：
+对数据库test中的表`t_order`创建对应的实体类Order：
 
 ```java
 @Data
 @TableName("t_order")
 public class Order {
-    @TableId
+    @TableId("order_id")
     private Long orderId;
     private String orderName;
 }
 ```
 
-### 6、Mapper
+### 6.5 Mapper
 
 ```java
 public interface UserMapper extends BaseMapper<User> {
@@ -1052,7 +1074,7 @@ public interface OrderMapper extends BaseMapper<Order> {
 }
 ```
 
-### 7、Service层使用@DS注解指定数据源
+### 6.6 Service层使用@DS注解指定数据源
 
 ```java
 public interface UserService {
@@ -1094,9 +1116,9 @@ public class OrderServiceImpl implements OrderService {
 }
 ```
 
-> **注意**：`@DS`可以注解在方法上或类上，如果同时存在则按照就近原则，即`方法上注解`优先于`类上注解`。
+> **注意**：`@DS`可以标注在方法上或类上，如果同时存在则按照就近原则，即`方法上注解`优先于`类上注解`。
 
-### 8、测试
+### 6.7 测试
 
 ```java
 @SpringBootTest
@@ -1115,7 +1137,7 @@ public class DataSourceTests {
 }
 ```
 
-## 6.7 MyBatis-Plus逆向工程
+## 7. MyBatis-Plus逆向工程
 
 总体步骤与MyBatis生成逆向工程类似，只不过在使用MyBatisX插件填写信息时，要指定生成MyBatis-Plus：
 

@@ -623,7 +623,7 @@ protected boolean tryReleaseShared(int)
 protected boolean isHeldExclusively()
 ```
 
-> 说明：钩子方法是一种被声明在抽象类中的方法，一般使用 `protected` 关键字修饰，它可以是空方法，也可以是默认实现的方法。模板设计模式通过钩子方法控制固定步骤的实现。
+> 说明：钩子方法是一种被声明在抽象类中的方法，一般使用 `protected` 关键字修饰，它是由抽象类默认实现的方法（方法体可以为空，意味着交给子类去扩展）。模板设计模式通过钩子方法控制固定步骤的实现。
 
 注意，AQS中有两种资源共享方式：
 
@@ -2342,7 +2342,7 @@ static <U> CompletableFuture<U> supplyAsync(Supplier<U> supplier, Executor execu
 
 - `T get()`
 - `T get(long timeout, TimeUnit unit)`
-- `T join()`：与`get()`作用相同，只不过它并不会抛出编译时异常，推荐使用
+- `T join()`：与`get()`作用相同，只不过它并不会抛出编译时异常
 - `T getNow(T valueIfAbsent)`：获取任务的计算结果，如果任务尚未完成，则返回valueIfAbsent。该方法不会阻塞。
 - `boolean complete(T value)`：如果任务已经完成，则返回false。否则，就直接设置任务的计算结果为value（但任务还在继续执行，并没有结束，只是计算结果变成了固定的value），并返回true。
 

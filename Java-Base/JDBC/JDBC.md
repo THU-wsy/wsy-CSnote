@@ -911,8 +911,6 @@ public class CustomerDaoImpl extends BaseDao<Customer> implements CustomerDao{
 3. 新的资源分配手段
 4. 统一的连接管理，避免数据库连接泄漏
 
-
-
 ### 8.3 多种开源的数据库连接池
 
 JDBC 的数据库连接池使用 javax.sql.DataSource 接口进行规范，所有的第三方连接池都实现此接口：
