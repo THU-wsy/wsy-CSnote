@@ -999,7 +999,7 @@ public class AddEmployeeVO {
 }
 ```
 
-> 说明：`@JsonFormat`用于指定JSON格式，通常用于日期类型的属性
+> 说明：`@JsonFormat`用于指定JSON格式
 
 修改员工的前端请求入参（对于修改操作，必须指定id属性）：
 
