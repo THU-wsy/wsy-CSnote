@@ -331,7 +331,7 @@ public interface ChatService {
 
 ```java
 @Configuration
-public class CommonConfig {
+public class MyConfig {
     @Autowired
     private OpenAiChatModel model;
 
@@ -361,7 +361,7 @@ public class ChatController {
 
 为了简化AiServices工具类的使用，LangChain4j提供了声明式使用方法，想为哪个service接口创建代理对象，只需要在该接口上添加@AiService注解并指定要使用的模型，将来LangChain4j扫描到该注解后会自动创建该接口的代理对象并注入到IoC容器中。
 
-由此，我们只需编写如下的service接口，而无需再编写上述CommonConfig配置类。
+由此，我们只需编写如下的service接口，而无需再编写上述MyConfig配置类。
 
 ```java
 @AiService(
@@ -373,16 +373,18 @@ public interface ChatService {
 }
 ```
 
-> 说明：
+> 注意：
 >
 > - wiringMode默认为AUTOMATIC（自动装配），也就是会自动去装配IoC容器中已有的模型，例如框架自带的`openAiChatModel`，所以事实上上述`@AiService`的这两个属性都可以无需指定。
 > - 我们上面将wiringMode设置为EXPLICIT（手动装配），这时候我们就必须手动指定要装配的模型，chatModel就用于指定对话时需要使用的模型对象在IoC容器中的名称。
+
+说明：我们可以将资料目录下的index.html放在项目类路径的static目录下，后续我们将基于这一前端页面做案例演示。
 
 ## 3. 流式调用
 
 我们之前代码演示的都是阻塞式调用，如果想进行流式调用，则需要使用webflux框架。
 
-（1）引入依赖：
+（1）创建一个新项目，引入依赖：
 
 ```xml
 <dependency>
@@ -447,7 +449,7 @@ public class ChatController {
 }
 ```
 
-> 说明：我们可以将资料目录下的index.html放在项目类路径的static目录下，后续我们将基于这一前端页面做案例演示。
+> 说明：我们可以将资料目录下的index.html放在项目类路径的static目录下，基于这一前端页面可以更直观地看到流式调用的效果。
 
 ## 4. 消息注解
 
@@ -458,11 +460,11 @@ public class ChatController {
 ```java
 @AiService(
         wiringMode = AiServiceWiringMode.EXPLICIT,
-        streamingChatModel = "openAiStreamingChatModel"
+        chatModel = "openAiChatModel"
 )
 public interface ChatService {
     @SystemMessage("你是小吴的助手小艾同学，请在每次回答时都先说一句'你好，我是小艾！'")
-    Flux<String> chat(String message);
+    String chat(String message);
 }
 ```
 
@@ -471,11 +473,11 @@ public interface ChatService {
 ```java
 @AiService(
         wiringMode = AiServiceWiringMode.EXPLICIT,
-        streamingChatModel = "openAiStreamingChatModel"
+        chatModel = "openAiChatModel"
 )
 public interface ChatService {
     @SystemMessage(fromResource = "system.txt")
-    Flux<String> chat(String message);
+    String chat(String message);
 }
 ```
 
@@ -564,7 +566,29 @@ public class MessageWindowChatMemory implements ChatMemory {
 
 #### 1、实现ChatMemoryStore存储消息
 
-我们首先要在项目中进行Redis的相关配置，然后自定义类实现ChatMemoryStore接口：
+我们首先要在项目中进行Redis的相关配置：
+
+引入依赖：
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-redis</artifactId>
+</dependency>
+```
+
+添加配置：
+
+```yaml
+spring:
+  data:
+    redis:
+      password: abc666
+      host: 192.168.231.203
+      port: 6379
+```
+
+然后自定义类实现ChatMemoryStore接口：
 
 ```java
 @Component
@@ -631,13 +655,13 @@ public class CommonConfig {
 ```java
 @AiService(
         wiringMode = AiServiceWiringMode.EXPLICIT,
-        streamingChatModel = "openAiStreamingChatModel",
+        chatModel = "openAiChatModel",
         chatMemoryProvider = "chatMemoryProvider"  // 配置会话记忆对象提供者
 )
 public interface ChatService {
     // 添加参数memoryId，并通过LangChain4j提供的注解区分ID和消息内容
     @SystemMessage(fromResource = "system.txt")
-    Flux<String> chat(@MemoryId String memoryId, @UserMessage String message);
+    String chat(@MemoryId String memoryId, @UserMessage String message);
 }
 ```
 
@@ -649,9 +673,8 @@ public class ChatController {
     @Autowired
     private ChatService chatService;
 
-    // produces属性用于解决乱码问题
-    @GetMapping(value = "/chat", produces = "text/html;charset=utf-8")
-    public Flux<String> chat(
+    @GetMapping("/chat")
+    public String chat(
             @RequestParam("memoryId") String memoryId,
             @RequestParam("message") String message) {
         return chatService.chat(memoryId, message);
@@ -661,7 +684,7 @@ public class ChatController {
 
 > 说明：在我们提供的前端页面中，实际上已经传递了参数memoryId
 
-## 6. RAG知识库
+## 6. RAG
 
 ### 6.1 RAG简介
 
@@ -688,7 +711,7 @@ RAG全称为Retrieval Augmented Generation（**检索增强生成**），简单�
 
 #### 存储数据
 
-知识库通常会使用一种特殊的数据库（向量数据库）。目前市面上常见的向量数据库很多，比如Milvus、Chroma、Pinecone等。存储数据的**基本原理**如下：
+知识库通常会使用一种特殊的数据库（向量数据库）。目前市面上常见的向量数据库很多，比如Milvus、Chroma、Pinecone、RediSearch等。存储数据的**基本原理**如下：
 
 ![image-20250706174442300](images/image-20250706174442300.png)
 
@@ -708,9 +731,431 @@ RAG全称为Retrieval Augmented Generation（**检索增强生成**），简单�
 
 ![image-20250706191931417](images/image-20250706191931417.png)
 
+### 6.3 搭建知识库
 
+我们想通过RAG的方式增强大模型的生成能力，从而让我们能够查询出最新的2024年的大学录取分数线。所以我们首先需要搭建知识库，将相关数据转换为多维向量保存到知识库中。
 
+#### 1、向量数据库RediSearch
 
+我们选用RediSearch作为知识库，RediSearch是Redis扩展的一个功能，Docker安装命令如下：
+
+```shell
+docker run --name redis-vector -d -p 6380:6379 redislabs/redisearch
+```
+
+#### 2、引入依赖
+
+额外引入以下依赖：
+
+```xml
+<dependency>
+    <groupId>dev.langchain4j</groupId>
+    <artifactId>langchain4j-easy-rag</artifactId>
+    <version>1.0.1-beta6</version>
+</dependency>
+<dependency>
+    <groupId>dev.langchain4j</groupId>
+    <artifactId>langchain4j-community-redis-spring-boot-starter</artifactId>
+    <version>1.0.1-beta6</version>
+</dependency>
+```
+
+#### 3、配置文件
+
+**配置向量模型**：
+
+向量模型的作用是将分割后的文本片段向量化或者把用户消息向量化。LangChain4j中提供了EmbeddingModel接口用于定义有关向量模型的方法。事实上，LangChain4j默认提供了一个内存版本的向量模型实现方案，但是这种内置的向量模型功能没有那么强大，所以我们选择使用阿里云百炼平台提供的专业的向量模型text-embedding-v3，因此我们就需要进行配置。
+
+在配置文件中新增以下内容：
+
+```yaml
+langchain4j:
+  open-ai:
+    # 配置向量模型
+    embedding-model:
+      base-url: https://dashscope.aliyuncs.com/compatible-mode/v1
+      api-key: 你的API-Key
+      model-name: text-embedding-v3
+      log-requests: true
+      log-responses: true
+      max-segments-per-batch: 10  # 向量模型text-embedding-v3规定每次发送请求的数据不超过10行
+```
+
+> 说明：当我们进行上述配置后，LangChain4j会自动根据我们的配置往IoC容器中注册一个EmbeddingModel对象供我们使用。
+
+**配置向量数据库连接信息**：在配置文件中新增以下内容：
+
+```yaml
+langchain4j:
+  community:
+    # 配置向量数据库连接信息
+    redis:
+      host: 192.168.231.203
+      port: 6380
+```
+
+> 说明：当我们进行上述配置后，LangChain4j会自动根据我们的配置往IoC容器中注册一个RedisEmbeddingStore对象，这个对象实现了EmbeddingStore接口，封装了操作RediSearch的API。
+
+#### 4、完成知识库的搭建
+
+我们首先将资料目录下的content文件夹复制到项目的类路径下，这是我们的知识数据文档。
+
+然后定义一个临时的配置类用于在SpringBoot初始化时存储数据到知识库：
+
+```java
+@Configuration
+public class TempConfig {
+    @Autowired
+    private EmbeddingModel embeddingModel;
+    @Autowired
+    private RedisEmbeddingStore redisEmbeddingStore;
+
+    @PostConstruct
+    public void buildKnowledgeBase() {
+        // 1. 使用文档加载器将文档加载进内存
+        List<Document> documents = ClassPathDocumentLoader.loadDocuments("content");
+
+        // 2. 构建EmbeddingStoreIngestor对象，它的功能是进行文本数据的切割、向量化、存储
+        EmbeddingStoreIngestor ingestor = EmbeddingStoreIngestor.builder()
+                .embeddingModel(embeddingModel)  // 指定向量模型
+                .embeddingStore(redisEmbeddingStore)  // 指定向量数据库操作对象
+                .build();
+
+        // 3. 对文档数据进行切割、向量化，然后存储到知识库
+        ingestor.ingest(documents);
+    }
+}
+```
+
+启动程序后我们就会发现，RediSearch知识库已经搭建完成。注意，知识库搭建完成后需要把TempConfig这个临时配置类注释掉，否则每次启动程序都会重新搭建一次知识库。
+
+> 说明：EmbeddingStoreIngestor类封装了很多细节，它的核心功能是使用文档分割器来对文本数据进行**切割**、然后使用向量模型完成**向量化**、最后将每个向量和其对应的文本片段一起**存储**到向量数据库中。
+
+### 6.4 检索知识库
+
+#### 1、配置ContentRetriever
+
+我们在CommonConfig中配置ContentRetriever：
+
+```java
+    @Autowired
+    private EmbeddingModel embeddingModel;
+    @Autowired
+    private RedisEmbeddingStore redisEmbeddingStore;
+
+    @Bean
+    public ContentRetriever contentRetriever() {
+        return EmbeddingStoreContentRetriever.builder()
+                .embeddingModel(embeddingModel)  // 指定向量模型
+                .embeddingStore(redisEmbeddingStore)  // 指定向量数据库操作对象
+                .minScore(0.5)  // 设置最小的余弦相似度（只有高于此值的片段才会被检索出来）
+                .maxResults(3)  // 设置检索出来的最大片段数量
+                .build();
+    }
+```
+
+> 说明：EmbeddingStoreContentRetriever是LangChain4j提供的向量数据库检索对象。
+
+#### 2、service接口指定检索器
+
+通过`@AiService`注解的contentRetriever属性指定向量数据库检索对象：
+
+```java
+@AiService(
+        wiringMode = AiServiceWiringMode.EXPLICIT,
+        chatModel = "openAiChatModel",
+        chatMemoryProvider = "chatMemoryProvider",  // 配置会话记忆对象提供者
+        contentRetriever = "contentRetriever"  // 配置向量数据库检索对象
+)
+public interface ChatService {
+    @SystemMessage(fromResource = "system.txt")
+    String chat(@MemoryId String memoryId, @UserMessage String message);
+}
+```
+
+**测试**：启动程序后，询问AI志愿填报顾问："西北大学2024年录取分数是多少"，发现已经可以正确地根据知识库的内容来回答了。可以在IDEA的控制台查看日志，会发现发送给大模型的用户消息中，格式是这样的：
+
+![image-20250712224212871](images/image-20250712224212871.png)
+
+### 6.5 RAG核心组件总结
+
+![image-20250713094200314](images/image-20250713094200314.png)
+
+知识库的存储流程如上图所示，其中涉及到了5个核心组件：
+
+#### 文档加载器
+
+文档加载器的作用是把磁盘或者网络中的文档数据加载进内存。LangChain4j给我们提供的常见文档加载器有：
+
+- ClassPathDocumentLoader：相对于类路径加载
+- FileSystemDocumentLoader：根据本地磁盘绝对路径加载
+- UrlDocumentLoader：根据url路径加载
+
+#### 文档解析器
+
+文档解析器（DocumentParser）的作用是解析文档中的内容，把原本的非纯文本数据转化成纯文本，最后在内存中生成一个一个的Document对象用于记录文档的内容。在LangChain4j中提供了几个常用的文档解析器：
+
+- ApacheTikaDocumentParser（默认）：几乎可以解析所有格式的文件
+- TextDocumentParser：解析纯文本格式的文件
+- ApachePdfBoxDocumentParser：解析pdf格式文件
+- ApachePoiDocumentParser：解析微软的office文件，例如DOC、PPT、XLS
+
+#### 文档分割器
+
+文档分割器（DocumentSplitter）主要用于把一个大的文档切割成一个一个的文本片段。由于每个Document对象中记录的是对应文档中的全部内容，如果我们直接把整个文档的内容一次性向量化存储到向量数据库中，不利于检索，所以这些文档对象，需要使用文档分割器分割成一个一个的文本片段，而每一个文本片段只是记录整个文档中的一小部分内容，这样将来根据用户问题检索相关片段的时候就会更精准。
+
+LangChain4j提供了多种文档分割器：
+
+- DocumentSplitters.recursive()：（默认）递归分割器，优先按照段落分割、再按照行分割、再按照句子分割、再按照词分割，直到达到每个文本片段设置的最大字符数
+- DocuemntByParagraphSplitter：只按照段落分割文本
+- DocumentByLineSplitter：只按照行分割文本
+- DocumentBySentenceSplitter：只按照句子分割文本
+- DocumentByWordSplitter：只按照词分割文本
+- DocumentByCharacterSplitter：按照固定数量的字符分割文本
+- DocumentByRegexSplitter：按照正则表达式分割文本
+
+如下是段落文本分割器的例子，假设我们设置了每个文本片段的最大字符数是300，那么将文档按照段落进行分割后，发现第一个文本片段中只能放下第1段和第2段（再加上第3段则会超过300字符），于是第3段会放到下一个文本片段中。将来我们进行向量化时，实际上是对**每个文本片段**进行向量化的。
+
+![image-20250713095911016](images/image-20250713095911016.png)
+
+> 说明：如果我们采用默认的递归分割器，那么在上述的例子中，放入两个段落后，还会尝试能否放入行、句子、词，直到该文本片段达到300个字符。
+
+LangChain4j默认使用的递归分割器，其单个文本片段的最大字符数就是300，如果我们想自定义，则可以使用以下API：
+
+```java
+DocumentSplitter documentSplitter = DocumentSplitters.recursive(maxSegmentSizeInChars, maxOverlapSizeInChars);
+```
+
+其中，maxSegmentSizeInChars表示每个文本片段容纳的最大字符数，而maxOverlapSizeInChars表示两个文本片段之间重叠的字符数。设置重叠字符数的作用如下：
+
+![image-20250713101932527](images/image-20250713101932527.png)
+
+假如有一篇以"高考"为题目的文档需要存储到向量数据库中，使用文档分割器后得到两个文本片段，其中第一个文本片段里提到"高考"，而第二个文本片段中完全没有出现"高考"相关的字眼，那到时候我们检索"高考"相关的内容时就无法将第二个文本片段检索出来，但实质上按照语义它是应该被检索出来的。我们的解决办法就是让两个文本片段存储的内容有重叠的部分，即上一个文本片段的末尾与下一个文本片段的开头重复，这样就可以保持语义的连贯性了。比如将"高考不是重点，而是起点..."这句话存储到第二个文本片段的开头，就能解决上述问题，所以maxOverlapSizeInChars就是用于指定重叠部分字符的数量。
+
+我们在构建EmbeddingStoreIngestor时，可以指定我们自定义的文档分割器对象：
+
+```java
+@Configuration
+public class TempConfig {
+    @Autowired
+    private EmbeddingModel embeddingModel;
+    @Autowired
+    private RedisEmbeddingStore redisEmbeddingStore;
+
+    @PostConstruct
+    public void buildKnowledgeBase() {
+        // 1. 使用文档加载器将文档加载进内存
+        List<Document> documents = ClassPathDocumentLoader.loadDocuments("content");
+
+        // 2. 构建EmbeddingStoreIngestor对象，它的功能是进行文本数据的切割、向量化、存储
+        EmbeddingStoreIngestor ingestor = EmbeddingStoreIngestor.builder()
+                .embeddingModel(embeddingModel)  // 指定向量模型
+                .embeddingStore(redisEmbeddingStore)  // 指定向量数据库操作对象
+                .documentSplitter(DocumentSplitters.recursive(500, 100))  // 指定文档分割器对象
+                .build();
+
+        // 3. 对文档数据进行切割、向量化，然后存储到知识库
+        ingestor.ingest(documents);
+    }
+}
+```
+
+#### 向量模型
+
+向量模型（EmbeddingModel）的作用是将一个个文本片段转换为一个个向量。LangChain4j中使用Embedding对象来记录这一个个向量。
+
+#### 向量数据库操作对象
+
+向量数据库操作对象（EmbeddingStore）封装了操作向量数据库的API，无论是存储还是检索都需要借助于它来完成。
+
+## 7. Tools
+
+### 7.1 业务需求案例
+
+在我们的AI志愿填报顾问中，已经设置了如下系统消息，会在每次回答完用户的问题后，都附上一句话：志愿填报需要考虑的因素有很多，如果要得到专业的志愿填报指导，建议您预约一个一对一的指导服务，是否需要预约? 
+
+我们想实现以下功能：当用户表达出需要预约的意愿并提交姓名、性别、电话等信息后，就往数据库中添加一条信息，记录预约详情。为此，我们首先搭建数据库环境。
+
+执行SQL脚本：
+
+```sql
+create database if not exists volunteer;
+use volunteer;
+create table if not exists reservation
+(
+    id                 bigint primary key auto_increment not null comment '主键ID',
+    name               varchar(50) not null comment '考生姓名',
+    gender             varchar(2)  not null comment '考生性别',
+    phone              varchar(20) not null comment '考生手机号',
+    communication_time datetime    not null comment '沟通时间',
+    province           varchar(32) not null comment '考生所处的省份',
+    estimated_score    int         not null comment '考生预估分数'
+)
+```
+
+引入依赖：
+
+```xml
+<dependency>
+    <groupId>org.projectlombok</groupId>
+    <artifactId>lombok</artifactId>
+</dependency>
+<dependency>
+    <groupId>com.baomidou</groupId>
+    <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+    <version>3.5.8</version>
+</dependency>
+<dependency>
+    <groupId>com.mysql</groupId>
+    <artifactId>mysql-connector-j</artifactId>
+    <scope>runtime</scope>
+</dependency>
+```
+
+添加配置：
+
+```yaml
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.231.203:3306/volunteer
+    username: root
+    password: abc666
+```
+
+实体类：
+
+```java
+@TableName("reservation")
+@Data
+public class Reservation {
+    @TableId(value = "id", type = IdType.AUTO)
+    private Long id;
+    private String name;
+    private String gender;
+    private String phone;
+    private LocalDateTime communicationTime;
+    private String province;
+    private Integer estimatedScore;
+}
+```
+
+Mapper：
+
+```java
+@Mapper
+public interface ReservationMapper extends BaseMapper<Reservation> {
+}
+```
+
+Service：
+
+```java
+public interface ReservationService {
+    /**
+     * 添加预约信息记录
+     */
+    void insert(Reservation reservation);
+
+    /**
+     * 根据手机号查询预约信息记录
+     */
+    Reservation queryByPhone(String phone);
+}
+```
+
+```java
+@Service
+public class ReservationServiceImpl implements ReservationService {
+    @Autowired
+    private ReservationMapper reservationMapper;
+
+    @Override
+    public void insert(Reservation reservation) {
+        reservationMapper.insert(reservation);
+    }
+
+    @Override
+    public Reservation queryByPhone(String phone) {
+        return reservationMapper.selectOne(
+                new LambdaQueryWrapper<Reservation>().eq(Reservation::getPhone, phone) 
+        );
+    }
+}
+```
+
+### 7.2 Tools工具原理
+
+Tools工具，以前也叫做function calling。如果在我们的程序中添加了Tools功能，那么整个工作流程就会变成以下情形：
+
+![image-20250714214722034](images/image-20250714214722034.png)
+
+当用户把问题发送给AI应用，在AI应用的内部需要组织提交给大模型的数据，而这些数据中需要描述清楚我们的AI应用中有哪些函数能够被大模型调用。每一个函数的描述都包含三个部分：方法名称、方法作用、方法入参。当AI应用把这些数据发送给大模型后，大模型会先根据用户的问题以及上下文拆解任务，从而判断是否需要调用函数，如果有函数需要调用，则把需要调用的函数名称，以及调用时需要使用的参数准备好一并响应给AI应用。AI应用接收到响应后需要执行对应的函数，得到对应的结果，接下来把得到的结果和之前的信息一块组织好再发送给大模型。
+
+这里需要注意的是由于在一次任务的处理过程中可能需要根据顺序调用多个函数，所以当大模型再次接收到AI应用发送的数据后会继续拆解任务，如果发现还需要调用其他的函数，则会重复4.1~4.4这几个步骤，直到无需调用函数，最终把生成的结果响应给AI应用，并由AI应用发送给用户。
+
+### 7.3 Tools的使用方式
+
+LangChain4j提供了`@Tool`注解用于对方法的作用进行描述，还有`@P`注解用于对方法的参数进行描述。将来LangChain4j就能通过反射的方式获取到`@Tool`注解中的作用描述、`@P`注解中的参数描述、以及方法的名称，然后组织数据一并发送给大模型。
+
+```java
+@Component
+public class ReservationTool {
+    @Autowired
+    private ReservationService reservationService;
+
+    /**
+     * 工具方法：添加预约信息
+     */
+    @Tool("预约志愿填报服务")
+    public void addReservation(
+            @P("考生姓名") String name,
+            @P("考生性别") String gender,
+            @P("考生手机号") String phone,
+            @P("预约沟通时间，格式为：yyyy-MM-dd'T'HH:mm") String communicationTime,
+            @P("考生所在省份") String province,
+            @P("考生预估分数") Integer estimatedScore
+    ) {
+        Reservation reservation = new Reservation();
+        reservation.setName(name);
+        reservation.setGender(gender);
+        reservation.setPhone(phone);
+        reservation.setCommunicationTime(LocalDateTime.parse(communicationTime));
+        reservation.setProvince(province);
+        reservation.setEstimatedScore(estimatedScore);
+        
+        reservationService.insert(reservation);
+    }
+
+    /**
+     * 工具方法：查询预约信息
+     */
+    @Tool("根据考生手机号查询预约信息")
+    public Reservation queryReservation(@P("考生手机号") String phone) {
+        return reservationService.queryByPhone(phone);
+    }
+}
+```
+
+然后通过`@AiService`注解的tools属性指定Tools类，这样就给ChatService业务配置好了Tools工具：
+
+```java
+@AiService(
+        wiringMode = AiServiceWiringMode.EXPLICIT,
+        chatModel = "openAiChatModel",
+        chatMemoryProvider = "chatMemoryProvider",  // 配置会话记忆对象提供者
+        contentRetriever = "contentRetriever",  // 配置向量数据库检索对象
+        tools = "reservationTool"  // 指定Tools工具
+)
+public interface ChatService {
+    @SystemMessage(fromResource = "system.txt")
+    String chat(@MemoryId String memoryId, @UserMessage String message);
+}
+```
+
+测试：
+
+![image-20250714221836005](images/image-20250714221836005.png)
 
 
 
