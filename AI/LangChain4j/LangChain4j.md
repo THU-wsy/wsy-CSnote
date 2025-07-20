@@ -116,7 +116,7 @@ ollama run qwen3:0.6b
 
 ## 2. 大模型调用
 
-大模型调用时，不同平台的请求数据基本都类似，以下我们将介绍几个核心的数据。
+调用大模型时，大多数LLM都遵循**OpenAI API格式**，以下我们将介绍几个核心的数据。
 
 ### 2.1 请求数据
 
@@ -226,9 +226,9 @@ ollama run qwen3:0.6b
 
 # 第03章_LangChain4j
 
-## 1. 快速入门
+随着人工智能技术的迅猛发展，越来越多的开发者开始将目光投向AI应用的开发。目前市场上大多数AI框架如LangChain、PyTorch等主要支持Python。使用Java调用大模型的工具库主流有两种：LangChain4j和Spring AI。其中，LangChain4j其实就是LangChain For Java，该框架的目标是简化将LLM集成到Java应用程序中的过程，官方文档为 https://docs.langchain4j.dev/
 
-目前市面上使用Java调用大模型的工具库主流有两种：LangChain4j和Spring AI。其中，LangChain4j的官方文档为 https://docs.langchain4j.dev/
+## 1. 快速入门
 
 创建一个Maven工程后，引入以下依赖：
 
@@ -274,6 +274,13 @@ public class Main {
     <version>1.0.1-beta6</version>
 </dependency>
 ```
+
+> 说明：LangChain4j提供了Low Level和High Level这两个层次的抽象：
+>
+> - Low Level：通过**langchain4j-open-ai-spring-boot-starter**依赖引入，提供了低层次的组件，如ChatModel、UserMessage、AiMessage、EmbeddingStore、Embedding等
+> - High Level：通过**langchain4j-spring-boot-starter**依赖引入，提供了高层次的组件，如AI Services
+>
+> 将来我们做大模型应用开发时，这两个依赖都需要引入。
 
 （2）配置文件：
 
@@ -380,9 +387,9 @@ public interface ChatService {
 
 说明：我们可以将资料目录下的index.html放在项目类路径的static目录下，后续我们将基于这一前端页面做案例演示。
 
-## 3. 流式调用
+## 3. 流式输出
 
-我们之前代码演示的都是阻塞式调用，如果想进行流式调用，则需要使用webflux框架。
+流式输出是一种分批次实时传输LLM生成结果给客户端的技术，尤其适用于LLM响应较慢的场景（如生成长文本或复杂推理结果）。我们之前代码演示的都是阻塞式调用，如果想进行流式调用，则需要使用webflux框架。
 
 （1）创建一个新项目，引入依赖：
 
@@ -451,7 +458,21 @@ public class ChatController {
 
 > 说明：我们可以将资料目录下的index.html放在项目类路径的static目录下，基于这一前端页面可以更直观地看到流式调用的效果。
 
-## 4. 消息注解
+## 4. 提示词工程
+
+### 4.1 简介
+
+提示词工程（Prompt Engineering）是指通过结构化文本等方式来设计和优化提示词，以引导大预言模型输出期望的结果。Prompt一般通过多角色消息的方式来设计，也就是将消息分为不同角色（user、system、assistant等），设置功能边界，增强交互的复杂性和上下文感知能力。
+
+LangChain4j通过枚举类ChatMessageType定义了五种类型的消息：
+
+- `SystemMessage`：系统消息，用于设定模型的目标或角色，通常会用它来设定LLM在这次对话中的角色、应该如何表现、以什么风格回答等指令；
+- `UserMessage`：用户消息；
+- `AiMessage`：由AI生成的消息，通常是对用户消息的回复；
+- `ToolExecutionResultMessage`：Tool执行的结果，每个ToolExecutionRequest对应一个ToolExecutionResultMessage；
+- `CustomMessage`：自定义消息，这种消息类型只能由支持它的ChatModel使用
+
+### 4.2 系统消息的使用
 
 我们之前提到，在发送HTTP请求时，可以通过设置system类型的消息，来给大模型设定一个角色。而在代码中，我们可以使用LangChain4j为我们提供的消息注解`@SystemMessage`来设置system类型的消息。
 
@@ -482,6 +503,115 @@ public interface ChatService {
 ```
 
 > 说明：我们可以将资料目录下的system.txt文件放在项目的类路径下。
+
+### 4.3 提示词模板的使用
+
+我们也可以使用**提示词模板**来拼接用户提问的内容，精确控制输入和期望的输出格式，确保问题被LLM正确地理解和回答。
+
+#### 方式一
+
+Service接口：通过`@UserMessage`来设置user类型的消息，结合`@V`注解以及占位符`{{ }}`来拼接用户提问的内容
+
+```java
+@AiService(
+        wiringMode = AiServiceWiringMode.EXPLICIT,
+        chatModel = "openAiChatModel"
+)
+public interface DocumentGenerateService {
+    String PROMPT_TEMPLATE = """
+            ## 角色设定
+            你是一个智能的文档生成助手，能帮助用户快速生成所需的文档。
+            
+            ## 任务目标
+            {{task}}
+            
+            ## 任务要求
+            - 生成的文档要包含四部分内容：背景、目标、实现方案、总结
+            - 语言要专业化
+            - 生成的文档必须是markdown格式
+            """;
+
+    @UserMessage(PROMPT_TEMPLATE)
+    String documentGenerate(@V("task") String message);
+}
+```
+
+测试：
+
+```java
+@SpringBootTest
+public class AiBootDemoApplicationTests {
+    @Autowired
+    private DocumentGenerateService documentGenerateService;
+    
+    @Test
+    public void test() {
+        String message = "生成一份关于搭建AI智能体的技术方案，2000字左右";
+        String result = documentGenerateService.documentGenerate(message);
+        System.out.println(result);
+    }
+}
+```
+
+#### 方式二
+
+如果要拼接的参数很多，我们也可以使用`@StructuredPrompt`标注一个实体类作为提示词模板。
+
+提示词模板实体类：
+
+```java
+@Data
+@StructuredPrompt(
+        """
+        ## 角色设定
+        你是一个智能的文档生成助手，能帮助用户快速生成所需的文档。
+                    
+        ## 任务目标
+        {{task}}
+                    
+        ## 任务要求
+        - 生成的文档要包含四部分内容：背景、目标、实现方案、总结
+        - 语言要专业化
+        - 生成的文档必须是markdown格式
+        - 字数在{{length}}左右
+        """
+)
+public class DocumentGeneratePrompt {
+    private String task;
+    private Integer length;
+}
+```
+
+Service接口：
+
+```java
+@AiService(
+        wiringMode = AiServiceWiringMode.EXPLICIT,
+        chatModel = "openAiChatModel"
+)
+public interface DocumentGenerateService {
+    String documentGenerate(DocumentGeneratePrompt prompt);
+}
+```
+
+测试：
+
+```java
+@SpringBootTest
+public class AiBootDemoApplicationTests {
+    @Autowired
+    private DocumentGenerateService documentGenerateService;
+
+    @Test
+    public void test() {
+        DocumentGeneratePrompt prompt = new DocumentGeneratePrompt();
+        prompt.setTask("生成一份关于搭建AI智能体的技术方案");
+        prompt.setLength(2000);
+        String result = documentGenerateService.documentGenerate(prompt);
+        System.out.println(result);
+    }
+}
+```
 
 ## 5. 会话记忆
 
@@ -515,11 +645,16 @@ public interface ChatMemory {
 }
 ```
 
-> 说明：必须使用唯一ID来标识每一次会话，因为用户点击新建会话时就应该使用新的会话记忆，而不是沿用旧的会话记忆。
+> 说明：**必须使用唯一ID来标识每一次会话**，因为用户点击新建会话时就应该使用新的会话记忆，而不是沿用旧的会话记忆。
 
 **整体流程**：当用户发送问题时，LangChain4j会将该消息存储到指定ID的ChatMemory中，然后获取该ID保存的所有消息并发送给大模型；大模型生成文本后会将响应消息也存储到指定ID的ChatMemory中，然后响应用户。
 
-我们可以使用ChatMemory的一个实现类MessageWindowChatMemory来实现会话记忆：
+ChatMemory有以下两个实现类：
+
+- MessageWindowChatMemory：采用滑动窗口的方式，保留最新的N条消息，并淘汰较旧的消息。
+- TokenWindowChatMemory：采用滑动窗口的方式，保留最新的N个Token，并淘汰较旧的消息。需要结合TokenCountEstimator来计算每条ChatMessage中的Token数量。
+
+我们一般使用MessageWindowChatMemory来实现会话记忆即可：
 
 ```java
 public class MessageWindowChatMemory implements ChatMemory {
@@ -690,7 +825,11 @@ public class ChatController {
 
 由于大模型训练完毕后，它的知识库就不再更新了，也就是说它无法感知今年最新的相关数据（例如今年各个高校的最新录取分数）。一个方案是开启联网搜索。但是对于一些专业领域的数据（例如公司内部某个方案的执行计划），那么对通用大模型而言，开启联网搜索也无法感知。因此，一种更好的策略就是RAG。
 
-RAG全称为Retrieval Augmented Generation（**检索增强生成**），简单理解就是通过检索外部知识库的方式增强大模型的生成能力。
+> 总结：通用大模型基于其训练数据生成响应，所以存在两大问题：一是无法得知训练之后的最新数据，二是无法获取专业领域的数据。
+
+RAG全称为Retrieval Augmented Generation（**检索增强生成**），简单理解就是通过检索外部知识库的方式增强大模型的生成能力，从而降低产生幻觉的概率。
+
+> 说明：幻觉是指LLM生成的内容看似合理且自信，但实际上是不真实、不准确或完全虚构的信息。
 
 **普通大模型的整体流程**：
 
@@ -1086,7 +1225,9 @@ public class ReservationServiceImpl implements ReservationService {
 
 ### 7.2 Tools工具原理
 
-Tools工具，以前也叫做function calling。如果在我们的程序中添加了Tools功能，那么整个工作流程就会变成以下情形：
+Tools工具，以前也叫做Function Calling。它允许LLM在必要时表达调用Tools的意图，这些Tools通常由开发人员定义（Tools可以是网络搜索、外部API、特定代码片段等）。注意，LLM本身并不能实际调用Tools，而是会在响应中指示应该调用哪个Tools以及如何调用。
+
+如果在我们的程序中添加了Tools功能，那么整个工作流程就会变成以下情形：
 
 ![image-20250714214722034](images/image-20250714214722034.png)
 
@@ -1156,6 +1297,252 @@ public interface ChatService {
 测试：
 
 ![image-20250714221836005](images/image-20250714221836005.png)
+
+## 8. MCP
+
+AI Agent领域有两个重大挑战：
+
+1. Agent与Tools的交互方式，也就是Agent需要调用外部工具和API来执行代码等。**MCP协议正是Agent与Tools交互的标准协议**。
+2. Agent与其他Agent的交互方式，也就是Agent需要理解其他Agent的意图来协同完成任务。**A2A协议正是多个Agent之间交互的标准协议**。
+
+### 8.1 MCP简介
+
+MCP（Model Context Protocol，模型上下文协议）是2024年11月底由Anthropic推出的一种开放标准，旨在**为AI模型应用提供统一的标准化方式与外部数据源和工具之间进行通信**。
+
+![image-20250720122444874](images/image-20250720122444874.png)
+
+MCP遵循CS架构（客户端-服务器架构），包含以下五个核心部分：
+
+1. MCP Host（MCP主机）：AI应用程序，是运行MCP的主应用程序，为用户提供与LLM交互的接口，同时集成MCP Client以连接MCP Server；
+2. MCP Client（MCP客户端）：集成在MCP Host内部，主要负责接收来自LLM的请求、将请求转发到相应的MCP Server、将MCP Server的结果返回给LLM；
+3. MCP Server（MCP服务端）：提供一组特定的工具，负责从本地数据或远程服务中检索信息。注意，与传统的远程API服务器不同，MCP服务端既可以作为本地应用程序在本机运行（stdio模式），也可以部署至远程服务器（SSE模式）；
+4. Local Resource（本地资源）：本地计算机中可供MCP Server安全访问的资源，如文件、数据库等
+5. Remote Resource（远程资源）：MCP Server可以连接到的远程资源，如通过API提供的数据
+
+![image-20250720123353785](images/image-20250720123353785.png)
+
+假设你正在使用一个AI编程助手来帮助你写代码。这个AI编程助手就是一个MCP Host，它需要访问一些外部资源，比如代码库、文档、调试工具等。MCP Server就像是一个中介，它连接了这些资源和AI编程助手：
+
+1. 当你向AI编程助手提问某个函数的用法时，AI编程助手就会通过MCP Client向MCP Server发送请求；
+2. MCP Server接收到请求后，就会去代码库或文档中查找相关信息，找到信息后再将结果返回给AI编程助手；
+3. AI编程助手根据返回的信息，生成一段代码或解释并展示给你。
+
+![image-20250720171442377](images/image-20250720171442377.png)
+
+### 8.2 MCP的通信机制
+
+MCP支持两种通信机制（传输方式）：
+
+- stdio（标准输入输出）：主要用在本地服务上，操作你本地的软件和文件。这是MCP**默认**的通信方式。
+- SSE（Server-Sent Events）：主要用在远程通信服务上，这个服务需要有在线的API，比如访问谷歌邮件、天气情况等。
+
+![image-20250720125433899](images/image-20250720125433899.png)
+
+> 说明：stdio模式适用于MCP Client和MCP Server在同一台机器上运行的场景，通信速度更快。但stdio的配置比较复杂，需要在本地安装以下两种指令：
+>
+> - uvx：对于Python编写的服务（MCP Server），需要安装uvx指令。首先需要在本地配置Python环境，然后执行`pip install uv`命令即可。
+> - npx：对于TypeScript编写的服务（MCP Server），需要安装npx指令。只需下载安装Node.js即可。
+
+### 8.3 MCP案例实战
+
+> 说明：我们可以访问MCP平台 https://mcp.so/zh 来寻找优秀的MCP Server并使用。
+
+本次我们使用百度地图MCP Server作为演示 https://mcp.so/zh/server/baidu-map/baidu-maps ，可以看到它提供了丰富的Tools工具，并且是一个TypeScript编写的服务（提供了npx的接入方式）：
+
+![image-20250720143310247](images/image-20250720143310247.png)
+
+#### 1、百度地图API-Key申请
+
+（1）访问 https://lbsyun.baidu.com/apiconsole/key 注册账号并认证
+
+（2）点击"创建应用"，其中应用名称可以随意填写，IP白名单填写`0.0.0.0/0`，然后点击提交
+
+（3）这样就完成了API-Key的申请
+
+#### 2、引入依赖
+
+创建一个新的工程，并引入依赖：
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+</dependency>
+<dependency>
+    <groupId>dev.langchain4j</groupId>
+    <artifactId>langchain4j-open-ai-spring-boot-starter</artifactId>
+    <version>1.0.1-beta6</version>
+</dependency>
+<dependency>
+    <groupId>dev.langchain4j</groupId>
+    <artifactId>langchain4j-spring-boot-starter</artifactId>
+    <version>1.0.1-beta6</version>
+</dependency>
+<!-- MCP依赖 -->
+<dependency>
+    <groupId>dev.langchain4j</groupId>
+    <artifactId>langchain4j-mcp</artifactId>
+    <version>1.0.1-beta6</version>
+</dependency>
+```
+
+#### 3、配置文件
+
+```yaml
+langchain4j:
+  open-ai:
+    chat-model:
+      base-url: https://dashscope.aliyuncs.com/compatible-mode/v1
+      api-key: 你的API-Key
+      model-name: qwen-plus
+      log-requests: true   # 打印请求日志
+      log-responses: true  # 打印响应日志
+```
+
+#### 4、Service接口
+
+```java
+public interface McpService {
+    String chat(String message);
+}
+```
+
+#### 5、MCP核心配置
+
+```java
+@Configuration
+public class McpConfig {
+    private static final String BAIDU_MAP_API_KEY = "你的百度地图API-Key";
+
+    @Autowired
+    private OpenAiChatModel model;
+
+    @Bean
+    public McpService mcpService() {
+        try (
+                // 1. 构建MCP Transport（根据百度地图MCP Server提供的npx接入方式）
+                StdioMcpTransport transport = new StdioMcpTransport.Builder()
+                        .command(List.of("cmd", "/c", "npx", "-y", "@baidumap/mcp-server-baidu-map"))
+                        .environment(Map.of("BAIDU_MAP_API_KEY", BAIDU_MAP_API_KEY))
+                        .build();
+                // 2. 构建MCP Client
+                DefaultMcpClient mcpClient = new DefaultMcpClient.Builder()
+                        .transport(transport)
+                        .build();
+                ) {
+            // 3. 创建工具集
+            McpToolProvider toolProvider = McpToolProvider.builder()
+                    .mcpClients(mcpClient)
+                    .build();
+            // 4. 给Service接口指定工具集
+            McpService mcpService = AiServices.builder(McpService.class)
+                    .chatModel(model)
+                    .toolProvider(toolProvider)
+                    .build();
+            return mcpService;
+        } catch (Exception e) {
+            System.out.println("McpService构建异常" + e);
+            throw new RuntimeException(e);
+        }
+    }
+}
+```
+
+#### 6、测试
+
+```java
+@RestController
+public class McpController {
+    @Autowired
+    private McpService mcpService;
+    
+    @GetMapping("/chat")
+    public String chat(@RequestParam("message") String message) {
+        return mcpService.chat(message);
+    }
+}
+```
+
+访问：
+
+- `http://localhost:8080/chat?message=查询北京天气`
+- `http://localhost:8080/chat?message=查询昌平区到天安门的路线规划`
+
+## 9. A2A
+
+谷歌在2025年4月发布了开源的应用层协议A2A（Agent-to-Agent），其设计目的是使智能体（Agent）之间能够以一种自然的模态进行协作，类似于人与人之间的互动。
+
+![image-20250720191931616](images/image-20250720191931616.png)
+
+## 10. 多模态
+
+大模型也可以进行图片处理、图片理解、图片生成、语音合成、语音识别、音频理解、视频理解、视频生成等，支持视觉-语言的多模态任务。
+
+以图片理解为例，我们使用`通义千问VL-Max`（通义千问超大规模视觉语言模型）进行演示，它具有很强的视觉推理能力和指令遵循能力，提供更高的视觉感知和认知水平。
+
+我们新建一个工程，引入依赖：
+
+```xml
+<dependency>
+    <groupId>dev.langchain4j</groupId>
+    <artifactId>langchain4j-open-ai-spring-boot-starter</artifactId>
+    <version>1.0.1-beta6</version>
+</dependency>
+<!-- IO工具 -->
+<dependency>
+    <groupId>commons-io</groupId>
+    <artifactId>commons-io</artifactId>
+    <version>2.13.0</version>
+</dependency>
+```
+
+配置文件：
+
+```yaml
+langchain4j:
+  open-ai:
+    chat-model:
+      base-url: https://dashscope.aliyuncs.com/compatible-mode/v1
+      api-key: 你的API-Key
+      model-name: qwen-vl-max
+      log-requests: true   # 打印请求日志
+      log-responses: true  # 打印响应日志
+```
+
+测试：
+
+```java
+@SpringBootTest
+public class AiBootPictureDemoApplicationTests {
+    @Autowired
+    private OpenAiChatModel model;
+    
+    @Test
+    public void test() throws IOException {
+        // 图片的MIME类型
+        String mimeType = "image/png";
+        // 图片的URL地址
+        String imageUrl = "https://oss.itbaima.cn/internal/markdown/2022/09/17/Z7AiBPNO6ylML4z.png";
+        // 将图片转换为Base64编码后的结果
+        String base64Data = encodePicture(imageUrl);
+
+        // 调用LLM
+        UserMessage userMessage = UserMessage.from(
+                TextContent.from("描述下这张图片中的内容"),
+                ImageContent.from(base64Data, mimeType)
+        );
+        ChatResponse response = model.chat(userMessage);
+        System.out.println(response.aiMessage().text());
+    }
+
+    private String encodePicture(String url) throws IOException {
+        byte[] imageBytes = IOUtils.toByteArray(new URL(url));
+        return Base64.getEncoder().encodeToString(imageBytes);
+    }
+}
+```
+
+
 
 
 
