@@ -949,7 +949,11 @@ RAG全称为Retrieval Augmented Generation（**检索增强生成**），是一�
 
 #### 检索与用户问题相关的数据片段
 
-在向量数据库中，两个向量的接近程度通常采用**余弦相似度**来衡量，余弦相似度就是两个向量夹角的余弦值，所以余弦相似度越大（越接近1），两个向量就越接近。从向量数据库中检索与用户问题相关的数据片段的**基本原理**如下：
+在向量数据库中，两个向量的接近程度通常采用**余弦相似度**来衡量，余弦相似度就是两个向量夹角的余弦值，所以余弦相似度越大（越接近1），两个向量就越接近。
+
+> 补充：大多数相似度测量要么仅依赖于方向，要么同时考虑方向和大小。常见的四种向量相似度计算方法为欧几里得距离、曼哈顿距离、点积、余弦相似度。
+
+从向量数据库中检索与用户问题相关的数据片段的**基本原理**如下：
 
 ![image-20250706191517871](images/image-20250706191517871.png)
 
@@ -1567,7 +1571,9 @@ public class McpController {
 
 大模型也可以进行图片处理、图片理解、图片生成、语音合成、语音识别、音频理解、视频理解、视频生成等，支持视觉-语言的多模态任务。
 
-以图片理解为例，我们使用`通义千问VL-Max`（通义千问超大规模视觉语言模型）进行演示，它具有很强的视觉推理能力和指令遵循能力，提供更高的视觉感知和认知水平。
+### 10.1 图片理解
+
+我们使用`通义千问VL-Max`（通义千问超大规模视觉语言模型）进行演示，它具有很强的视觉推理能力和指令遵循能力，提供更高的视觉感知和认知水平。
 
 我们新建一个工程，引入依赖：
 
@@ -1631,7 +1637,36 @@ public class AiBootPictureDemoApplicationTests {
 }
 ```
 
+### 10.2 图片生成
 
+我们使用`通义万相2.1-文生图-Turbo`进行演示，它拥有更快的生成速度，在图像美观度、真实感、艺术性上全面升级，有更强的语义理解能力、丰富的风格泛化性、支持最大200万像素生成，支持智能提示词改写等。
+
+我们新建一个工程，引入依赖：
+
+```xml
+<!-- 接入阿里云百炼平台 -->
+<dependency>
+    <groupId>dev.langchain4j</groupId>
+    <artifactId>langchain4j-community-dashscope-spring-boot-starter</artifactId>
+    <version>1.0.1-beta6</version>
+</dependency>
+```
+
+测试：
+
+```java
+public static final String API_KEY = "你的API-Key";
+
+@Test
+public void test() {
+    WanxImageModel model = WanxImageModel.builder()
+            .modelName("wanx2.1-t2i-turbo")
+            .apiKey(API_KEY)
+            .build();
+    Response<Image> response = model.generate("生成一张美女照片");
+    System.out.println(response.content().url());
+}
+```
 
 
 

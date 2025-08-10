@@ -8718,6 +8718,68 @@ Lambda表达式需要一个目标类型，这个目标类型必须是一个函�
 - `BiPredicate<T, U>`，其抽象方法是`boolean test(T t, U u);`
 - `DoublePredicate`，其抽象方法是`boolean test(double value);`
 
+### 1.4 特点
+
+Lambda表达式中引用的变量必须是final或effectively final。例如下面的语句就会编译报错：
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        int count = 0;
+        Runnable runnable = () -> {
+            System.out.println(count);
+        };
+        count++;
+        runnable.run();
+    }
+}
+```
+
+这是因为Java的Lambda表达式本质上是匿名内部类的匿名对象，上述代码实际上就是：
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        int count = 0;
+        Runnable runnable = new Lambda(count);
+        count++;
+        runnable.run();  // 输出：0
+    }
+}
+class Lambda implements Runnable {
+    private final int count;
+
+    Lambda(int count) {
+        this.count = count;
+    }
+
+    @Override
+    public void run() {
+        System.out.println(count);
+    }
+}
+```
+
+也就是说，Lambda内部的count是外部变量count的拷贝，如果对其进行了修改，就会**导致内外count值不一致**。Java认为这样的设计是不符合规范的，因此要求Lambda表达式中引用的变量必须是final或effectively final。所以如果我们想在Lambda表达式中访问一个可以被修改的变量，可以这么做：
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        CountObject countObject = new CountObject();
+        Runnable runnable = () -> {
+            System.out.println(countObject.count);
+        };
+        countObject.count++;
+        runnable.run();  // 输出：1
+    }
+}
+class CountObject {
+    public int count = 0;
+}
+```
+
+> 说明：这一例子中，实际上创建的Lambda匿名内部类中，持有一个countObject的引用拷贝，所以修改其字段count的值并不会导致内外部countObject的引用地址不一致。
+
 ## 2. Java8新特性：方法引用
 
 方法引用是用来进一步简化Lambda表达式的。**方法引用的前提**：Lambda体只有一句语句，并且是通过调用一个对象/类的现有方法或构造器来完成的。
