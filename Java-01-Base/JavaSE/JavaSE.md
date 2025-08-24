@@ -9211,7 +9211,7 @@ Collector接口中方法的实现决定了如何对流执行收集的操作(如�
 
 - `Collectors.toList()`：把元素收集到List集合中
 - `Collectors.toSet()`：把元素收集到Set集合中
-- `Collectors.toMap(Function keyMapper, Function valueMapper, BinaryOperator mergeFunction)`：把元素收集到Map集合中。keyMapper是key的映射函数；valueMapper是value的映射函数；mergeFunction是当key产生冲突时所调用的合并方法，注意我们**必须指定mergeFunction**，否则当key冲突时会抛出异常，我们通常采用的mergeFunction为`(k1, k2) -> k1`，它表示当key冲突时会保留原来的数据，即key冲突时新的数据不会覆盖旧的数据。
+- `Collectors.toMap(Function keyMapper, Function valueMapper, BinaryOperator mergeFunction)`：把元素收集到Map集合中。keyMapper是key的映射函数；valueMapper是value的映射函数；mergeFunction是当key产生冲突时所调用的合并方法，注意我们**必须指定mergeFunction**，否则当key冲突时会抛出异常，我们通常采用的mergeFunction为`(v1, v2) -> v1`，它表示当key冲突时会保留原来的数据，即key冲突时新的数据不会覆盖旧的数据。
 - `Collectors.toCollection(Supplier collectionFactory)`：把元素收集到创建的集合中
 
 ```java
