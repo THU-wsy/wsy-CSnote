@@ -661,7 +661,7 @@ pip install 包名称
 但由于pip是连接国外网站进行包的安装，所以速度很慢，我们可以通过如下命令让其连接国内网站进行包的安装：
 
 ```cmd
-pip install -i https://pypi.tuna.tsinghua.edu.cn/simple 包名称
+pip install -i https://mirrors.aliyun.com/pypi/simple/ 包名称
 ```
 
 第三方包安装完成后，就可以在Python程序中导入并使用：
