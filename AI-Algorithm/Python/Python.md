@@ -1,3 +1,135 @@
+# 目录
+
+- [目录](#目录)
+- [第01章\_Python简介](#第01章_python简介)
+  - [1. Python安装](#1-python安装)
+  - [2. PyCharm安装](#2-pycharm安装)
+  - [3. 虚拟环境 venv](#3-虚拟环境-venv)
+- [第02章\_Python基础](#第02章_python基础)
+  - [1. 变量](#1-变量)
+    - [1.1 变量的声明与赋值](#11-变量的声明与赋值)
+    - [1.2 数据类型](#12-数据类型)
+    - [1.3 数据输入](#13-数据输入)
+    - [1.4 数据输出](#14-数据输出)
+  - [2. 运算符](#2-运算符)
+    - [2.1 算术运算符](#21-算术运算符)
+    - [2.2 赋值运算符](#22-赋值运算符)
+    - [2.3 比较运算符](#23-比较运算符)
+      - [is 与 == 的区别](#is-与--的区别)
+      - [三元表达式（条件表达式）](#三元表达式条件表达式)
+    - [2.4 逻辑运算符](#24-逻辑运算符)
+      - [and](#and)
+      - [or](#or)
+      - [not](#not)
+  - [3. 流程控制语句](#3-流程控制语句)
+    - [3.1 if](#31-if)
+    - [3.2 while](#32-while)
+    - [3.3 for](#33-for)
+      - [enumerate() — 同时获取索引和值](#enumerate--同时获取索引和值)
+      - [zip() — 并行迭代](#zip--并行迭代)
+      - [for-else 与 while-else](#for-else-与-while-else)
+  - [4. 函数](#4-函数)
+    - [4.1 函数的定义](#41-函数的定义)
+    - [4.2 变量的作用域](#42-变量的作用域)
+    - [4.3 多返回值](#43-多返回值)
+    - [4.4 多种传参方式](#44-多种传参方式)
+      - [1、位置参数](#1位置参数)
+      - [2、关键字参数](#2关键字参数)
+      - [3、缺省参数](#3缺省参数)
+      - [4、可变参数](#4可变参数)
+    - [4.5 lambda匿名函数](#45-lambda匿名函数)
+  - [5. 异常处理](#5-异常处理)
+  - [6. 模块与包](#6-模块与包)
+    - [6.1 模块](#61-模块)
+    - [6.2 json模块的使用](#62-json模块的使用)
+    - [6.3 自定义模块](#63-自定义模块)
+    - [6.4 包](#64-包)
+    - [6.5 安装第三方包](#65-安装第三方包)
+- [第03章\_数据容器](#第03章_数据容器)
+  - [1. 列表list](#1-列表list)
+    - [1.1 列表的定义](#11-列表的定义)
+    - [1.2 列表的索引](#12-列表的索引)
+    - [1.3 列表的常用操作](#13-列表的常用操作)
+    - [1.4 列表的遍历](#14-列表的遍历)
+  - [2. 元组tuple](#2-元组tuple)
+    - [2.1 元组的定义](#21-元组的定义)
+    - [2.2 元组的常用操作](#22-元组的常用操作)
+    - [2.3 元组的遍历](#23-元组的遍历)
+  - [3. 字符串str](#3-字符串str)
+    - [3.1 三种定义方式](#31-三种定义方式)
+    - [3.2 字符串拼接](#32-字符串拼接)
+    - [3.3 字符串格式化](#33-字符串格式化)
+      - [方式一](#方式一)
+      - [方式二](#方式二)
+    - [3.4 字符串的常用操作](#34-字符串的常用操作)
+    - [3.5 字符串的遍历](#35-字符串的遍历)
+  - [4. 集合set](#4-集合set)
+    - [4.1 集合的定义](#41-集合的定义)
+    - [4.2 集合的常用操作](#42-集合的常用操作)
+    - [4.3 集合的遍历](#43-集合的遍历)
+    - [4.4 不可变集合 frozenset](#44-不可变集合-frozenset)
+  - [5. 字典dict](#5-字典dict)
+    - [5.1 字典的定义](#51-字典的定义)
+    - [5.2 字典的常用操作](#52-字典的常用操作)
+    - [5.3 字典的遍历](#53-字典的遍历)
+  - [6. 数据容器的其他操作](#6-数据容器的其他操作)
+    - [6.1 序列切片](#61-序列切片)
+    - [6.2 统计功能](#62-统计功能)
+    - [6.3 转换功能](#63-转换功能)
+    - [6.4 排序功能](#64-排序功能)
+    - [6.5 其他常用容器方法补充](#65-其他常用容器方法补充)
+  - [7. 推导式 Comprehension](#7-推导式-comprehension)
+    - [7.1 列表推导式](#71-列表推导式)
+    - [7.2 字典推导式](#72-字典推导式)
+    - [7.3 集合推导式](#73-集合推导式)
+  - [8. 五类数据容器对比](#8-五类数据容器对比)
+- [第04章\_文件操作](#第04章_文件操作)
+  - [1. 打开文件](#1-打开文件)
+  - [2. 读取文件](#2-读取文件)
+  - [3. 关闭文件](#3-关闭文件)
+  - [4. 写入文件](#4-写入文件)
+  - [5. pathlib — 更现代的文件路径操作](#5-pathlib--更现代的文件路径操作)
+- [第05章\_面向对象编程](#第05章_面向对象编程)
+  - [1. 类与对象](#1-类与对象)
+    - [1.1 类的定义](#11-类的定义)
+    - [1.2 魔术方法](#12-魔术方法)
+  - [2. 封装](#2-封装)
+    - [2.1 @property 装饰器 — Pythonic 的 getter/setter](#21-property-装饰器--pythonic-的-gettersetter)
+    - [2.2 @classmethod 与 @staticmethod](#22-classmethod-与-staticmethod)
+  - [3. 继承](#3-继承)
+    - [3.1 继承的基本语法](#31-继承的基本语法)
+    - [3.2 复写](#32-复写)
+  - [4. 多态](#4-多态)
+  - [5. 类型检查：isinstance() 和 issubclass()](#5-类型检查isinstance-和-issubclass)
+  - [6. dataclass — 简化数据类的定义](#6-dataclass--简化数据类的定义)
+- [第06章\_类型注解](#第06章_类型注解)
+  - [1. 类型注解简介](#1-类型注解简介)
+  - [2. 变量的类型注解](#2-变量的类型注解)
+  - [3. 函数的类型注解](#3-函数的类型注解)
+  - [4. Union类型注解](#4-union类型注解)
+- [第07章\_Python操作数据库](#第07章_python操作数据库)
+  - [1. 创建数据库连接](#1-创建数据库连接)
+  - [2. 增删改语句](#2-增删改语句)
+  - [3. 查询语句](#3-查询语句)
+- [第08章\_Python高阶技巧](#第08章_python高阶技巧)
+  - [1. 闭包](#1-闭包)
+  - [2. Python中实现常见的设计模式](#2-python中实现常见的设计模式)
+    - [2.1 装饰器模式](#21-装饰器模式)
+    - [2.2 单例模式](#22-单例模式)
+    - [2.3 工厂模式](#23-工厂模式)
+  - [3. 多线程编程](#3-多线程编程)
+  - [4. eval函数](#4-eval函数)
+  - [5. 浅拷贝和深拷贝](#5-浅拷贝和深拷贝)
+    - [5.1 可变类型](#51-可变类型)
+    - [5.2 不可变类型](#52-不可变类型)
+  - [6. 生成器与 yield](#6-生成器与-yield)
+  - [7. match-case 结构模式匹配](#7-match-case-结构模式匹配)
+  - [8. map() 与 filter()](#8-map-与-filter)
+  - [9. 解包运算符 \* 和 \*\*（函数调用侧）](#9-解包运算符--和-函数调用侧)
+  - [10. f-string 高级格式化](#10-f-string-高级格式化)
+
+---
+
 # 第01章_Python简介
 
 ## 1. Python安装
@@ -17,6 +149,40 @@
 ## 2. PyCharm安装
 
 PyCharm是Python最常用的集成开发工具（IDE），前往官网 https://www.jetbrains.com.cn/pycharm/download/?section=windows 下载PyCharm社区版即可。
+
+## 3. 虚拟环境 venv
+
+虚拟环境是 Python 项目隔离的基础设施。每个项目可以有自己独立的依赖包，互不冲突。
+
+**创建和激活虚拟环境**：
+
+```cmd
+# 创建虚拟环境（在项目目录下）
+python -m venv venv
+
+# 激活虚拟环境（Windows）
+venv\Scripts\activate
+
+# 激活虚拟环境（Mac / Linux）
+source venv/bin/activate
+
+# 退出虚拟环境
+deactivate
+```
+
+激活后，通过 `pip install` 安装的第三方包只会安装在当前虚拟环境中，不会影响系统全局 Python。
+
+**导出和安装依赖**：
+
+```cmd
+# 导出当前环境的依赖清单
+pip freeze > requirements.txt
+
+# 根据依赖清单一键安装
+pip install -r requirements.txt
+```
+
+> 建议：每个 Python 项目都创建独立的虚拟环境，并通过 `requirements.txt` 管理依赖。`venv/` 目录应写入 `.gitignore`，不纳入版本控制。
 
 
 
@@ -44,7 +210,7 @@ print("剩余金额：", money)
 - 多行注释使用三引号包裹，通常用于解释类、方法、或者整个python代码文件
 - 单行注释以`#`开头，起辅助说明作用
 
-注意：Python中变量、函数的命名推荐使用**下划线命名法**（多个单词用下划线连接，所有英文字母小写），例如`student_name`；而类的命名推荐使用**大驼峰命名法**，例如`UserInfoModel`
+注意：Python中变量、函数的命名推荐使用**下划线命名法**（多个单词用下划线连接，所有英文字母小写），例如`student_name`；而类的命名推荐使用**大驼峰命名法**，例如`UserInfoModel`。这些命名规范来源于 Python 官方的 **PEP 8** 风格指南，建议在编码时遵循 PEP 8 规范。
 
 ### 1.2 数据类型
 
@@ -121,9 +287,52 @@ print(3 ** 2)  # 9，乘方
 
 ### 2.3 比较运算符
 
-通过比较运算符进行比较运算会得到布尔类型的结果
+通过比较运算符进行比较运算会得到布尔类型的结果：
 
-`==`、`!=`、`>`、`<`、`>=`、`<=`
+```python
+a, b = 10, 20
+print(a == b)  # False
+print(a != b)  # True
+print(a > b)   # False
+print(a < b)   # True
+print(a >= b)  # False
+print(a <= b)  # True
+```
+
+**链式比较**：Python 支持链式比较，比其它语言更简洁直观：
+
+```python
+age = 25
+print(18 <= age <= 60)  # True
+print(0 < age < 18)     # False
+```
+
+#### is 与 == 的区别
+
+- `==` 比较两个对象的**值**是否相等
+- `is` 比较两个对象的**内存地址**是否相同（身份比较）
+
+```python
+a = [1, 2, 3]
+b = [1, 2, 3]
+c = a
+
+print(a == b)  # True  — 值相等
+print(a is b)  # False — 不同对象，地址不同
+print(a is c)  # True  — 同一对象
+```
+
+> 惯用法：与 `None` 比较时统一使用 `is`，即 `if x is None` 而不是 `if x == None`。
+
+#### 三元表达式（条件表达式）
+
+Python 中没有 `?:` 三目运算符，而是使用 `if-else` 表达式：
+
+```python
+x = 10
+result = "偶数" if x % 2 == 0 else "奇数"
+print(result)  # 偶数
+```
 
 ### 2.4 逻辑运算符
 
@@ -223,6 +432,73 @@ for i in range(5):
 1. `range(n)`获取一个从`0`开始、到`n`结束的数字序列（不含`n`本身）。例如，`range(5)`取得的数据是`[0,1,2,3,4]`
 2. `range(n1, n2)`获取一个从`n1`开始、到`n2`结束的数字序列（不含`n2`本身）。例如，`range(5, 10)`取得的数据是`[5,6,7,8,9]`
 3. `range(n1, n2, step)`获取一个从`n1`开始、到`n2`结束、以`step`为步长的数字序列（不含`n2`本身）。例如，`range(5, 10, 2)`取得的数据是`[5, 7, 9]`
+
+#### enumerate() — 同时获取索引和值
+
+`enumerate()` 可以在遍历可迭代对象时同时获取索引和值，非常常用：
+
+```python
+fruits = ["苹果", "香蕉", "橘子"]
+for index, fruit in enumerate(fruits):
+    print(f"第{index}个水果是{fruit}")
+# 输出：
+# 第0个水果是苹果
+# 第1个水果是香蕉
+# 第2个水果是橘子
+
+# 可通过 start 参数指定索引起始值
+for index, fruit in enumerate(fruits, start=1):
+    print(f"第{index}个水果是{fruit}")
+# 输出：
+# 第1个水果是苹果
+# 第2个水果是香蕉
+# 第3个水果是橘子
+```
+
+#### zip() — 并行迭代
+
+`zip()` 可以将多个可迭代对象"拉链式"地并行迭代：
+
+```python
+names = ["张三", "李四", "王五"]
+ages = [18, 20, 19]
+for name, age in zip(names, ages):
+    print(f"{name}今年{age}岁")
+# 输出：
+# 张三今年18岁
+# 李四今年20岁
+# 王五今年19岁
+```
+
+> 说明：`zip()` 按最短的可迭代对象截断。如果需要严格等长校验，可传入 `strict=True`（Python 3.10+）。
+
+#### for-else 与 while-else
+
+Python 的循环有一个独特的 `else` 子句：当循环**正常结束**（即未被 `break` 中断）时，会执行 `else` 块。
+
+```python
+# for-else 示例：查找元素
+nums = [1, 3, 5, 7]
+target = 4
+for n in nums:
+    if n == target:
+        print("找到了")
+        break
+else:
+    print("未找到")  # 未被break时执行
+# 输出：未找到
+```
+
+```python
+# while-else 示例
+count = 3
+while count > 0:
+    print(count)
+    count -= 1
+else:
+    print("循环正常结束")
+# 输出：3 2 1 循环正常结束
+```
 
 ## 4. 函数
 
@@ -863,6 +1139,9 @@ print(message)
 | 字符串.index(字符串)             | 从前往后，查找此字符串第一个匹配项的下标，找不到则报错       |
 | 字符串.replace(字符串1, 字符串2) | 将字符串中的全部字符串1替换为字符串2后返回一个新的字符串。注意，原字符串并不会被修改。 |
 | 字符串.split(分隔符)             | 按照指定分隔符划分字符串，并存入一个列表中返回               |
+| "分隔符".join(列表)              | 用指定分隔符将列表中的字符串元素拼接成一个新字符串           |
+| 字符串.startswith(字符串)        | 判断字符串是否以指定前缀开头，返回布尔值                     |
+| 字符串.endswith(字符串)          | 判断字符串是否以指定后缀结尾，返回布尔值                     |
 | 字符串.strip()                   | 移除首尾的空格和换行符后返回一个新的字符串                   |
 | 字符串.strip(字符串)             | 移除首尾的指定字符串后返回一个新的字符串                     |
 | 字符串.count(字符串)             | 统计字符串中某字符串的出现次数                               |
@@ -886,6 +1165,15 @@ print(s.strip("$$"))    # hello, world
 
 print(s.count("l"))     # 3
 print(len(s))           # 16
+
+# join() — 用分隔符拼接列表
+words = ["Hello", "World"]
+print("-".join(words))          # Hello-World
+
+# startswith() / endswith()
+filename = "photo.jpg"
+print(filename.startswith("photo"))  # True
+print(filename.endswith(".jpg"))     # True
 ```
 
 ### 3.5 字符串的遍历
@@ -947,6 +1235,20 @@ print(len(set2))                # 2
 set1 = {1, 2, 3, 4, 5}
 for element in set1:
     print(element)
+```
+
+### 4.4 不可变集合 frozenset
+
+`frozenset` 是不可变的集合类型——创建后不能再添加或删除元素。由于它是不可变的，可以作为字典的 key 或另一个集合的元素：
+
+```python
+fs = frozenset([1, 2, 3])
+print(type(fs))  # <class 'frozenset'>
+# fs.add(4)      # 报错：AttributeError
+
+# frozenset 可作为字典的 key（普通 set 不可以）
+d = {frozenset([1, 2]): "group_a", frozenset([3, 4]): "group_b"}
+print(d[frozenset([1, 2])])  # group_a
 ```
 
 ## 5. 字典dict
@@ -1057,6 +1359,100 @@ print(sorted(set1))                # [0, 1, 2, 5]
 print(sorted(set1, reverse=True))  # [5, 2, 1, 0]
 ```
 
+> 补充说明：`list.sort()` 是列表的**原地排序**方法（修改原列表，返回 None），而 `sorted()` 是内置函数（**返回新列表**，原容器不变）。`sorted()` 可作用于任何可迭代对象，而 `sort()` 只属于列表。
+
+### 6.5 其他常用容器方法补充
+
+**列表的 `sort()` vs `sorted()`**：
+
+```python
+nums = [3, 1, 2]
+nums.sort()         # 原地排序，nums 变为 [1, 2, 3]，返回 None
+print(nums)         # [1, 2, 3]
+print(sorted(nums)) # [1, 2, 3]，返回新列表，原列表不变
+```
+
+**字典的 `get()` 方法**（安全取值，key 不存在时返回默认值而不报错）：
+
+```python
+d = {"name": "张三"}
+print(d.get("name"))      # 张三
+print(d.get("age", "未知"))  # 未知（key 不存在时返回默认值）
+```
+
+**字典的 `items()` / `values()` 方法**（遍历键值对的推荐方式）：
+
+```python
+d = {"k1": 111, "k2": 222, "k3": 333}
+for key, value in d.items():
+    print(f"key={key}, value={value}")
+```
+
+## 7. 推导式 Comprehension
+
+推导式是 Python 最具标志性的特性之一，可以用**一行简洁语法**创建列表、字典、集合。
+
+### 7.1 列表推导式
+
+```python
+# 基本格式：[表达式 for 临时变量 in 可迭代对象 if 条件]
+
+# 示例1：生成平方列表
+squares = [x**2 for x in range(6)]
+print(squares)  # [0, 1, 4, 9, 16, 25]
+
+# 示例2：带条件过滤
+evens = [x for x in range(10) if x % 2 == 0]
+print(evens)    # [0, 2, 4, 6, 8]
+
+# 示例3：嵌套循环
+pairs = [(x, y) for x in range(2) for y in "ab"]
+print(pairs)    # [(0, 'a'), (0, 'b'), (1, 'a'), (1, 'b')]
+
+# 示例4：if-else 三元表达式
+labels = ["偶数" if x % 2 == 0 else "奇数" for x in range(5)]
+print(labels)   # ['偶数', '奇数', '偶数', '奇数', '偶数']
+```
+
+### 7.2 字典推导式
+
+```python
+# 基本格式：{键表达式: 值表达式 for 临时变量 in 可迭代对象}
+
+squares_dict = {x: x**2 for x in range(4)}
+print(squares_dict)  # {0: 0, 1: 1, 2: 4, 3: 9}
+
+# 从两个列表创建字典
+keys = ["name", "age", "gender"]
+values = ["张三", 18, "男"]
+d = {k: v for k, v in zip(keys, values)}
+print(d)  # {'name': '张三', 'age': 18, 'gender': '男'}
+```
+
+### 7.3 集合推导式
+
+```python
+# 基本格式：{表达式 for 临时变量 in 可迭代对象}
+
+# 去重并求平方
+nums = [1, 2, 2, 3, 3, 4]
+unique_squares = {x**2 for x in nums}
+print(unique_squares)  # {1, 4, 9, 16}
+```
+
+> 说明：推导式不仅简洁，而且通常比等价的 for 循环**执行更快**。但嵌套过深时会降低可读性，建议控制在 2 层以内。
+
+## 8. 五类数据容器对比
+
+| 特性     | 列表 list | 元组 tuple | 集合 set | 字典 dict | 字符串 str |
+| -------- | --------- | ---------- | -------- | --------- | ---------- |
+| 有序性   | 有序      | 有序       | 无序     | 无序（3.7+有序） | 有序 |
+| 可变性   | 可变      | 不可变     | 可变     | 可变      | 不可变     |
+| 重复元素 | 允许      | 允许       | 不允许   | key 不重复 | 允许     |
+| 索引访问 | 支持      | 支持       | 不支持   | key 访问  | 支持       |
+| 元素类型 | 任意      | 任意       | 不可变类型（可哈希） | key 不可变 | 字符 |
+| 典型场景 | 有序集合  | 常量/坐标  | 去重/集合运算 | 键值映射 | 文本处理 |
+
 
 
 # 第04章_文件操作
@@ -1137,6 +1533,34 @@ file.close()
 - 调用`file.flush()`后，数据才会**真正**写入文件，即从内存缓冲区刷新到硬盘。
 - `file.close()`会附带`file.flush()`方法的功能。
 
+## 5. pathlib — 更现代的文件路径操作
+
+Python 3.4+ 引入了 `pathlib` 模块，提供面向对象的路径操作方式，比传统的 `os.path` 更优雅、更易读写：
+
+```python
+from pathlib import Path
+
+# 构建路径（自动适配操作系统分隔符）
+p = Path("E:/demo.txt")
+
+# 常用操作
+print(p.name)        # demo.txt（文件名）
+print(p.suffix)      # .txt（后缀名）
+print(p.stem)        # demo（无后缀的文件名）
+print(p.parent)      # E:\ （父目录）
+print(p.exists())    # True/False（文件是否存在）
+
+# 读写文件（with 无需手动 open）
+content = p.read_text(encoding="UTF-8")       # 读取全部文本
+p.write_text("hello", encoding="UTF-8")       # 写入文本
+
+# 遍历目录
+for f in Path("E:/").iterdir():
+    print(f)
+```
+
+> 推荐在新项目中使用 `pathlib` 替代 `os.path` 和手动 `open()` 进行路径操作。
+
 
 
 # 第05章_面向对象编程
@@ -1199,6 +1623,23 @@ class Student:
 student = Student()
 print(student)  # Student(name=张三, age=18)
 ```
+
+**`__repr__`方法**：`__repr__` 与 `__str__` 类似，但面向**开发者调试**。`print()` 优先调用 `__str__`，若未定义则回退到 `__repr__`；在交互式环境中直接输入变量名则优先调用 `__repr__`。推荐至少实现 `__repr__`：
+
+```python
+class Student:
+    name = "张三"
+    age = 18
+
+    def __repr__(self):
+        return f"Student(name={self.name!r}, age={self.age})"
+
+
+student = Student()
+print(repr(student))  # Student(name='张三', age=18)
+```
+
+> 说明：`{self.name!r}` 中的 `!r` 会自动给字符串加上引号，使输出更清晰。
 
 **`__lt__`方法**：默认两个对象是无法进行大小比较的，我们可以通过重写`__lt__`方法来自定义`<`的比较逻辑。除此之外，重写完该方法后，也能进行`>`的比较。
 
@@ -1265,6 +1706,89 @@ print(student1 == student2)  # True
 ## 2. 封装
 
 封装的思想其实就是合理隐藏、合理暴露。通过定义私有成员变量、私有成员方法，就可以实现封装的思想。在Python中，以双下划线`__`开头命名的就代表私有成员变量、私有成员方法。
+
+```python
+class Student:
+    def __init__(self, name, age):
+        self.name = name       # 公有成员
+        self.__age = age       # 私有成员
+
+    # 提供公开方法访问私有成员
+    def get_age(self):
+        return self.__age
+
+    def set_age(self, age):
+        if age > 0:
+            self.__age = age
+        else:
+            raise ValueError("年龄必须为正数")
+
+
+stu = Student("张三", 18)
+print(stu.get_age())  # 18
+stu.set_age(20)
+# print(stu.__age)     # 报错：AttributeError
+```
+
+### 2.1 @property 装饰器 — Pythonic 的 getter/setter
+
+比起手写 `get_xxx()` / `set_xxx()`，Python 提供了更优雅的 `@property` 装饰器，让我们可以像访问属性一样调用方法：
+
+```python
+class Student:
+    def __init__(self, name, age):
+        self.name = name
+        self.__age = age
+
+    @property
+    def age(self):
+        """获取年龄"""
+        return self.__age
+
+    @age.setter
+    def age(self, value):
+        """设置年龄，附带校验"""
+        if value < 0:
+            raise ValueError("年龄必须为正数")
+        self.__age = value
+
+
+stu = Student("张三", 18)
+print(stu.age)    # 18 — 像属性一样读取，实际调用了 age() 方法
+stu.age = 20      # 像属性一样赋值，实际调用了 age.setter
+```
+
+### 2.2 @classmethod 与 @staticmethod
+
+除了普通的成员方法（第一个参数是 `self`），Python 还有两种特殊方法：
+
+```python
+class Calculator:
+    factor = 10  # 类变量
+
+    def instance_method(self, x):
+        """普通方法：操作实例数据"""
+        return x * self.factor
+
+    @classmethod
+    def class_method(cls, x):
+        """类方法：第一个参数是类本身(cls)，可访问类变量"""
+        return x * cls.factor
+
+    @staticmethod
+    def static_method(x):
+        """静态方法：无需 self 或 cls，本质是放在类里的普通函数"""
+        return x * 2
+
+
+calc = Calculator()
+print(calc.instance_method(5))  # 50
+print(Calculator.class_method(5))  # 50（可直接通过类调用）
+print(Calculator.static_method(5)) # 10
+```
+
+- `@classmethod`：常用于定义**工厂方法**（创建对象的替代构造器）
+- `@staticmethod`：常用于组织**工具函数**到类的命名空间下
 
 ## 3. 继承
 
@@ -1373,6 +1897,67 @@ test(Cat())  # 喵喵喵
 ```
 
 上述Animal是一个抽象类（含有抽象方法的类），其中speak()是一个抽象方法（方法体是空实现的，使用pass占位），然后由子类去实现该抽象方法，从而达到了多态的效果。
+
+## 5. 类型检查：isinstance() 和 issubclass()
+
+前面我们使用 `type()` 来检查类型，但 `isinstance()` 更推荐使用，因为它会**考虑继承关系**：
+
+```python
+class Animal: pass
+class Dog(Animal): pass
+
+dog = Dog()
+
+# type() 不识别继承关系
+print(type(dog) == Animal)    # False — 严格比较
+
+# isinstance() 识别继承关系
+print(isinstance(dog, Animal)) # True — dog 也是 Animal
+print(isinstance(dog, Dog))    # True
+print(isinstance(123, int))    # True
+print(isinstance(123, (int, float)))  # True — 可以是多个类型之一
+```
+
+`issubclass()` 用于判断类之间的继承关系：
+
+```python
+print(issubclass(Dog, Animal))   # True
+print(issubclass(Dog, object))   # True（所有类都继承自 object）
+```
+
+> 推荐：在判断类型时优先使用 `isinstance()` 而非 `type()`，除非确实需要严格类型匹配。
+
+## 6. dataclass — 简化数据类的定义
+
+Python 3.7+ 引入的 `dataclass` 装饰器，可自动生成 `__init__`、`__repr__`、`__eq__` 等魔术方法，极大地简化数据类的写法：
+
+```python
+from dataclasses import dataclass
+
+@dataclass
+class Student:
+    name: str
+    age: int
+    score: float = 0.0  # 带默认值的字段放最后
+
+
+# 自动生成 __init__、__repr__、__eq__
+stu1 = Student("张三", 18)
+stu2 = Student("张三", 18)
+print(stu1)              # Student(name='张三', age=18, score=0.0)
+print(stu1 == stu2)      # True（自动按字段值比较）
+
+# 也可手动覆盖默认行为
+@dataclass
+class Student:
+    name: str
+    age: int
+
+    def __str__(self):
+        return f"学生：{self.name}"
+```
+
+对比传统写法（需手写 `__init__`、`__repr__`、`__eq__`），`@dataclass` 能节省大量样板代码，是定义数据模型的首选方式。
 
 
 
@@ -1746,5 +2331,140 @@ print(id(arr))              # 2358694435200
 print(id(arr_assign))       # 2358694435200
 print(id(arr_copy))         # 2358694435200
 print(id(arr_deepcopy))     # 2358694435200
+```
+
+## 6. 生成器与 yield
+
+生成器是一种特殊的迭代器，使用 `yield` 关键字**惰性**地逐个生成值，而不是一次性将所有值加载到内存中。这对于处理大数据集非常有用。
+
+```python
+# 定义一个生成器函数
+def count_up_to(n):
+    i = 1
+    while i <= n:
+        yield i       # yield 会"暂停"函数，保存当前状态
+        i += 1
+
+gen = count_up_to(3)
+print(type(gen))       # <class 'generator'>
+print(next(gen))       # 1（每次next恢复执行，直到下一个yield）
+print(next(gen))       # 2
+print(next(gen))       # 3
+# print(next(gen))     # 报错：StopIteration（生成完毕）
+
+# 生成器可以直接用于 for 循环
+for num in count_up_to(5):
+    print(num, end=' ')  # 1 2 3 4 5
+```
+
+**生成器表达式**（类似推导式，但用圆括号）：
+
+```python
+# 推导式 → 一次性生成列表（占用内存）
+squares_list = [x**2 for x in range(1000000)]
+
+# 生成器表达式 → 惰性生成，节省内存
+squares_gen = (x**2 for x in range(1000000))
+print(next(squares_gen))  # 0
+print(next(squares_gen))  # 1
+```
+
+> `range()` 本质上就是一个惰性序列，它的行为类似生成器，在 Python 3 中不会一次性创建列表。
+
+## 7. match-case 结构模式匹配
+
+Python 3.10+ 引入的 `match-case` 语句，比 if-elif-else 链更强大、更易读：
+
+```python
+# 基础匹配
+status = 404
+match status:
+    case 200:
+        print("请求成功")
+    case 404:
+        print("页面未找到")
+    case 500:
+        print("服务器错误")
+    case _:               # _ 是通配符，匹配所有情况
+        print("其他状态")
+
+# 数据结构解构匹配
+point = (1, 0)
+match point:
+    case (0, 0):
+        print("原点")
+    case (0, y):
+        print(f"在 Y 轴上，y={y}")
+    case (x, 0):
+        print(f"在 X 轴上，x={x}")
+    case (x, y):
+        print(f"坐标：({x}, {y})")
+# 输出：在 X 轴上，x=1
+
+# 字典匹配与 guard 条件
+user = {"name": "张三", "age": 18}
+match user:
+    case {"name": name, "age": age} if age >= 18:
+        print(f"{name}已是成年人")
+    case {"name": name}:
+        print(f"{name}信息不完整")
+```
+
+## 8. map() 与 filter()
+
+`map()` 和 `filter()` 是 Python 函数式编程的基础工具：
+
+```python
+# map() — 对每个元素应用函数
+nums = [1, 2, 3, 4]
+squares = list(map(lambda x: x**2, nums))
+print(squares)  # [1, 4, 9, 16]
+
+# filter() — 按条件过滤元素
+evens = list(filter(lambda x: x % 2 == 0, nums))
+print(evens)    # [2, 4]
+```
+
+> 说明：推导式通常比 `map()`/`filter()` 更 Pythonic、更易读，但 `map()`/`filter()` 返回的是惰性迭代器，适合搭配大数据管道使用。
+
+## 9. 解包运算符 * 和 **（函数调用侧）
+
+笔记 4.4 中介绍了 `*args` 和 `**kwargs` 用于函数**定义**，其实 `*` 和 `**` 也可以在函数**调用**时解包序列/字典：
+
+```python
+def greet(name, age):
+    print(f"{name}今年{age}岁")
+
+# * 解包列表/元组
+info = ["张三", 18]
+greet(*info)  # 等价于 greet("张三", 18)
+
+# ** 解包字典
+info_dict = {"name": "李四", "age": 20}
+greet(**info_dict)  # 等价于 greet(name="李四", age=20)
+```
+
+## 10. f-string 高级格式化
+
+f-string 不仅支持变量插入，还支持表达式、格式化说明符和调试模式：
+
+```python
+name = "张三"
+age = 18
+score = 92.567
+
+# 表达式嵌入
+print(f"{name}明年{age + 1}岁")
+
+# 数字格式化（宽度、精度、补零）
+print(f"PI ≈ {3.1415926:.2f}")   # PI ≈ 3.14
+print(f"学号：{15:04d}")          # 学号：0015
+print(f"得分：{score:.1f}分")     # 得分：92.6分
+
+# 对齐与填充
+print(f"{'标题':*^20}")           # ********标题********
+
+# 调试速记（Python 3.8+）
+print(f"{name=}, {age=}")         # name='张三', age=18
 ```
 
