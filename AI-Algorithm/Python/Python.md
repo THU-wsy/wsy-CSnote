@@ -991,6 +991,7 @@ print(list1[-1])  # True
 
 | 使用方式                | 作用                                                 |
 | ----------------------- | ---------------------------------------------------- |
+| `x in 列表`             | 判断 x 是否在列表中（O(n) 线性查找）                  |
 | 列表.append(元素)       | 向列表尾部追加一个元素                               |
 | 列表.extend(容器)       | 将容器中的所有元素依次追加到列表尾部                 |
 | 列表.insert(下标, 元素) | 在指定下标处插入指定元素                             |
@@ -1015,6 +1016,10 @@ list1.remove(3)         # [1, 2, 0, 1]
 print(list1.index(1))   # 0
 print(list1.count(1))   # 2
 print(len(list1))       # 4
+
+# in 判断元素是否在列表中
+print(2 in list1)       # True
+print(99 in list1)      # False
 ```
 
 ### 1.4 列表的遍历
@@ -1052,6 +1057,7 @@ print(type(tuple1))  # <class 'tuple'>
 
 | 使用方式         | 作用                                                 |
 | ---------------- | ---------------------------------------------------- |
+| `x in 元组`      | 判断 x 是否在元组中（与列表相同，O(n) 线性查找）      |
 | 元组.index(元素) | 从前往后，查找此元素第一个匹配项的下标，找不到则报错 |
 | 元组.count(元素) | 统计此元素在元组中出现的次数                         |
 | len(元组)        | 返回元组中的元素个数                                 |
@@ -1135,6 +1141,7 @@ print(message)
 
 | 使用方式                         | 作用                                                         |
 | -------------------------------- | ------------------------------------------------------------ |
+| `子串 in 字符串`                 | 判断字符串中是否包含该子串，返回布尔值                       |
 | 字符串[下标]                     | 根据下标索引读取字符                                         |
 | 字符串.index(字符串)             | 从前往后，查找此字符串第一个匹配项的下标，找不到则报错       |
 | 字符串.replace(字符串1, 字符串2) | 将字符串中的全部字符串1替换为字符串2后返回一个新的字符串。注意，原字符串并不会被修改。 |
@@ -1174,6 +1181,10 @@ print("-".join(words))          # Hello-World
 filename = "photo.jpg"
 print(filename.startswith("photo"))  # True
 print(filename.endswith(".jpg"))     # True
+
+# in 判断子串是否在字符串中（非常常用）
+print("hello" in s)     # True
+print("world" not in s) # False
 ```
 
 ### 3.5 字符串的遍历
@@ -1204,6 +1215,7 @@ print(type(set1))  # <class 'set'>
 
 | 使用方式                       | 作用                                                       |
 | ------------------------------ | ---------------------------------------------------------- |
+| `x in 集合`                    | 判断 x 是否为集合的成员（比列表查找快，O(1)）               |
 | 集合.add(元素)                 | 集合内添加元素                                             |
 | 集合.remove(元素)              | 移除集合内指定的元素                                       |
 | 集合.pop()                     | 从集合中随机移除一个元素并返回                             |
@@ -1220,6 +1232,10 @@ set1 = {1, 2, 3}
 set1.add(4)       # {1, 2, 3, 4}
 set1.remove(4)    # {1, 2, 3}
 set1.pop()        # {2, 3}
+
+# in 判断元素是否在集合中（O(1) 哈希查找，比列表快很多）
+print(2 in set1)   # True
+print(5 in set1)   # False
 
 set2 = {1, 2, 3}
 print(set2.difference({3, 4}))  # {1, 2}
@@ -1278,6 +1294,7 @@ print(type(dict1))  # <class 'dict'>
 | 字典[key]=value | 添加或更新键值对                             |
 | 字典.pop(key)   | 从字典中删除指定的key-value对，并返回该value |
 | 字典.clear()    | 清空字典                                     |
+| `x in 字典`     | 判断 x 是否为字典的 **key**     |
 | 字典.keys()     | 获取字典的全部key                            |
 | len(字典)       | 返回字典中的元素个数                         |
 
@@ -1290,6 +1307,10 @@ dict1["k4"] = 444
 dict1.pop("k3")
 print(dict1.keys())  # dict_keys(['k1', 'k2', 'k4'])
 print(len(dict1))    # 3
+
+# in 运算符判断的是 key，不是 value
+print("k1" in dict1)  # True  — "k1" 是 key
+print(111 in dict1)   # False — 111 是 value，不是 key
 ```
 
 ### 5.3 字典的遍历
@@ -1372,20 +1393,44 @@ print(nums)         # [1, 2, 3]
 print(sorted(nums)) # [1, 2, 3]，返回新列表，原列表不变
 ```
 
-**字典的 `get()` 方法**（安全取值，key 不存在时返回默认值而不报错）：
+**字典的 `get()` 方法 vs 直接索引**：
 
 ```python
 d = {"name": "张三"}
-print(d.get("name"))      # 张三
-print(d.get("age", "未知"))  # 未知（key 不存在时返回默认值）
+
+# dict[key] — key 不存在时抛出 KeyError
+print(d["name"])    # 张三
+# print(d["age"])   # KeyError: 'age'  ← 直接报错！
+
+# dict.get(key) — key 不存在时返回 None 或自定义默认值（不报错）
+print(d.get("name"))       # 张三
+print(d.get("age"))        # None（key 不存在，返回 None）
+print(d.get("age", "未知"))  # 未知（使用自定义默认值）
 ```
 
-**字典的 `items()` / `values()` 方法**（遍历键值对的推荐方式）：
+> 小结：`dict[key]` 适合**确定 key 一定存在**的场景；`dict.get()` 适合**key 可能不存在**的场景，更安全。
+
+**字典的 `items()` / `values()` / `keys()` 方法**：
 
 ```python
 d = {"k1": 111, "k2": 222, "k3": 333}
+
+# items() — 遍历键值对（最常用）
 for key, value in d.items():
     print(f"key={key}, value={value}")
+
+# values() — 只遍历值
+for value in d.values():
+    print(value)  # 111  222  333
+
+# keys() — 只遍历键（与直接 for key in d 等价）
+for key in d.keys():
+    print(key)  # k1  k2  k3
+
+# 常用操作示例
+print(list(d.values()))  # [111, 222, 333] — 转列表
+print(sum(d.values()))   # 666 — 直接求和
+print(max(d.values()))   # 333 — 取最大值
 ```
 
 ## 7. 推导式 Comprehension
@@ -2467,4 +2512,63 @@ print(f"{'标题':*^20}")           # ********标题********
 # 调试速记（Python 3.8+）
 print(f"{name=}, {age=}")         # name='张三', age=18
 ```
+
+## 11. collections.defaultdict — 带默认值的字典
+
+普通字典访问不存在的 key 会报 `KeyError`，而 `defaultdict` 在 key 不存在时会**自动用工厂函数创建默认值**，省去手动初始化的麻烦：
+
+```python
+from collections import defaultdict
+
+# 场景1：分组（默认值为空列表）
+mp = defaultdict(list)
+words = ["eat", "tea", "tan"]
+for w in words:
+    key = "".join(sorted(w))
+    mp[key].append(w)      # key 不存在时自动创建 []，无需 if key not in mp
+print(dict(mp))            # {'aet': ['eat', 'tea'], 'ant': ['tan']}
+
+# 场景2：计数（默认值为 0）
+counter = defaultdict(int)
+for ch in "abracadabra":
+    counter[ch] += 1       # 首次访问自动初始化为 0
+print(dict(counter))       # {'a': 5, 'b': 2, 'r': 2, 'c': 1, 'd': 1}
+
+# 场景3：集合去重（默认值为空集合）
+mp = defaultdict(set)
+mp["a"].add(1)
+mp["a"].add(1)             # 自动去重
+print(dict(mp))            # {'a': {1}}
+```
+
+常见工厂函数：`list`（空列表）、`int`（0）、`set`（空集合）、`float`（0.0）、`str`（空字符串）、自定义 `lambda: "默认值"`。
+
+## 12. 常用内置函数补充
+
+### ord() 与 chr() — 字符与码点互转
+
+```python
+print(ord("a"))   # 97  — 字符 → Unicode 码点
+print(ord("中"))  # 20013
+print(chr(97))    # 'a' — 码点 → 字符
+print(chr(20013)) # '中'
+
+# 常见用法：将字母映射到 0~25
+for ch in "abc":
+    print(ord(ch) - ord("a"))  # 0, 1, 2
+```
+
+> `ord(ch) - ord("a")` 是 LeetCode 字母类题目的经典技巧，将 `'a'~'z'` 映射为数组下标 `0~25`。
+
+### 列表 * 运算符 — 快速创建重复元素列表
+
+```python
+print([0] * 5)        # [0, 0, 0, 0, 0]
+print([1, 2] * 3)     # [1, 2, 1, 2, 1, 2]
+
+# 常见用法：创建固定长度的计数数组
+counts = [0] * 26     # 26 个 0，用于统计字母频率
+```
+
+> ⚠️ `*` 复制的是引用。如果元素是可变对象（如 `[[]] * 3`），三个子列表指向同一对象，修改一个会影响全部。对不可变元素（`int`、`str`、`tuple`）则安全。
 
