@@ -1139,20 +1139,21 @@ print(message)
 
 ### 3.4 字符串的常用操作
 
-| 使用方式                         | 作用                                                         |
-| -------------------------------- | ------------------------------------------------------------ |
-| `子串 in 字符串`                 | 判断字符串中是否包含该子串，返回布尔值                       |
-| 字符串[下标]                     | 根据下标索引读取字符                                         |
-| 字符串.index(字符串)             | 从前往后，查找此字符串第一个匹配项的下标，找不到则报错       |
+| 使用方式                   | 作用                                                        |
+| -------------------------- | ----------------------------------------------------------- |
+| `子串 in 字符串`           | 判断字符串中是否包含该子串，返回布尔值                      |
+| 字符串[下标]               | 根据下标索引读取字符                                        |
+| 字符串[起始:结束:步长]     | 切片截取子串（与列表切片语法相同）                |
+| 字符串.index(字符串)       | 从前往后，查找此字符串第一个匹配项的下标，找不到则报错      |
 | 字符串.replace(字符串1, 字符串2) | 将字符串中的全部字符串1替换为字符串2后返回一个新的字符串。注意，原字符串并不会被修改。 |
-| 字符串.split(分隔符)             | 按照指定分隔符划分字符串，并存入一个列表中返回               |
-| "分隔符".join(列表)              | 用指定分隔符将列表中的字符串元素拼接成一个新字符串           |
-| 字符串.startswith(字符串)        | 判断字符串是否以指定前缀开头，返回布尔值                     |
-| 字符串.endswith(字符串)          | 判断字符串是否以指定后缀结尾，返回布尔值                     |
-| 字符串.strip()                   | 移除首尾的空格和换行符后返回一个新的字符串                   |
-| 字符串.strip(字符串)             | 移除首尾的指定字符串后返回一个新的字符串                     |
-| 字符串.count(字符串)             | 统计字符串中某字符串的出现次数                               |
-| len(字符串)                      | 统计字符串的字符个数                                         |
+| 字符串.split(分隔符)       | 按照指定分隔符划分字符串，并存入一个列表中返回              |
+| "分隔符".join(列表)        | 用指定分隔符将列表中的字符串元素拼接成一个新字符串          |
+| 字符串.startswith(字符串)  | 判断字符串是否以指定前缀开头，返回布尔值                    |
+| 字符串.endswith(字符串)    | 判断字符串是否以指定后缀结尾，返回布尔值                    |
+| 字符串.strip()             | 移除首尾的空格和换行符后返回一个新的字符串                  |
+| 字符串.strip(字符串)       | 移除首尾的指定字符串后返回一个新的字符串                    |
+| 字符串.count(字符串)       | 统计字符串中某字符串的出现次数                              |
+| len(字符串)                | 统计字符串的字符个数                                        |
 
 示例：
 
@@ -1371,6 +1372,7 @@ print(list1[3:1:-1])  # [3, 2]
 
 - `sorted(容器)`：升序
 - `sorted(容器, reverse=True)`：降序
+- `sorted(容器, key=函数)`：**自定义排序规则**
 
 示例：
 
@@ -1380,7 +1382,76 @@ print(sorted(set1))                # [0, 1, 2, 5]
 print(sorted(set1, reverse=True))  # [5, 2, 1, 0]
 ```
 
-> 补充说明：`list.sort()` 是列表的**原地排序**方法（修改原列表，返回 None），而 `sorted()` 是内置函数（**返回新列表**，原容器不变）。`sorted()` 可作用于任何可迭代对象，而 `sort()` 只属于列表。
+#### key 参数 — 自定义排序规则
+
+`key` 接收一个函数，在排序前对**每个元素**调用一次，按返回值排序：
+
+```python
+# 按字符串长度排序
+words = ["apple", "kiwi", "banana", "pear"]
+print(sorted(words, key=len))
+# ['kiwi', 'pear', 'apple', 'banana']
+
+# 按元组第二个元素排序
+pairs = [(1, 3), (2, 1), (4, 2)]
+print(sorted(pairs, key=lambda x: x[1]))
+# [(2, 1), (4, 2), (1, 3)]
+
+# 按对象属性排序
+students = [{"name": "张三", "age": 20}, {"name": "李四", "age": 18}]
+print(sorted(students, key=lambda s: s["age"]))
+# [{'name': '李四', 'age': 18}, {'name': '张三', 'age': 20}]
+```
+
+**多条件排序**：返回一个元组，先按第一个字段排，相同时按第二个字段：
+
+```python
+data = [("张三", 85), ("李四", 92), ("王五", 85), ("赵六", 78)]
+# 按分数降序，分数相同按姓名升序
+print(sorted(data, key=lambda x: (-x[1], x[0])))
+# [('李四', 92), ('张三', 85), ('王五', 85), ('赵六', 78)]
+#          ↓ 用负号实现降序，只对数字有效
+```
+
+> 技巧：`-x[1]` 用负号翻转数字排序方向。对字符串需要降序时，可以用 `reverse=True` 搭配 `key`，但此时所有字段都会反转。更精细的控制可用 `key=lambda x: (x[0], -x[1])` 这种元组方式。
+
+> 补充说明：`list.sort()` 是列表的**原地排序**方法（修改原列表，返回 None），而 `sorted()` 是内置函数（**返回新列表**，原容器不变）。`sorted()` 可作用于任何可迭代对象，而 `sort()` 只属于列表。两者都支持 `key` 和 `reverse` 参数。
+
+#### reversed() — 反向迭代器
+
+`reversed()` 返回一个**惰性反向迭代器**，可用于任何序列（列表、元组、字符串、range 等），不修改原容器：
+
+```python
+lst = [1, 2, 3]
+print(list(reversed(lst)))  # [3, 2, 1]
+print(tuple(reversed(lst))) # (3, 2, 1)
+
+# 对字符串 — 反向迭代字符
+for ch in reversed("abc"):
+    print(ch)               # c  b  a
+
+# 常用：配合 join 反转字符串
+print("".join(reversed("abc")))  # "cba"
+```
+
+**`reversed()` vs `[::-1]` 切片**：
+
+| 方式 | 返回值 | 时机 | 适用场景 |
+|------|--------|------|---------|
+| `lst[::-1]` | 立即创建新列表/字符串 | 急切 | 需要结果存变量、对结果再切片 |
+| `reversed(lst)` | 惰性迭代器 | 延迟 | 只遍历一次、大序列、省内存 |
+
+```python
+# 对比
+s = "hello"
+print(s[::-1])            # "olleh" — 直接得到字符串
+
+r = reversed(s)
+print(r)                  # <reversed object> — 迭代器
+print("".join(r))         # "olleh" — 消费迭代器得到结果
+```
+
+> `reversed()` 是纯粹的**反转**，和排序无关。如果需要降序排列，用 `sorted(容器, reverse=True)`。
 
 ### 6.5 其他常用容器方法补充
 
@@ -2513,9 +2584,11 @@ print(f"{'标题':*^20}")           # ********标题********
 print(f"{name=}, {age=}")         # name='张三', age=18
 ```
 
-## 11. collections.defaultdict — 带默认值的字典
+## 11. collections 模块常用类型
 
-普通字典访问不存在的 key 会报 `KeyError`，而 `defaultdict` 在 key 不存在时会**自动用工厂函数创建默认值**，省去手动初始化的麻烦：
+`collections` 是 Python 标准库中的容器扩展模块，提供了比内置容器更专业的工具。
+
+### 11.1 defaultdict — 带默认值的字典
 
 ```python
 from collections import defaultdict
@@ -2526,22 +2599,119 @@ words = ["eat", "tea", "tan"]
 for w in words:
     key = "".join(sorted(w))
     mp[key].append(w)      # key 不存在时自动创建 []，无需 if key not in mp
-print(dict(mp))            # {'aet': ['eat', 'tea'], 'ant': ['tan']}
 
 # 场景2：计数（默认值为 0）
 counter = defaultdict(int)
 for ch in "abracadabra":
     counter[ch] += 1       # 首次访问自动初始化为 0
-print(dict(counter))       # {'a': 5, 'b': 2, 'r': 2, 'c': 1, 'd': 1}
 
 # 场景3：集合去重（默认值为空集合）
 mp = defaultdict(set)
 mp["a"].add(1)
-mp["a"].add(1)             # 自动去重
-print(dict(mp))            # {'a': {1}}
+mp["a"].add(1)
+# defaultdict(set, {'a': {1}})
+
+# 场景4：自定义默认值
+mp = defaultdict(lambda : 1)
+print(mp["a"])  # 1
 ```
 
-常见工厂函数：`list`（空列表）、`int`（0）、`set`（空集合）、`float`（0.0）、`str`（空字符串）、自定义 `lambda: "默认值"`。
+常用工厂函数：`list`（空列表）、`int`（0）、`set`（空集合）、`float`（0.0）、`str`（空字符串）、自定义 `lambda: "默认值"`。
+
+### 11.2 deque — 双端队列
+
+`list.pop(0)` / `list.insert(0, x)` 是 O(n)；`deque` 头部和尾部操作都是 O(1)：
+
+```python
+from collections import deque
+
+q = deque([1, 2, 3])
+
+# 尾部 — 同 list
+q.append(4)       # 右入队
+q.pop()           # 右出队
+
+# 头部 — deque 独有，O(1)
+q.appendleft(0)   # 左入队
+q.popleft()       # 左出队
+
+# 也支持索引、len、in
+print(q[0], q[-1], len(q))  # 1  3  3
+```
+
+| 操作 | list | deque |
+|------|------|-------|
+| 尾部 `append` / `pop` | O(1) | O(1) |
+| 头部 `pop(0)` / `insert(0)` | **O(n)** | **O(1)** |
+| 随机索引 `[i]` | O(1) | O(1) |
+
+典型场景：滑动窗口单调队列、BFS、LRU 缓存。
+
+### 11.3 Counter — 统计频次
+
+一行代码完成元素计数，比手写 `defaultdict(int)` 更简洁：
+
+```python
+from collections import Counter
+
+# 统计字符频次
+cnt = Counter("abracadabra")
+print(cnt)             # Counter({'a': 5, 'b': 2, 'r': 2, 'c': 1, 'd': 1})
+
+# 统计列表元素
+cnt = Counter(["apple", "banana", "apple", "orange", "banana", "apple"])
+print(cnt)             # Counter({'apple': 3, 'banana': 2, 'orange': 1})
+
+# 常用操作
+print(cnt.most_common(2))   # [('apple', 3), ('banana', 2)] — Top N
+print(cnt["apple"])         # 3 — 单个元素计数
+print(cnt["grape"])         # 0 — 不存在的 key 返回 0（不会报错）
+print(cnt.total())          # 6 — Python 3.10+ 总数
+
+# Counter 之间可直接做数学运算
+a = Counter("abbc")
+b = Counter("bbcd")
+print(a + b)   # Counter({'b': 4, 'c': 2, 'a': 1, 'd': 1})  相加
+print(a - b)   # Counter({'a': 1})                          相减
+print(a & b)   # Counter({'b': 2, 'c': 1})                  取交集最小值
+print(a | b)   # Counter({'b': 2, 'c': 1, 'a': 1, 'd': 1})  取并集最大值
+```
+
+### 11.4 namedtuple — 轻量不可变数据类
+
+给元组的每个位置起一个名字，像对象一样用 `.属性` 访问，但没有 class 的开销：
+
+```python
+from collections import namedtuple
+
+# 定义
+Point = namedtuple("Point", ["x", "y"])
+Student = namedtuple("Student", "name age score")
+
+# 使用
+p = Point(3, 5)
+print(p.x, p.y)      # 3 5
+print(p[0], p[1])    # 3 5 — 依然支持索引
+
+s = Student("张三", 18, 92.5)
+print(s.name)        # 张三
+# s.name = "李四"     # 报错 — 不可变！
+
+# 常用方法
+print(s._asdict())   # {'name': '张三', 'age': 18, 'score': 92.5} — 转字典
+```
+
+> `namedtuple` 本质是不可变元组，适合做简单数据载体。需要可变数据或方法逻辑时用 `@dataclass`（见第05章 §6）。
+
+### 11.5 选型速查
+
+| 需求 | 推荐方案 |
+|------|---------|
+| 分组、自动初始化 | `defaultdict(list/set)` |
+| 频次统计 | `Counter` |
+| 队列 / 滑动窗口 | `deque` |
+| 简单不可变数据载体 | `namedtuple` |
+| 带方法/可变的数据模型 | `@dataclass`（第05章 §6） |
 
 ## 12. 常用内置函数补充
 
@@ -2551,7 +2721,6 @@ print(dict(mp))            # {'a': {1}}
 print(ord("a"))   # 97  — 字符 → Unicode 码点
 print(ord("中"))  # 20013
 print(chr(97))    # 'a' — 码点 → 字符
-print(chr(20013)) # '中'
 
 # 常见用法：将字母映射到 0~25
 for ch in "abc":
@@ -2566,9 +2735,7 @@ for ch in "abc":
 print([0] * 5)        # [0, 0, 0, 0, 0]
 print([1, 2] * 3)     # [1, 2, 1, 2, 1, 2]
 
-# 常见用法：创建固定长度的计数数组
-counts = [0] * 26     # 26 个 0，用于统计字母频率
+counts = [0] * 26     # 常见用法：创建固定长度计数数组
 ```
 
 > ⚠️ `*` 复制的是引用。如果元素是可变对象（如 `[[]] * 3`），三个子列表指向同一对象，修改一个会影响全部。对不可变元素（`int`、`str`、`tuple`）则安全。
-
