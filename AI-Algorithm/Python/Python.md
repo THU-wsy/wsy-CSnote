@@ -1,135 +1,3 @@
-# 目录
-
-- [目录](#目录)
-- [第01章\_Python简介](#第01章_python简介)
-  - [1. Python安装](#1-python安装)
-  - [2. PyCharm安装](#2-pycharm安装)
-  - [3. 虚拟环境 venv](#3-虚拟环境-venv)
-- [第02章\_Python基础](#第02章_python基础)
-  - [1. 变量](#1-变量)
-    - [1.1 变量的声明与赋值](#11-变量的声明与赋值)
-    - [1.2 数据类型](#12-数据类型)
-    - [1.3 数据输入](#13-数据输入)
-    - [1.4 数据输出](#14-数据输出)
-  - [2. 运算符](#2-运算符)
-    - [2.1 算术运算符](#21-算术运算符)
-    - [2.2 赋值运算符](#22-赋值运算符)
-    - [2.3 比较运算符](#23-比较运算符)
-      - [is 与 == 的区别](#is-与--的区别)
-      - [三元表达式（条件表达式）](#三元表达式条件表达式)
-    - [2.4 逻辑运算符](#24-逻辑运算符)
-      - [and](#and)
-      - [or](#or)
-      - [not](#not)
-  - [3. 流程控制语句](#3-流程控制语句)
-    - [3.1 if](#31-if)
-    - [3.2 while](#32-while)
-    - [3.3 for](#33-for)
-      - [enumerate() — 同时获取索引和值](#enumerate--同时获取索引和值)
-      - [zip() — 并行迭代](#zip--并行迭代)
-      - [for-else 与 while-else](#for-else-与-while-else)
-  - [4. 函数](#4-函数)
-    - [4.1 函数的定义](#41-函数的定义)
-    - [4.2 变量的作用域](#42-变量的作用域)
-    - [4.3 多返回值](#43-多返回值)
-    - [4.4 多种传参方式](#44-多种传参方式)
-      - [1、位置参数](#1位置参数)
-      - [2、关键字参数](#2关键字参数)
-      - [3、缺省参数](#3缺省参数)
-      - [4、可变参数](#4可变参数)
-    - [4.5 lambda匿名函数](#45-lambda匿名函数)
-  - [5. 异常处理](#5-异常处理)
-  - [6. 模块与包](#6-模块与包)
-    - [6.1 模块](#61-模块)
-    - [6.2 json模块的使用](#62-json模块的使用)
-    - [6.3 自定义模块](#63-自定义模块)
-    - [6.4 包](#64-包)
-    - [6.5 安装第三方包](#65-安装第三方包)
-- [第03章\_数据容器](#第03章_数据容器)
-  - [1. 列表list](#1-列表list)
-    - [1.1 列表的定义](#11-列表的定义)
-    - [1.2 列表的索引](#12-列表的索引)
-    - [1.3 列表的常用操作](#13-列表的常用操作)
-    - [1.4 列表的遍历](#14-列表的遍历)
-  - [2. 元组tuple](#2-元组tuple)
-    - [2.1 元组的定义](#21-元组的定义)
-    - [2.2 元组的常用操作](#22-元组的常用操作)
-    - [2.3 元组的遍历](#23-元组的遍历)
-  - [3. 字符串str](#3-字符串str)
-    - [3.1 三种定义方式](#31-三种定义方式)
-    - [3.2 字符串拼接](#32-字符串拼接)
-    - [3.3 字符串格式化](#33-字符串格式化)
-      - [方式一](#方式一)
-      - [方式二](#方式二)
-    - [3.4 字符串的常用操作](#34-字符串的常用操作)
-    - [3.5 字符串的遍历](#35-字符串的遍历)
-  - [4. 集合set](#4-集合set)
-    - [4.1 集合的定义](#41-集合的定义)
-    - [4.2 集合的常用操作](#42-集合的常用操作)
-    - [4.3 集合的遍历](#43-集合的遍历)
-    - [4.4 不可变集合 frozenset](#44-不可变集合-frozenset)
-  - [5. 字典dict](#5-字典dict)
-    - [5.1 字典的定义](#51-字典的定义)
-    - [5.2 字典的常用操作](#52-字典的常用操作)
-    - [5.3 字典的遍历](#53-字典的遍历)
-  - [6. 数据容器的其他操作](#6-数据容器的其他操作)
-    - [6.1 序列切片](#61-序列切片)
-    - [6.2 统计功能](#62-统计功能)
-    - [6.3 转换功能](#63-转换功能)
-    - [6.4 排序功能](#64-排序功能)
-    - [6.5 其他常用容器方法补充](#65-其他常用容器方法补充)
-  - [7. 推导式 Comprehension](#7-推导式-comprehension)
-    - [7.1 列表推导式](#71-列表推导式)
-    - [7.2 字典推导式](#72-字典推导式)
-    - [7.3 集合推导式](#73-集合推导式)
-  - [8. 五类数据容器对比](#8-五类数据容器对比)
-- [第04章\_文件操作](#第04章_文件操作)
-  - [1. 打开文件](#1-打开文件)
-  - [2. 读取文件](#2-读取文件)
-  - [3. 关闭文件](#3-关闭文件)
-  - [4. 写入文件](#4-写入文件)
-  - [5. pathlib — 更现代的文件路径操作](#5-pathlib--更现代的文件路径操作)
-- [第05章\_面向对象编程](#第05章_面向对象编程)
-  - [1. 类与对象](#1-类与对象)
-    - [1.1 类的定义](#11-类的定义)
-    - [1.2 魔术方法](#12-魔术方法)
-  - [2. 封装](#2-封装)
-    - [2.1 @property 装饰器 — Pythonic 的 getter/setter](#21-property-装饰器--pythonic-的-gettersetter)
-    - [2.2 @classmethod 与 @staticmethod](#22-classmethod-与-staticmethod)
-  - [3. 继承](#3-继承)
-    - [3.1 继承的基本语法](#31-继承的基本语法)
-    - [3.2 复写](#32-复写)
-  - [4. 多态](#4-多态)
-  - [5. 类型检查：isinstance() 和 issubclass()](#5-类型检查isinstance-和-issubclass)
-  - [6. dataclass — 简化数据类的定义](#6-dataclass--简化数据类的定义)
-- [第06章\_类型注解](#第06章_类型注解)
-  - [1. 类型注解简介](#1-类型注解简介)
-  - [2. 变量的类型注解](#2-变量的类型注解)
-  - [3. 函数的类型注解](#3-函数的类型注解)
-  - [4. Union类型注解](#4-union类型注解)
-- [第07章\_Python操作数据库](#第07章_python操作数据库)
-  - [1. 创建数据库连接](#1-创建数据库连接)
-  - [2. 增删改语句](#2-增删改语句)
-  - [3. 查询语句](#3-查询语句)
-- [第08章\_Python高阶技巧](#第08章_python高阶技巧)
-  - [1. 闭包](#1-闭包)
-  - [2. Python中实现常见的设计模式](#2-python中实现常见的设计模式)
-    - [2.1 装饰器模式](#21-装饰器模式)
-    - [2.2 单例模式](#22-单例模式)
-    - [2.3 工厂模式](#23-工厂模式)
-  - [3. 多线程编程](#3-多线程编程)
-  - [4. eval函数](#4-eval函数)
-  - [5. 浅拷贝和深拷贝](#5-浅拷贝和深拷贝)
-    - [5.1 可变类型](#51-可变类型)
-    - [5.2 不可变类型](#52-不可变类型)
-  - [6. 生成器与 yield](#6-生成器与-yield)
-  - [7. match-case 结构模式匹配](#7-match-case-结构模式匹配)
-  - [8. map() 与 filter()](#8-map-与-filter)
-  - [9. 解包运算符 \* 和 \*\*（函数调用侧）](#9-解包运算符--和-函数调用侧)
-  - [10. f-string 高级格式化](#10-f-string-高级格式化)
-
----
-
 # 第01章_Python简介
 
 ## 1. Python安装
@@ -148,41 +16,219 @@
 
 ## 2. PyCharm安装
 
-PyCharm是Python最常用的集成开发工具（IDE），前往官网 https://www.jetbrains.com.cn/pycharm/download/?section=windows 下载PyCharm社区版即可。
+PyCharm是Python最常用的集成开发工具（IDE），前往官网 https://www.jetbrains.com.cn/pycharm/download/?section=windows 下载即可。
 
-## 3. 虚拟环境 venv
+## 3. 环境管理
 
-虚拟环境是 Python 项目隔离的基础设施。每个项目可以有自己独立的依赖包，互不冲突。
+### 3.1 venv
 
-**创建和激活虚拟环境**：
+venv 虚拟环境管理是 Python 标准库自带的，适用于轻量场景，现代工具（uv、poetry、pipenv）底层也基于 venv。
+
+**创建虚拟环境**
 
 ```cmd
-# 创建虚拟环境（在项目目录下）
-python -m venv venv
+# 在当前项目目录下创建 .venv 文件夹
+python -m venv .venv
+```
 
-# 激活虚拟环境（Windows）
-venv\Scripts\activate
+**激活/退出虚拟环境**（如果要删除虚拟环境，直接删掉对应的 .venv 文件夹即可）
 
+```cmd
+# 激活虚拟环境（cmd）
+.venv\Scripts\activate
+# 激活虚拟环境（powershell）
+.venv\Scripts\Activate.ps1
 # 激活虚拟环境（Mac / Linux）
-source venv/bin/activate
+source .venv/bin/activate
 
 # 退出虚拟环境
 deactivate
 ```
 
-激活后，通过 `pip install` 安装的第三方包只会安装在当前虚拟环境中，不会影响系统全局 Python。
-
-**导出和安装依赖**：
+**基本使用（激活环境后，通过 pip 安装的包会自动安装到当前虚拟环境中，不影响系统全局 Python）**
 
 ```cmd
-# 导出当前环境的依赖清单
-pip freeze > requirements.txt
+# pip安装包
+pip install requests
 
 # 根据依赖清单一键安装
 pip install -r requirements.txt
+
+# 查看已安装的包
+pip list
+
+# 导出当前环境的依赖清单
+pip freeze > requirements.txt
 ```
 
-> 建议：每个 Python 项目都创建独立的虚拟环境，并通过 `requirements.txt` 管理依赖。`venv/` 目录应写入 `.gitignore`，不纳入版本控制。
+requirements.txt 示例
+
+```txt
+requests==2.31.0
+numpy>=1.24,<2.0
+pandas
+```
+
+**最佳实践**
+
+- 项目根目录下创建 .venv，并加入 .gitignore
+- 每个项目独立一个虚拟环境，并通过 `requirements.txt` 管理依赖
+
+### 3.2 conda
+
+conda 也用于虚拟环境管理，但需要安装 Anaconda 或 Miniconda，适用于数据科学、机器学习等重量级场景。
+
+#### Anaconda 的安装
+
+（1）前往 https://www.anaconda.com/download/success 点击 Download 进行下载并安装
+
+（2）我们以 2022.05 版本的 Anaconda3 为例，安装过程中勾选如下选项
+
+![image-20260711185513471](images/image-20260711185513471.png)
+
+（3）修改镜像源
+
+- 首先打开 Anaconda Prompt 后执行下述命令
+
+  ```shell
+  conda config --set show_channel_urls yes
+  ```
+
+- 然后打开 `C:\Users\<YourUserName>\.condarc` 文件并修改成以下内容：
+
+  ```txt
+  channels:
+    - defaults
+  show_channel_urls: true
+  default_channels:
+    - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main
+    - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/r
+    - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/msys2
+  custom_channels:
+    conda-forge: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+    pytorch: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+  ```
+
+> 说明：如果已经修改好镜像源，用 conda 安装包时仍出现网络连接异常，可能是 WiFi 的原因，可以尝试使用手机热点进行安装。
+
+（4）PyCharm 中指定 Conda 及环境，只需在右下角添加 Python 解释器：
+
+![image-20260711185626071](images/image-20260711185626071.png)
+
+#### 基本使用
+
+**管理 Conda 自身命令**：
+
+```shell
+# 查看 conda 版本
+conda --version
+# 查看基本信息
+conda info
+```
+
+**虚拟环境管理**：
+
+```shell
+# 创建虚拟环境并指定 python 版本
+conda create -n env_name python=3.8
+# 克隆已有环境
+conda create -n new_env --clone old_env
+# 从 environment.yml 创建
+conda env create -f environment.yml
+
+# 查看所有环境
+conda env list
+
+# 激活某一环境
+conda activate env_name
+
+# 退出虚拟环境
+conda deactivate
+
+# 删除指定环境
+conda env remove -n env_name
+
+# 导出环境
+conda env export > environment.yml
+conda env export --no-builds > environment.yml   # 去掉构建信息，跨平台兼容
+```
+
+environment.yml 示例：
+
+```yaml
+name: myproject
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - numpy=1.24.3
+  - pandas>=2.0
+  - pip
+  - pip:
+    - requests==2.31.0
+    - some-pypi-only-package
+```
+
+**包管理**：
+
+```shell
+# 在当前环境安装指定版本的包
+conda install package_name=1.2.3
+
+# 查看已经安装的包
+conda list
+
+# 清理缓存（删除下载的临时包）
+conda clean --all
+```
+
+### 3.3 venv 与 conda 对比
+
+| 维度            | venv                      | conda                                 |
+| --------------- | ------------------------- | ------------------------------------- |
+| 安装方式        | Python 内置，无需额外安装 | 需安装 Anaconda/Miniconda             |
+| 包管理器        | pip（仅 Python 包）       | conda + pip（可管理非 Python 依赖）   |
+| Python 版本管理 | 不能管理 Python 本身      | 可以创建不同 Python 版本的环境        |
+| 跨语言支持      | 仅 Python                 | 支持 R、C/C++ 库等                    |
+| 体积            | 轻量（~10-20MB）          | 较大（base 环境 ~500MB+）             |
+| 依赖解析        | pip 逐包解析              | conda 全局 SAT 求解，更可靠           |
+| 适用场景        | 纯 Python 项目            | 科学计算、数据科学、需要 C 扩展的项目 |
+
+## 4. Jupyter
+
+Jupyter 是一个开源的交互式计算环境，广泛应用于数据科学、机器学习、科学研究等领域。JupyterLab 是新一代的界面，而 Jupyter Notebook 是经典界面。在 PyCharm 中已经集成了 Jupyter。
+
+**Jupyter 的安装与启动**：
+
+```cmd
+# 新一代界面（推荐）
+pip install jupyterlab   # 安装
+jupyter lab              # 启动
+
+# 经典界面
+pip install notebook     # 安装
+jupyter notebook         # 启动
+```
+
+**在 PyCharm 中配置 Jupyter 服务器的步骤如下**：
+
+1. `工具->添加Jupyter连接`，外部服务器中服务器 URL 填写 `http://localhost:8888`，密码填写你所设置的 Jupyter 服务器密码（对于经典界面，设置密码只需在终端输入 `jupyter notebook password` 后即可设置）
+2. 需要在终端启动 Jupyter 服务器
+3. 在 PyCharm 中创建一个 Jupyter Notebook 文件即可进行编写
+
+**Jupyter 快捷键如下**：
+
+| 快捷键     | 功能                              |
+| ---------- | --------------------------------- |
+| esc        | 从输入模式退出到命令模式          |
+| a          | 在当前 cell 上面创建一个新的 cell |
+| b          | 在当前 cell 下面创建一个新的 cell |
+| dd         | 删除当前 cell                     |
+| m          | 切换到 markdown 模式              |
+| y          | 切换到 code 模式                  |
+| ctrl+回车  | 运行当前 cell                     |
+| shift+回车 | 运行当前 cell 并创建一个新的 cell |
 
 
 
@@ -285,6 +331,29 @@ print(3 ** 2)  # 9，乘方
 
 `=`、`+=`、`-=`、`*=`、`/=`、`%=`、`//=`、`**=`
 
+```python
+x = 10   # 赋值
+x += 5   # x = 15（加等）
+x -= 3   # x = 12（减等）
+x *= 2   # x = 24（乘等）
+x /= 4   # x = 6.0（除等）
+```
+
+**海象运算符 `:=`**（Python 3.8+）可以在**表达式内部**完成赋值并返回赋的值，而普通 `=` 只能在单独一行做赋值语句：
+
+```python
+# ❌ 普通 = 是语句，不能嵌在表达式里
+# while cur1 and (cur2 = cur1.next):   # SyntaxError
+
+# ✅ := 是表达式，可以嵌在任何需要值的地方
+while cur1 and (cur2 := cur1.next):
+    print(cur2)  # cur2 已赋值，直接用
+
+# 另一常见用法：if 中的捕获
+if (n := len(data)) > 10:
+    print(f"数据太长：{n} 条")  # n 已赋值，跳过 len() 重复计算
+```
+
 ### 2.3 比较运算符
 
 通过比较运算符进行比较运算会得到布尔类型的结果：
@@ -311,18 +380,21 @@ print(0 < age < 18)     # False
 
 - `==` 比较两个对象的**值**是否相等
 - `is` 比较两个对象的**内存地址**是否相同（身份比较）
+- `is not` 是 `is` 的反义（地址不同时为 True）
 
 ```python
 a = [1, 2, 3]
 b = [1, 2, 3]
 c = a
 
-print(a == b)  # True  — 值相等
-print(a is b)  # False — 不同对象，地址不同
-print(a is c)  # True  — 同一对象
+print(a == b)      # True  — 值相等
+print(a is b)      # False — 不同对象，地址不同
+print(a is c)      # True  — 同一对象
+print(a is not b)  # True  — a 和 b 不是同一对象
+print(a is not c)  # False — a 和 c 是同一对象
 ```
 
-> 惯用法：与 `None` 比较时统一使用 `is`，即 `if x is None` 而不是 `if x == None`。
+> 惯用法：与 `None` 比较时统一使用 `is` / `is not`，即 `if x is not None` 而不是 `if x != None`。
 
 #### 三元表达式（条件表达式）
 
@@ -634,7 +706,24 @@ def test(**kwargs):
 test(name="张三", age=18)  # 类型为<class 'dict'>，内容为{'name': '张三', 'age': 18}
 ```
 
-### 4.5 lambda匿名函数
+### 4.5 解包运算符（函数调用侧）
+
+前面提到 `*args` 和 `**kwargs` 用于函数**定义**，其实 `*` 和 `**` 也可以在函数**调用**时解包序列/字典：
+
+```python
+def greet(name, age):
+    print(f"{name}今年{age}岁")
+
+# * 解包列表/元组
+info = ["张三", 18]
+greet(*info)  # 等价于 greet("张三", 18)
+
+# ** 解包字典
+info_dict = {"name": "李四", "age": 20}
+greet(**info_dict)  # 等价于 greet(name="李四", age=20)
+```
+
+### 4.6 lambda匿名函数
 
 Python中，函数本身也可以像普通变量一样作为参数传递使用（**函数名**存放的是函数的地址）：
 
@@ -953,6 +1042,112 @@ print(matrix)
 #  [0. 0. 0. 1.]]
 ```
 
+## 7. 文件操作
+
+### 7.1 打开文件
+
+使用open函数可以打开一个已经存在的文件或者创建一个新文件：
+
+```python
+file = open(name, mode, encoding="UTF-8")
+```
+
+- name表示文件路径，如果使用相对路径，则默认的相对路径是当前python文件所在目录
+- mode表示访问模式，有以下三种：
+  1. `r`表示以**只读**方式打开文件，这是默认模式。文件的指针将会放在文件开头。
+  2. `w`表示打开一个文件**只用于写入**。如果该文件不存在，则创建新文件；如果该文件已存在，则打开该文件，清空原有内容，并从头开始写入。
+  3. `a`表示打开一个文件**用于追加**。如果该文件不存在，则创建新文件；如果该文件已存在，则打开该文件，新的内容将会被写入到已有内容之后。
+- encoding表示编码格式，推荐统一使用UTF-8
+- 返回值file是一个**文件对象**
+
+示例：
+
+```python
+file = open("E:/demo.txt", "r", encoding="UTF-8")
+```
+
+### 7.2 读取文件
+
+每次`open()`中的内容只能被读取一次。对于同一文件对象，每次读取会从上一次读取结束的位置开始读取。读取文件的常用操作如下：
+
+- `file.read(num)`：读取num个字符。若没有传入num，则读取文件中的全部数据。
+- `file.readline()`：读取一行数据
+- `file.readlines()`：按照行的方式读取全部内容，返回一个列表，列表中的每个元素代表每一行的数据
+- `for line in file`：for循环读取数据，每个临时变量line记录一行数据
+
+示例：
+
+```python
+file = open("E:/demo.txt", "r", encoding="UTF-8")
+for line in file:
+    print(line, end='')
+file.close()
+```
+
+### 7.3 关闭文件
+
+如果不关闭文件，且程序没有停止运行，那么这个文件将一直被Python程序占用，无法操作。所以我们使用完文件对象后，必须调用`file.close()`来关闭文件。
+
+Python中为我们提供了`with open() as file`的语法，在该语句块中可以对文件进行操作，操作完成后会**自动关闭文件**，即使出现异常也会自动关闭文件：
+
+```python
+with open("E:/demo.txt", "r", encoding="UTF-8") as file:
+    for line in file:
+        print(line, end='')
+```
+
+### 7.4 写入文件
+
+`w`写入模式：
+
+```python
+file = open("E:/demo.txt", "w", encoding="UTF-8")
+file.write("hello world\n")
+file.close()
+```
+
+`a`追加模式：
+
+```python
+file = open("E:/demo.txt", "a", encoding="UTF-8")
+file.write("hello world\n")
+file.close()
+```
+
+说明：
+
+- 调用`file.write(content)`后，数据并**未真正**写入文件，而是会写入内存缓冲区。
+- 调用`file.flush()`后，数据才会**真正**写入文件，即从内存缓冲区刷新到硬盘。
+- `file.close()`会附带`file.flush()`方法的功能。
+
+### 7.5 pathlib — 更现代的文件路径操作
+
+Python 3.4+ 引入了 `pathlib` 模块，提供面向对象的路径操作方式，比传统的 `os.path` 更优雅、更易读写：
+
+```python
+from pathlib import Path
+
+# 构建路径（自动适配操作系统分隔符）
+p = Path("E:/demo.txt")
+
+# 常用操作
+print(p.name)        # demo.txt（文件名）
+print(p.suffix)      # .txt（后缀名）
+print(p.stem)        # demo（无后缀的文件名）
+print(p.parent)      # E:\ （父目录）
+print(p.exists())    # True/False（文件是否存在）
+
+# 读写文件（无需手动 open）
+content = p.read_text(encoding="UTF-8")       # 读取全部文本
+p.write_text("hello", encoding="UTF-8")       # 写入文本
+
+# 遍历目录
+for f in Path("E:/").iterdir():
+    print(f)
+```
+
+> 推荐在新项目中使用 `pathlib` 替代 `os.path` 和手动 `open()` 进行路径操作。
+
 
 
 # 第03章_数据容器
@@ -975,6 +1170,17 @@ empty_list2 = list()
 print(list1)        # ['wsy', 666, True]
 print(type(list1))  # <class 'list'>
 ```
+
+列表 * 运算符，用于快速创建重复元素列表：
+
+```python
+print([0] * 5)        # [0, 0, 0, 0, 0]
+print([1, 2] * 3)     # [1, 2, 1, 2, 1, 2]
+
+counts = [0] * 26     # 常见用法：创建固定长度计数数组
+```
+
+> 注意：`*` 复制的是引用。如果元素是可变对象（如 `[[]] * 3`），三个子列表指向同一对象，修改一个会影响全部。对不可变元素（`int`、`str`、`tuple`）则安全。
 
 ### 1.2 列表的索引
 
@@ -1126,7 +1332,7 @@ print(message)
 - `%7.2f`表示将宽度控制在7位，将小数点精度设置为2，例如`11.345`就会变成`[空格][空格]11.35`
 - `%.2f`表示不限制宽度，只设置小数点精度为2，例如`11.345`就会变成`11.35`
 
-#### 方式二
+#### 方式二：f-string 高级格式化
 
 通过语法`f"内容{变量}"`可以进行字符串的快速格式化：
 
@@ -1135,6 +1341,28 @@ name = "张三"
 age = 18
 message = f"我叫{name}，今年{age}岁"
 print(message)
+```
+
+注意，f-string 不仅支持变量插入，还支持表达式、格式化说明符和调试模式：
+
+```python
+name = "张三"
+age = 18
+score = 92.567
+
+# 表达式嵌入
+print(f"{name}明年{age + 1}岁")
+
+# 数字格式化（宽度、精度、补零）
+print(f"PI ≈ {3.1415926:.2f}")   # PI ≈ 3.14
+print(f"学号：{15:04d}")          # 学号：0015
+print(f"得分：{score:.1f}分")     # 得分：92.6分
+
+# 对齐与填充
+print(f"{'标题':*^20}")           # ********标题********
+
+# 调试速记（Python 3.8+）
+print(f"{name=}, {age=}")         # name='张三', age=18
 ```
 
 ### 3.4 字符串的常用操作
@@ -1318,8 +1546,56 @@ print(111 in dict1)   # False — 111 是 value，不是 key
 
 ```python
 dict1 = {"k1": 111, "k2": 222, "k3": 333}
+
+# items() — 遍历键值对（最常用）
+for key, value in dict1.items():
+    print(f"key={key}, value={value}")
+
+# 只遍历键
 for key in dict1:
     print(f"key={key}, value={dict1[key]}")
+```
+
+### 5.4 字典的其他常用方法
+
+**`get()` 方法 vs 直接索引**：
+
+```python
+d = {"name": "张三"}
+
+# dict[key] — key 不存在时抛出 KeyError
+print(d["name"])    # 张三
+# print(d["age"])   # KeyError: 'age'  ← 直接报错！
+
+# dict.get(key) — key 不存在时返回 None 或自定义默认值（不报错）
+print(d.get("name"))       # 张三
+print(d.get("age"))        # None（key 不存在，返回 None）
+print(d.get("age", "未知"))  # 未知（使用自定义默认值）
+```
+
+> 小结：`dict[key]` 适合**确定 key 一定存在**的场景；`dict.get()` 适合**key 可能不存在**的场景，更安全。
+
+**字典的 `items()` / `values()` / `keys()` 方法**：
+
+```python
+d = {"k1": 111, "k2": 222, "k3": 333}
+
+# items() — 遍历键值对（最常用）
+for key, value in d.items():
+    print(f"key={key}, value={value}")
+
+# values() — 只遍历值
+for value in d.values():
+    print(value)  # 111  222  333
+
+# keys() — 只遍历键（与直接 for key in d 等价）
+for key in d.keys():
+    print(key)  # k1  k2  k3
+
+# 常用操作示例
+print(list(d.values()))  # [111, 222, 333] — 转列表
+print(sum(d.values()))   # 666 — 直接求和
+print(max(d.values()))   # 333 — 取最大值
 ```
 
 ## 6. 数据容器的其他操作
@@ -1415,9 +1691,18 @@ print(sorted(data, key=lambda x: (-x[1], x[0])))
 
 > 技巧：`-x[1]` 用负号翻转数字排序方向。对字符串需要降序时，可以用 `reverse=True` 搭配 `key`，但此时所有字段都会反转。更精细的控制可用 `key=lambda x: (x[0], -x[1])` 这种元组方式。
 
-> 补充说明：`list.sort()` 是列表的**原地排序**方法（修改原列表，返回 None），而 `sorted()` 是内置函数（**返回新列表**，原容器不变）。`sorted()` 可作用于任何可迭代对象，而 `sort()` 只属于列表。两者都支持 `key` 和 `reverse` 参数。
+#### 列表的 `sort()` vs `sorted()`
 
-#### reversed() — 反向迭代器
+`list.sort()` 是列表的**原地排序**方法（修改原列表，返回 None），而 `sorted()` 是内置函数（**返回新列表**，原容器不变）。`sorted()` 可作用于任何可迭代对象，而 `sort()` 只属于列表。两者都支持 `key` 和 `reverse` 参数。
+
+```python
+nums = [3, 1, 2]
+nums.sort()         # 原地排序，nums 变为 [1, 2, 3]，返回 None
+print(nums)         # [1, 2, 3]
+print(sorted(nums)) # [1, 2, 3]，返回新列表，原列表不变
+```
+
+### 6.5 反向迭代器
 
 `reversed()` 返回一个**惰性反向迭代器**，可用于任何序列（列表、元组、字符串、range 等），不修改原容器：
 
@@ -1451,58 +1736,7 @@ print(r)                  # <reversed object> — 迭代器
 print("".join(r))         # "olleh" — 消费迭代器得到结果
 ```
 
-> `reversed()` 是纯粹的**反转**，和排序无关。如果需要降序排列，用 `sorted(容器, reverse=True)`。
-
-### 6.5 其他常用容器方法补充
-
-**列表的 `sort()` vs `sorted()`**：
-
-```python
-nums = [3, 1, 2]
-nums.sort()         # 原地排序，nums 变为 [1, 2, 3]，返回 None
-print(nums)         # [1, 2, 3]
-print(sorted(nums)) # [1, 2, 3]，返回新列表，原列表不变
-```
-
-**字典的 `get()` 方法 vs 直接索引**：
-
-```python
-d = {"name": "张三"}
-
-# dict[key] — key 不存在时抛出 KeyError
-print(d["name"])    # 张三
-# print(d["age"])   # KeyError: 'age'  ← 直接报错！
-
-# dict.get(key) — key 不存在时返回 None 或自定义默认值（不报错）
-print(d.get("name"))       # 张三
-print(d.get("age"))        # None（key 不存在，返回 None）
-print(d.get("age", "未知"))  # 未知（使用自定义默认值）
-```
-
-> 小结：`dict[key]` 适合**确定 key 一定存在**的场景；`dict.get()` 适合**key 可能不存在**的场景，更安全。
-
-**字典的 `items()` / `values()` / `keys()` 方法**：
-
-```python
-d = {"k1": 111, "k2": 222, "k3": 333}
-
-# items() — 遍历键值对（最常用）
-for key, value in d.items():
-    print(f"key={key}, value={value}")
-
-# values() — 只遍历值
-for value in d.values():
-    print(value)  # 111  222  333
-
-# keys() — 只遍历键（与直接 for key in d 等价）
-for key in d.keys():
-    print(key)  # k1  k2  k3
-
-# 常用操作示例
-print(list(d.values()))  # [111, 222, 333] — 转列表
-print(sum(d.values()))   # 666 — 直接求和
-print(max(d.values()))   # 333 — 取最大值
-```
+> `reversed()` 是纯粹的**反转**，和排序无关
 
 ## 7. 推导式 Comprehension
 
@@ -1569,117 +1803,220 @@ print(unique_squares)  # {1, 4, 9, 16}
 | 元素类型 | 任意      | 任意       | 不可变类型（可哈希） | key 不可变 | 字符 |
 | 典型场景 | 有序集合  | 常量/坐标  | 去重/集合运算 | 键值映射 | 文本处理 |
 
+## 9. collections 模块
 
+`collections` 是 Python 标准库中的容器扩展模块，提供了比内置容器更专业的工具。
 
-# 第04章_文件操作
-
-## 1. 打开文件
-
-使用open函数可以打开一个已经存在的文件或者创建一个新文件：
+### 9.1 defaultdict — 带默认值的字典
 
 ```python
-file = open(name, mode, encoding="UTF-8")
+from collections import defaultdict
+
+# 场景1：分组（默认值为空列表）
+mp = defaultdict(list)
+words = ["eat", "tea", "tan"]
+for w in words:
+    key = "".join(sorted(w))
+    mp[key].append(w)      # key 不存在时自动创建 []，无需 if key not in mp
+
+# 场景2：计数（默认值为 0）
+counter = defaultdict(int)
+for ch in "abracadabra":
+    counter[ch] += 1       # 首次访问自动初始化为 0
+
+# 场景3：集合去重（默认值为空集合）
+mp = defaultdict(set)
+mp["a"].add(1)
+mp["a"].add(1)
+# defaultdict(set, {'a': {1}})
+
+# 场景4：自定义默认值
+mp = defaultdict(lambda : 1)
+print(mp["a"])  # 1
 ```
 
-- name表示文件路径，如果使用相对路径，则默认的相对路径是当前python文件所在目录
-- mode表示访问模式，有以下三种：
-  1. `r`表示以**只读**方式打开文件，这是默认模式。文件的指针将会放在文件开头。
-  2. `w`表示打开一个文件**只用于写入**。如果该文件不存在，则创建新文件；如果该文件已存在，则打开该文件，清空原有内容，并从头开始写入。
-  3. `a`表示打开一个文件**用于追加**。如果该文件不存在，则创建新文件；如果该文件已存在，则打开该文件，新的内容将会被写入到已有内容之后。
-- encoding表示编码格式，推荐统一使用UTF-8
-- 返回值file是一个**文件对象**
+常用工厂函数：`list`（空列表）、`int`（0）、`set`（空集合）、`float`（0.0）、`str`（空字符串）、自定义 `lambda: "默认值"`。
 
-示例：
+### 9.2 deque — 双端队列
+
+`list.pop(0)` / `list.insert(0, x)` 是 O(n)；`deque` 头部和尾部操作都是 O(1)：
 
 ```python
-file = open("E:/demo.txt", "r", encoding="UTF-8")
+from collections import deque
+
+q = deque([1, 2, 3])
+
+# 尾部 — 同 list
+q.append(4)       # 右入队
+q.pop()           # 右出队
+
+# 头部 — deque 独有，O(1)
+q.appendleft(0)   # 左入队
+q.popleft()       # 左出队
+
+# 也支持索引、len、in
+print(q[0], q[-1], len(q))  # 1  3  3
 ```
 
-## 2. 读取文件
+| 操作                        | list     | deque    |
+| --------------------------- | -------- | -------- |
+| 尾部 `append` / `pop`       | O(1)     | O(1)     |
+| 头部 `pop(0)` / `insert(0)` | **O(n)** | **O(1)** |
+| 随机索引 `[i]`              | O(1)     | O(1)     |
 
-每次`open()`中的内容只能被读取一次。对于同一文件对象，每次读取会从上一次读取结束的位置开始读取。读取文件的常用操作如下：
+### 9.3 Counter — 统计频次
 
-- `file.read(num)`：读取num个字符。若没有传入num，则读取文件中的全部数据。
-- `file.readline()`：读取一行数据
-- `file.readlines()`：按照行的方式读取全部内容，返回一个列表，列表中的每个元素代表每一行的数据
-- `for line in file`：for循环读取数据，每个临时变量line记录一行数据
-
-示例：
-
-```python
-file = open("E:/demo.txt", "r", encoding="UTF-8")
-for line in file:
-    print(line, end='')
-file.close()
-```
-
-## 3. 关闭文件
-
-如果不关闭文件，且程序没有停止运行，那么这个文件将一直被Python程序占用，无法操作。所以我们使用完文件对象后，必须调用`file.close()`来关闭文件。
-
-Python中为我们提供了`with open() as file`的语法，在该语句块中可以对文件进行操作，操作完成后会**自动关闭文件**，即使出现异常也会自动关闭文件：
+一行代码完成元素计数，比手写 `defaultdict(int)` 更简洁：
 
 ```python
-with open("E:/demo.txt", "r", encoding="UTF-8") as file:
-    for line in file:
-        print(line, end='')
-```
+from collections import Counter
 
-## 4. 写入文件
+# 统计字符频次
+cnt = Counter("abracadabra")
+print(cnt)             # Counter({'a': 5, 'b': 2, 'r': 2, 'c': 1, 'd': 1})
 
-`w`写入模式：
-
-```python
-file = open("E:/demo.txt", "w", encoding="UTF-8")
-file.write("hello world\n")
-file.close()
-```
-
-`a`追加模式：
-
-```python
-file = open("E:/demo.txt", "a", encoding="UTF-8")
-file.write("hello world\n")
-file.close()
-```
-
-说明：
-
-- 调用`file.write(content)`后，数据并**未真正**写入文件，而是会写入内存缓冲区。
-- 调用`file.flush()`后，数据才会**真正**写入文件，即从内存缓冲区刷新到硬盘。
-- `file.close()`会附带`file.flush()`方法的功能。
-
-## 5. pathlib — 更现代的文件路径操作
-
-Python 3.4+ 引入了 `pathlib` 模块，提供面向对象的路径操作方式，比传统的 `os.path` 更优雅、更易读写：
-
-```python
-from pathlib import Path
-
-# 构建路径（自动适配操作系统分隔符）
-p = Path("E:/demo.txt")
+# 统计列表元素
+cnt = Counter(["apple", "banana", "apple", "orange", "banana", "apple"])
+print(cnt)             # Counter({'apple': 3, 'banana': 2, 'orange': 1})
 
 # 常用操作
-print(p.name)        # demo.txt（文件名）
-print(p.suffix)      # .txt（后缀名）
-print(p.stem)        # demo（无后缀的文件名）
-print(p.parent)      # E:\ （父目录）
-print(p.exists())    # True/False（文件是否存在）
+print(cnt.most_common(2))   # [('apple', 3), ('banana', 2)] — Top N
+print(cnt["apple"])         # 3 — 单个元素计数
+print(cnt["grape"])         # 0 — 不存在的 key 返回 0（不会报错）
+print(cnt.total())          # 6 — Python 3.10+ 总数
 
-# 读写文件（with 无需手动 open）
-content = p.read_text(encoding="UTF-8")       # 读取全部文本
-p.write_text("hello", encoding="UTF-8")       # 写入文本
-
-# 遍历目录
-for f in Path("E:/").iterdir():
-    print(f)
+# Counter 之间可直接做数学运算
+a = Counter("abbc")
+b = Counter("bbcd")
+print(a + b)   # Counter({'b': 4, 'c': 2, 'a': 1, 'd': 1})  相加
+print(a - b)   # Counter({'a': 1})                          相减
+print(a & b)   # Counter({'b': 2, 'c': 1})                  取交集最小值
+print(a | b)   # Counter({'b': 2, 'c': 1, 'a': 1, 'd': 1})  取并集最大值
 ```
 
-> 推荐在新项目中使用 `pathlib` 替代 `os.path` 和手动 `open()` 进行路径操作。
+### 9.4 namedtuple — 轻量不可变数据类
+
+给元组的每个位置起一个名字，像对象一样用 `.属性` 访问，但没有 class 的开销：
+
+```python
+from collections import namedtuple
+
+# 定义
+Point = namedtuple("Point", ["x", "y"])
+Student = namedtuple("Student", "name age score")
+
+# 使用
+p = Point(3, 5)
+print(p.x, p.y)      # 3 5
+print(p[0], p[1])    # 3 5 — 依然支持索引
+
+s = Student("张三", 18, 92.5)
+print(s.name)        # 张三
+# s.name = "李四"     # 报错 — 不可变！
+
+# 常用方法
+print(s._asdict())   # {'name': '张三', 'age': 18, 'score': 92.5} — 转字典
+```
+
+> `namedtuple` 本质是不可变元组，适合做简单数据载体。需要可变数据或方法逻辑时用 `@dataclass`。
+
+## 10. heapq — 堆
+
+### 10.1 基本使用
+
+`heapq` 实现了**最小堆**算法，插入和弹出都是 O(log n)。
+
+| 函数                            | 作用                               |
+| ------------------------------- | ---------------------------------- |
+| `heapq.heappush(heap, item)`    | 入堆                               |
+| `heapq.heappop(heap)`           | 弹出最小值，堆为空时报错           |
+| `heapq.heapify(list)`           | 原地建堆 O(n)                      |
+| `heapq.heappushpop(heap, item)` | 先 push 再 pop（比分开调用更高效） |
+| `heapq.heapreplace(heap, item)` | 先 pop 再 push                     |
+| `heapq.nlargest(k, iterable)`   | 最大的 k 个                        |
+| `heapq.nsmallest(k, iterable)`  | 最小的 k 个                        |
+
+```python
+import heapq
+
+# 创建空堆
+heap = []
+heapq.heappush(heap, 3)
+heapq.heappush(heap, 1)
+heapq.heappush(heap, 2)
+print(heap[0])              # 1 — 堆顶始终是最小值（不弹出）
+
+# 依次弹出 — 天然升序
+while heap:
+    print(heapq.heappop(heap))  # 1  2  3
+
+# 已有列表转堆（O(n)）
+nums = [5, 2, 7, 1, 9]
+heapq.heapify(nums)
+print(nums[0])              # 1
+```
+
+> 说明：另有一个 `queue.PriorityQueue`（是线程安全的，基于 `heapq`），常见于多线程生产者-消费者模型。
+
+### 10.2 自定义优先级
+
+用元组 `(priority, item)` 可以自定义优先级：
+
+```python
+tasks = [(3, "洗衣"), (1, "做饭"), (2, "买菜")]
+heapq.heapify(tasks)
+while tasks:
+    print(heapq.heappop(tasks))  # (1, '做饭') (2, '买菜') (3, '洗衣')
+```
+
+注意，元组比较是逐元素的——优先级相同时会去比第二个元素，如果第二个元素不可比较（如 dict），直接报错。有两种**解决方案**：
+
+```python
+# ❌ dict 不可比较，优先级相同时报 TypeError
+heapq.heappush(heap, (1, {"name": "a"}))
+heapq.heappush(heap, (1, {"name": "b"}))
+
+# 方案1（最常用）：插入计数器破平局
+import itertools
+counter = itertools.count()
+heapq.heappush(heap, (1, next(counter), {"name": "a"}))
+heapq.heappush(heap, (1, next(counter), {"name": "b"}))
+# ✅ count 递增永不重复，第三个元素永不被比较
+
+# 方案2：自定义类，只比较优先级
+class Task:
+    def __init__(self, priority, name):
+        self.priority = priority
+        self.name = name
+    def __lt__(self, other):
+        return self.priority < other.priority
+```
+
+### 10.3 最大堆
+
+**最大堆** — 取负数翻转（Python 没有内置最大堆）：
+
+```python
+heap = []
+heapq.heappush(heap, -3)
+heapq.heappush(heap, -1)
+heapq.heappush(heap, -2)
+print(-heapq.heappop(heap))  # 3（最大值）
+```
+
+### 10.4 Top K
+
+  `nlargest` / `nsmallest` 一行搞定：
+
+```python
+data = [5, 2, 7, 1, 9]
+print(heapq.nlargest(3, data))   # [9, 7, 5]
+print(heapq.nsmallest(2, data))  # [1, 2]
+```
 
 
 
-# 第05章_面向对象编程
+# 第04章_面向对象编程
 
 ## 1. 类与对象
 
@@ -2045,7 +2382,7 @@ print(issubclass(Dog, object))   # True（所有类都继承自 object）
 
 ## 6. dataclass — 简化数据类的定义
 
-Python 3.7+ 引入的 `dataclass` 装饰器，可自动生成 `__init__`、`__repr__`、`__eq__` 等魔术方法，极大地简化数据类的写法：
+Python 3.7+ 引入的 `dataclass` 装饰器，可自动生成 `__init__`、`__repr__`、`__eq__`、`__hash__` 魔术方法，极大地简化数据类的写法：
 
 ```python
 from dataclasses import dataclass
@@ -2069,15 +2406,13 @@ class Student:
     name: str
     age: int
 
-    def __str__(self):
+    def __repr__(self):
         return f"学生：{self.name}"
 ```
 
-对比传统写法（需手写 `__init__`、`__repr__`、`__eq__`），`@dataclass` 能节省大量样板代码，是定义数据模型的首选方式。
 
 
-
-# 第06章_类型注解
+# 第05章_类型注解
 
 ## 1. 类型注解简介
 
@@ -2153,13 +2488,176 @@ my_dict: dict[str, Union[str, int]] = {"name": "wsy", "age": 18}
 
 > 说明：Union类型注解同样可以用在函数形参和返回值处。
 
+## 5. Optional类型注解
+
+使用 `Optional[Student]` 表示这个值可以是 Student 对象，也可以是 None，等价于 `Union[Student, None]`。在 Python 3.10+ 中可以用管道符的写法替代 `Optional`，即 `Student | None`
+
+
+
+# 第06章_多线程、子进程、多进程
+
+Python 中实现并发与并行的方式主要有三种：**多线程**（`threading`）、**子进程**（`subprocess`）和**多进程**（`multiprocessing`）。它们的适用场景和底层机制各不相同，理解它们的区别是编写高性能 Python 程序的关键。
+
+## 1. GIL 全局解释器锁
+
+在深入三种方式之前，必须先理解 **GIL（Global Interpreter Lock，全局解释器锁）**。
+
+GIL 是 CPython（Python 官方实现）中的一个互斥锁，它保证**同一时刻只有一个线程在执行 Python 字节码**。这意味着：
+
+- **CPU 密集型任务**：多线程无法利用多核 CPU 并行加速，因为 GIL 的存在使得线程只能轮流执行。
+- **IO 密集型任务**：多线程仍然有效，因为当线程等待 IO（网络请求、文件读写等）时会释放 GIL，让其他线程有机会执行。
+
+> **注意**：GIL 是 **CPython** 的特性，其他 Python 实现（如 Jython、IronPython）没有 GIL。从 Python 3.13 开始，GIL 可以通过编译选项移除（PEP 703）。
+
+```python
+# 验证 GIL 的存在：CPU 密集型任务中多线程并未真正并行
+import threading
+import time
+
+COUNT = 50_000_000
+
+def countdown(n):
+    while n > 0:
+        n -= 1
+
+# 单线程执行
+start = time.time()
+countdown(COUNT)
+countdown(COUNT)
+print(f"单线程耗时: {time.time() - start:.2f}s")
+
+# 两个线程"并行"
+start = time.time()
+t1 = threading.Thread(target=countdown, args=(COUNT,))
+t2 = threading.Thread(target=countdown, args=(COUNT,))
+t1.start(); t2.start()
+t1.join(); t2.join()
+print(f"两线程耗时: {time.time() - start:.2f}s")  # 不会比单线程快多少
+```
+
+## 2. 多线程（threading）
+
+Python 通过 `threading` 模块支持多线程编程，适合 **IO 密集型**任务（网络爬虫、文件读写、数据库操作等）。
+
+```python
+import threading
+import time
+
+def task(name, delay):
+    print(f"线程 {name} 开始")
+    time.sleep(delay)
+    print(f"线程 {name} 结束")
+
+# 方式一：直接创建 Thread 实例
+t1 = threading.Thread(target=task, args=("A", 2), name="Thread-A")
+t2 = threading.Thread(target=task, kwargs={"name": "B", "delay": 1})
+
+t1.start()   # 启动线程（非阻塞，立即返回）
+t2.start()
+
+t1.join()    # 等待线程执行完毕（阻塞当前线程）
+t2.join()    # 不调用 join 的话，主线程退出后子线程也会被强制终止
+
+print("所有线程结束")
+```
+
+```python
+# 方式二：继承 Thread 类
+class MyThread(threading.Thread):
+    def __init__(self, name, delay):
+        super().__init__(name=name)
+        self.delay = delay
+
+    def run(self):
+        print(f"线程 {self.name} 开始")
+        time.sleep(self.delay)
+        print(f"线程 {self.name} 结束")
+
+t = MyThread("Custom", 1.5)
+t.start()
+t.join()
+```
+
+## 3. 子进程（subprocess）
+
+`subprocess` 模块用于**启动并管理外部子进程**（执行任意系统命令、脚本或程序），其本身不是"并行计算"工具，而是与操作系统交互的桥梁。常用于调用外部工具、执行 shell 脚本、与外部程序通信等场景。
+
+```python
+import subprocess
+
+# 执行命令并等待完成（Python 3.5+ 推荐）
+result = subprocess.run(
+    ["echo", "Hello from subprocess"],
+    capture_output=True,   # 捕获 stdout 和 stderr
+    text=True,             # 以字符串形式返回（否则为 bytes）
+    check=True,            # 返回码非零时抛出 CalledProcessError
+    timeout=30             # 超时限制（秒）
+)
+print(f"stdout: {result.stdout}")
+print(f"stderr: {result.stderr}")
+print(f"returncode: {result.returncode}")
+```
+
+注意：**永远不要在 `shell=True` 时使用不可信的输入**，这可能导致命令注入攻击。推荐始终使用**列表形式**传参，而不是拼接字符串。
+
+```python
+# ❌ 危险：可能被注入
+user_input = "; rm -rf /"
+subprocess.run(f"echo {user_input}", shell=True)
+
+# ✅ 安全：列表传参，参数自动转义
+subprocess.run(["echo", user_input])
+```
+
+## 4. 多进程（multiprocessing）
+
+`multiprocessing` 模块通过创建**独立的 Python 解释器进程**来绕过 GIL，每个进程有自己独立的内存空间和 GIL，因此可以真正利用多核 CPU，适合 **CPU 密集型**任务。
+
+```python
+import multiprocessing as mp
+import os
+import time
+
+def worker(name, delay, result_queue):
+    print(f"进程 {name} (PID={os.getpid()}) 开始")
+    time.sleep(delay)
+    result_queue.put(f"{name} 完成")
+
+if __name__ == "__main__":   # ⚠ Windows 下必须有此保护
+    # 方式一：Process 类
+    queue = mp.Queue()
+    p1 = mp.Process(target=worker, args=("A", 1, queue))
+    p2 = mp.Process(target=worker, args=("B", 2, queue))
+    p1.start()
+    p2.start()
+    p1.join()
+    p2.join()
+
+    while not queue.empty():
+        print(queue.get())
+
+    # 方式二：继承 Process 类
+    class MyProcess(mp.Process):
+        def __init__(self, name):
+            super().__init__(name=name)
+
+        def run(self):
+            print(f"进程 {self.name} (PID={os.getpid()}) 运行中")
+
+    p = MyProcess("Custom")
+    p.start()
+    p.join()
+```
+
+> **Windows 注意事项**：在 Windows 上，`multiprocessing` 会重新导入主模块来执行子进程。如果不在 `if __name__ == "__main__":` 中保护进程创建代码，子进程会递归创建新的子进程，导致死循环。
+
 
 
 # 第07章_Python操作数据库
 
 ## 1. 创建数据库连接
 
-我们首先执行以下cmd命令来安装pymysql包，用于操作数据库：
+我们首先执行以下命令来安装 pymysql 包，用于操作数据库：
 
 ```cmd
 pip install -i https://pypi.tuna.tsinghua.edu.cn/simple pymysql
@@ -2357,36 +2855,9 @@ student = factory.get_person("s")
 teacher = factory.get_person("t")
 ```
 
-## 3. 多线程编程
 
-Python可以通过threading模块进行多线程编程：
 
-```python
-import threading
-import time
-
-def func(name, age):
-    while True:
-        print(f"我叫{name}，今年{age}岁！")
-        time.sleep(1)
-
-"""
-通过threading.Thread()可以创建一个线程，它主要有以下参数：
-- target: 执行的目标任务
-- args: 以元组的方式给执行任务传参
-- kwargs: 以字典的方式给执行任务传参
-- name: 线程名
-"""
-
-thread1 = threading.Thread(target=func, args=("张三", 18))
-thread2 = threading.Thread(target=func, kwargs={"name": "李四", "age": 20})
-
-# 启动线程
-thread1.start()
-thread2.start()
-```
-
-## 4. eval函数
+## 3. eval函数
 
 `eval()`函数可将字符串**当成有效的表达式**来求值并返回计算结果：
 
@@ -2401,9 +2872,9 @@ res = eval("[1,2,3]")
 print(type(res))  # <class 'list'>
 ```
 
-## 5. 浅拷贝和深拷贝
+## 4. 浅拷贝和深拷贝
 
-### 5.1 可变类型
+### 4.1 可变类型
 
 对于可变类型：
 
@@ -2430,7 +2901,7 @@ print(id(arr_copy[0]))      # 2138614228800
 print(id(arr_deepcopy[0]))  # 2138615952256
 ```
 
-### 5.2 不可变类型
+### 4.2 不可变类型
 
 对于不可变类型，进行普通赋值、使用`copy`函数、使用`deepcopy`函数的效果都相同，仅仅是拷贝地址：
 
@@ -2449,7 +2920,7 @@ print(id(arr_copy))         # 2358694435200
 print(id(arr_deepcopy))     # 2358694435200
 ```
 
-## 6. 生成器与 yield
+## 5. 生成器与 yield
 
 生成器是一种特殊的迭代器，使用 `yield` 关键字**惰性**地逐个生成值，而不是一次性将所有值加载到内存中。这对于处理大数据集非常有用。
 
@@ -2487,7 +2958,7 @@ print(next(squares_gen))  # 1
 
 > `range()` 本质上就是一个惰性序列，它的行为类似生成器，在 Python 3 中不会一次性创建列表。
 
-## 7. match-case 结构模式匹配
+## 6. match-case 结构模式匹配
 
 Python 3.10+ 引入的 `match-case` 语句，比 if-elif-else 链更强大、更易读：
 
@@ -2526,7 +2997,7 @@ match user:
         print(f"{name}信息不完整")
 ```
 
-## 8. map() 与 filter()
+## 7. map() 与 filter()
 
 `map()` 和 `filter()` 是 Python 函数式编程的基础工具：
 
@@ -2543,177 +3014,7 @@ print(evens)    # [2, 4]
 
 > 说明：推导式通常比 `map()`/`filter()` 更 Pythonic、更易读，但 `map()`/`filter()` 返回的是惰性迭代器，适合搭配大数据管道使用。
 
-## 9. 解包运算符 * 和 **（函数调用侧）
-
-笔记 4.4 中介绍了 `*args` 和 `**kwargs` 用于函数**定义**，其实 `*` 和 `**` 也可以在函数**调用**时解包序列/字典：
-
-```python
-def greet(name, age):
-    print(f"{name}今年{age}岁")
-
-# * 解包列表/元组
-info = ["张三", 18]
-greet(*info)  # 等价于 greet("张三", 18)
-
-# ** 解包字典
-info_dict = {"name": "李四", "age": 20}
-greet(**info_dict)  # 等价于 greet(name="李四", age=20)
-```
-
-## 10. f-string 高级格式化
-
-f-string 不仅支持变量插入，还支持表达式、格式化说明符和调试模式：
-
-```python
-name = "张三"
-age = 18
-score = 92.567
-
-# 表达式嵌入
-print(f"{name}明年{age + 1}岁")
-
-# 数字格式化（宽度、精度、补零）
-print(f"PI ≈ {3.1415926:.2f}")   # PI ≈ 3.14
-print(f"学号：{15:04d}")          # 学号：0015
-print(f"得分：{score:.1f}分")     # 得分：92.6分
-
-# 对齐与填充
-print(f"{'标题':*^20}")           # ********标题********
-
-# 调试速记（Python 3.8+）
-print(f"{name=}, {age=}")         # name='张三', age=18
-```
-
-## 11. collections 模块常用类型
-
-`collections` 是 Python 标准库中的容器扩展模块，提供了比内置容器更专业的工具。
-
-### 11.1 defaultdict — 带默认值的字典
-
-```python
-from collections import defaultdict
-
-# 场景1：分组（默认值为空列表）
-mp = defaultdict(list)
-words = ["eat", "tea", "tan"]
-for w in words:
-    key = "".join(sorted(w))
-    mp[key].append(w)      # key 不存在时自动创建 []，无需 if key not in mp
-
-# 场景2：计数（默认值为 0）
-counter = defaultdict(int)
-for ch in "abracadabra":
-    counter[ch] += 1       # 首次访问自动初始化为 0
-
-# 场景3：集合去重（默认值为空集合）
-mp = defaultdict(set)
-mp["a"].add(1)
-mp["a"].add(1)
-# defaultdict(set, {'a': {1}})
-
-# 场景4：自定义默认值
-mp = defaultdict(lambda : 1)
-print(mp["a"])  # 1
-```
-
-常用工厂函数：`list`（空列表）、`int`（0）、`set`（空集合）、`float`（0.0）、`str`（空字符串）、自定义 `lambda: "默认值"`。
-
-### 11.2 deque — 双端队列
-
-`list.pop(0)` / `list.insert(0, x)` 是 O(n)；`deque` 头部和尾部操作都是 O(1)：
-
-```python
-from collections import deque
-
-q = deque([1, 2, 3])
-
-# 尾部 — 同 list
-q.append(4)       # 右入队
-q.pop()           # 右出队
-
-# 头部 — deque 独有，O(1)
-q.appendleft(0)   # 左入队
-q.popleft()       # 左出队
-
-# 也支持索引、len、in
-print(q[0], q[-1], len(q))  # 1  3  3
-```
-
-| 操作 | list | deque |
-|------|------|-------|
-| 尾部 `append` / `pop` | O(1) | O(1) |
-| 头部 `pop(0)` / `insert(0)` | **O(n)** | **O(1)** |
-| 随机索引 `[i]` | O(1) | O(1) |
-
-典型场景：滑动窗口单调队列、BFS、LRU 缓存。
-
-### 11.3 Counter — 统计频次
-
-一行代码完成元素计数，比手写 `defaultdict(int)` 更简洁：
-
-```python
-from collections import Counter
-
-# 统计字符频次
-cnt = Counter("abracadabra")
-print(cnt)             # Counter({'a': 5, 'b': 2, 'r': 2, 'c': 1, 'd': 1})
-
-# 统计列表元素
-cnt = Counter(["apple", "banana", "apple", "orange", "banana", "apple"])
-print(cnt)             # Counter({'apple': 3, 'banana': 2, 'orange': 1})
-
-# 常用操作
-print(cnt.most_common(2))   # [('apple', 3), ('banana', 2)] — Top N
-print(cnt["apple"])         # 3 — 单个元素计数
-print(cnt["grape"])         # 0 — 不存在的 key 返回 0（不会报错）
-print(cnt.total())          # 6 — Python 3.10+ 总数
-
-# Counter 之间可直接做数学运算
-a = Counter("abbc")
-b = Counter("bbcd")
-print(a + b)   # Counter({'b': 4, 'c': 2, 'a': 1, 'd': 1})  相加
-print(a - b)   # Counter({'a': 1})                          相减
-print(a & b)   # Counter({'b': 2, 'c': 1})                  取交集最小值
-print(a | b)   # Counter({'b': 2, 'c': 1, 'a': 1, 'd': 1})  取并集最大值
-```
-
-### 11.4 namedtuple — 轻量不可变数据类
-
-给元组的每个位置起一个名字，像对象一样用 `.属性` 访问，但没有 class 的开销：
-
-```python
-from collections import namedtuple
-
-# 定义
-Point = namedtuple("Point", ["x", "y"])
-Student = namedtuple("Student", "name age score")
-
-# 使用
-p = Point(3, 5)
-print(p.x, p.y)      # 3 5
-print(p[0], p[1])    # 3 5 — 依然支持索引
-
-s = Student("张三", 18, 92.5)
-print(s.name)        # 张三
-# s.name = "李四"     # 报错 — 不可变！
-
-# 常用方法
-print(s._asdict())   # {'name': '张三', 'age': 18, 'score': 92.5} — 转字典
-```
-
-> `namedtuple` 本质是不可变元组，适合做简单数据载体。需要可变数据或方法逻辑时用 `@dataclass`（见第05章 §6）。
-
-### 11.5 选型速查
-
-| 需求 | 推荐方案 |
-|------|---------|
-| 分组、自动初始化 | `defaultdict(list/set)` |
-| 频次统计 | `Counter` |
-| 队列 / 滑动窗口 | `deque` |
-| 简单不可变数据载体 | `namedtuple` |
-| 带方法/可变的数据模型 | `@dataclass`（第05章 §6） |
-
-## 12. 常用内置函数补充
+## 8. 常用内置函数补充
 
 ### ord() 与 chr() — 字符与码点互转
 
@@ -2729,13 +3030,37 @@ for ch in "abc":
 
 > `ord(ch) - ord("a")` 是 LeetCode 字母类题目的经典技巧，将 `'a'~'z'` 映射为数组下标 `0~25`。
 
-### 列表 * 运算符 — 快速创建重复元素列表
+### abs() / round() / sum() — 数值运算
 
 ```python
-print([0] * 5)        # [0, 0, 0, 0, 0]
-print([1, 2] * 3)     # [1, 2, 1, 2, 1, 2]
+# abs() — 绝对值
+print(abs(-5))       # 5
+print(abs(3.14))     # 3.14
+print(abs(-3 + 4j))  # 5.0 — 复数返回模长
 
-counts = [0] * 26     # 常见用法：创建固定长度计数数组
+# round() — 四舍五入
+print(round(3.14159, 2))   # 3.14 — 保留两位小数
+print(round(3.5))          # 4    — 不指定小数位则取整
+
+# sum() — 求和
+print(sum([1, 2, 3, 4]))           # 10
+print(sum([1, 2, 3], start=100))   # 106 — 从 100 开始累加
 ```
 
-> ⚠️ `*` 复制的是引用。如果元素是可变对象（如 `[[]] * 3`），三个子列表指向同一对象，修改一个会影响全部。对不可变元素（`int`、`str`、`tuple`）则安全。
+### all() / any() — 全真与任一真
+
+```python
+# all() — 所有元素都为真才返回 True
+print(all([True, True, False]))  # False
+print(all([1, 2, 3]))            # True（非零非空就是真）
+
+# any() — 任一元素为真就返回 True
+print(any([False, False, True]))  # True
+print(any([0, "", []]))           # False
+
+# 常见用法：检查列表是否全部满足某条件
+nums = [2, 4, 6, 8]
+print(all(n % 2 == 0 for n in nums))  # True — 全是偶数
+print(any(n > 5 for n in nums))       # True — 至少有一个 >5
+# 配合生成器表达式，惰性求值，不会提前遍历完
+```

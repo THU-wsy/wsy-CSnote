@@ -11,123 +11,13 @@
 
 数据分析的核心工具：
 
-1. **Numpy**：高性能数值计算（矩阵、向量）
-2. **Pandas**：表格数据处理
-3. **Matplotlib**：数据可视化（绘图库）
-
-## 2. 环境搭建
-
-### 2.1 Anaconda
-
-#### 1、特点
-
-- 方便安装：就像安装一个应用程序一样简单，它为您预先安装好了许多常用的工具，无需单独配置
-- 包管理器：包含一个名为 Conda 的包管理器，用于安装、更新和管理软件包
-- 环境管理：可以轻松地创建和管理多个独立的 Python 环境，比如可以安装 python2 和 python3 环境，实现自由切换
-- 集成工具和库：捆绑了许多用于数据科学、机器学习和科学计算的重要工具和库，如 NumPy、Pandas、Matplotlib、SciPy、Scikit-learn 等
-- 跨平台性：可在 Windows、macOS 和 Linux 等操作系统上运行，使其成为一个跨平台的解决方案
-
-![image-20250920213548228](images/image-20250920213548228.png)
-
-#### 2、安装步骤
-
-（1）前往 https://www.anaconda.com/download/success 点击 Download 进行下载并安装
-
-（2）我们以 2022.05 版本的 Anaconda3 为例，安装过程中勾选如下选项
-
-![image-20250921213138950](images/image-20250921213138950.png)
-
-（3）修改镜像源
-
-- 首先打开 Anaconda Prompt 后执行下述命令
-
-  ```shell
-  conda config --set show_channel_urls yes
-  ```
-
-- 然后打开 `C:\Users\<YourUserName>\.condarc` 文件并修改成以下内容：
-
-  ```txt
-  channels:
-    - defaults
-  show_channel_urls: true
-  default_channels:
-    - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main
-    - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/r
-    - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/msys2
-  custom_channels:
-    conda-forge: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
-    pytorch: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
-  ```
-
-> 说明：如果已经修改好镜像源，用 conda 安装包时仍出现网络连接异常，可能是 WiFi 的原因，可以尝试使用手机热点进行安装。
-
-（4）PyCharm 中指定 Conda 及环境，只需在右下角添加 Python 解释器：
-
-![image-20250920230507857](images/image-20250920230507857.png)
-
-#### 3、常用命令
-
-> 需要打开 Anaconda Prompt 后执行下述命令
-
-**管理 Conda 自身命令**：
-
-```shell
-# 查看 conda 版本
-conda --version
-# 查看基本信息
-conda info
-```
-
-**虚拟环境管理**：
-
-```shell
-# 创建虚拟环境并指定 python 版本
-conda create -n env_name python=3.8
-# 查看所有环境
-conda env list
-# 激活某一环境
-conda activate env_name
-# 克隆环境
-conda create --name new_env --clone old_env
-# 删除指定环境
-conda remove -n env_name --all
-```
-
-**包管理**：
-
-```shell
-# 在当前环境安装指定版本的包
-conda install package_name=1.2.3
-
-# 查看已经安装的包
-conda list
-
-# 清理缓存（删除下载的临时包）
-conda clean --all
-```
-
-其他更多命令可以参考 https://blog.csdn.net/qq_55106902/article/details/147308606
-
-### 2.2 Jupyter
-
-Jupyter 是一个开源的交互式计算环境，广泛应用于数据科学、机器学习、科学研究等领域，主要组件有 Jupyter Notebook 和 Jupyter Lab。在 PyCharm 中已经集成了 Jupyter。
-
-> 说明：Jupyter 是 Anaconda 发行版的一部分，默认随 Anaconda 一起安装。
-
-**在 PyCharm 中配置 Jupyter 的步骤如下**：
-
-1. `工具->添加Jupyter连接`，外部服务器中服务器 URL 填写 `http://localhost:8888`，密码填写你所设置的 Jupyter Notebook 服务器密码（设置密码只需在终端输入 `jupyter notebook password` 后即可设置）
-2. 在 PyCharm 中使用 Jupyter，始终需要我们启动 Jupyter Notebook 服务器，即在终端输入 `jupyter notebook` 即可
-3. 在 PyCharm 中创建一个 Jupyter Notebook 文件即可进行编写
-
-**Jupyter 快捷键如下**：
-
-![image-20250920223314923](images/image-20250920223314923.png)
+1. **numpy**：高性能数值计算（矩阵、向量）
+2. **pandas**：表格数据处理
+3. **matplotlib**：数据可视化（绘图库）
 
 
 
-# 第02章_Numpy
+# 第02章_numpy
 
 numpy 是 Python 中科学计算的基础包。它是一个 Python 库，提供多维数组对象、各种派生对象（例如掩码数组和矩阵）以及用于对数组进行快速操作的各种方法，包括数学、逻辑、形状操作、排序、选择、I/O 、离散傅里叶变换、基本线性代数、基本统计运算、随机模拟等等。
 
@@ -209,10 +99,10 @@ print(arr)
 print(arr.shape)     # (2, 3)
 print(arr.ndim)      # 2
 print(arr.size)      # 6
-print(arr.dtype)     # int64
+print(arr.dtype)     # int32
 print(arr.T)         # [[1 4][2 5][3 6]]
-print(arr.itemsize)  # 8
-print(arr.nbytes)    # 48
+print(arr.itemsize)  # 4
+print(arr.nbytes)    # 24
 print(arr.flags)
 ```
 
@@ -320,22 +210,76 @@ print(arr[:, 6][arr[:, 6] > 80])  # [82 90]
 
 ### 1.5 ndarray的运算
 
+#### 基本四则运算
+
 ```python
-# 1. ndarray间的四则运算（ndarray可以是更高维的，但两个ndarray形状必须相同）
+# 1. ndarray间的四则运算（逐元素运算，支持广播机制，见下方说明）
 a = np.array([1, 2, 3])
 b = np.array([4, 5, 6])
 print(a + b)  # [5 7 9]
 print(a - b)  # [-3 -3 -3]
-print(a * b)  # [ 4 10 18]
+print(a * b)  # [ 4 10 18]  （注意：这是逐元素乘法，不是矩阵乘法）
 print(a / b)  # [0.25 0.4  0.5 ]
 
-# 2. ndarray与标量间的四则运算
+# 2. ndarray与标量间的四则运算（标量会自动广播到数组的每个元素）
 print(a + 3)  # [4 5 6]
 
 # 3. 矩阵乘法
 m1 = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
 m2 = np.array([[4, 5, 6], [7, 8, 9], [1, 2, 3]])
-print(m1 @ m2)  # [[ 21  27  33] [ 57  72  87] [ 93 117 141]]
+print(m1 @ m2)           # [[ 21  27  33] [ 57  72  87] [ 93 117 141]]
+print(np.dot(m1, m2))    # 同上，等价于 @ 运算符
+print(np.matmul(m1, m2)) # 同上
+```
+
+#### 广播机制（broadcasting）
+
+当两个数组形状不同时，numpy 会尝试将较小的数组"广播"到较大数组的形状，前提是满足以下规则：
+
+1. 从尾部维度开始比较
+2. 维度相等，或其中一个维度为 1，或其中一个维度缺失时，可以广播
+3. 不满足条件则报错
+
+```python
+# 示例1：标量与数组（标量广播到每个元素）
+a = np.array([1, 2, 3])
+print(a + 5)  # [6 7 8]
+
+# 示例2：一维数组与二维数组（行向量广播到矩阵每一行）
+matrix = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])  # shape: (3, 3)
+row = np.array([10, 20, 30])                             # shape: (3,)
+print(matrix + row)  # [[11 22 33] [14 25 36] [17 28 39]]
+
+# 示例3：列向量与矩阵（广播到每一列）
+col = np.array([[10], [20], [30]])  # shape: (3, 1)
+print(matrix + col)  # [[11 12 13] [24 25 26] [37 38 39]]
+
+# 示例4：不兼容的形状 — 会报错
+# a = np.array([1, 2, 3])       # shape: (3,)
+# b = np.array([1, 2])           # shape: (2,)
+# print(a + b)  # ValueError: operands could not be broadcast together
+```
+
+#### 常用运算函数
+
+```python
+a = np.array([1, 2, 3, 4, 5])
+
+# 裁剪：将值限制在指定范围内
+print(np.clip(a, 2, 4))  # [2 2 3 4 4]
+
+# 计算非零元素的个数
+arr = np.array([0, 1, 0, 3, 0, 5, 8])
+print(np.count_nonzero(arr))  # 4
+
+# 获取非零元素的索引
+print(np.nonzero(arr))  # (array([1, 3, 5, 6], dtype=int64),)
+print(np.argwhere(arr > 0))  # [[1] [3] [5] [6]] — 以二维数组形式返回
+
+# 将 NaN 替换为指定值，将无穷替换为指定值
+arr = np.array([1, np.nan, np.inf, -np.inf, 3])
+print(np.nan_to_num(arr, nan=0, posinf=999, neginf=-999))
+# [  1.   0. 999. -999.   3.]
 ```
 
 ## 2. numpy常用函数
@@ -376,6 +320,10 @@ print(np.floor([2.2, 3.8]))  # [2. 3.]
 
 # 10. 检测缺失值
 print(np.isnan([1, 2, np.nan, 3]))  # [False False  True False]
+
+# 11. L2范数
+vec = np.array([3, 4])
+print(np.linalg.norm(vec))  # 5.0
 ```
 
 ### 2.2 统计函数
@@ -485,7 +433,7 @@ new_arr = np.unique(arr)
 print(new_arr)
 ```
 
-### 2.6 其他函数
+### 2.6 其他常用函数
 
 ```python
 arr1 = np.array([1, 2, 3])
@@ -503,11 +451,27 @@ print(np.split(arr, [2, 5]))  # [array([1, 2]), array([3, 4, 5]), array([6])]
 
 # 3. 改变ndarray的形状
 print(np.reshape(arr, [2, 3]))  # [[1 2 3] [4 5 6]]
+## reshape 中可以用 -1 让 numpy 自动推导该维度
+print(np.reshape(arr, [-1, 2]))  # [[1 2] [3 4] [5 6]]
+print(np.reshape(arr, [2, -1]))  # [[1 2 3] [4 5 6]]
+
+# 4. 转一维数组为列向量/行向量
+print(arr[:, np.newaxis])   # shape: (6, 1) — 变为列向量
+print(arr[np.newaxis, :])   # shape: (1, 6) — 变为行向量
+
+# 5. 增加/删除维度
+print(np.expand_dims(arr, axis=0))  # shape: (1, 6)
+print(np.expand_dims(arr, axis=1))  # shape: (6, 1)
+print(np.squeeze(arr))              # 删除所有长度为1的维度
+
+# 6. 转置（对二维以上数组，可指定轴顺序）
+arr_3d = np.random.rand(2, 3, 4)
+print(np.transpose(arr_3d, (1, 0, 2)).shape)  # (3, 2, 4)
 ```
 
 
 
-# 第03章_Pandas
+# 第03章_pandas
 
 Pandas 是 Python 数据分析工具链中最核心的库，充当数据读取、清洗、分析、统计、输出的高效工具。Pandas 提供了易于使用的数据结构和数据分析工具，特别适用于处理结构化数据，如表格型数据（类似于 Excel 表格）。Pandas 是数据科学和分析领域中常用的工具之一，它使得用户能够轻松地从各种数据源中导入数据，并对数据进行高效的操作和分析。
 
@@ -650,6 +614,107 @@ print(df[df.学号 > 101])
 
 ![image-20250928214234182](images/image-20250928214234182.png)
 
+### 2.5 使用示例
+
+**数据快速预览**
+
+```python
+df = pd.read_csv('data/employees.csv')
+
+# 每次拿到新数据，最先运行的几个函数：
+print(df.head())           # 前5行
+print(df.info())           # 列名、非空数量、数据类型
+print(df.describe())       # 数值列的均值、标准差、四分位数
+print(df.isna().sum())     # 各列缺失值数量
+print(df['department_id'].value_counts())  # 某列的值分布
+```
+
+**数据合并（merge / concat）**
+
+```python
+# === merge：类似 SQL JOIN ===
+left = pd.DataFrame({'id': [1, 2, 3, 4], 'name': ['张三', '李四', '王五', '赵六']})
+right = pd.DataFrame({'id': [1, 2, 3, 5], 'score': [85, 92, 78, 88]})
+
+print(pd.merge(left, right, on='id'))           # 内连接（默认）
+print(pd.merge(left, right, on='id', how='left'))  # 左连接
+# 基于不同列名合并
+right2 = pd.DataFrame({'emp_id': [1, 2, 3], 'salary': [5000, 6000, 7000]})
+print(pd.merge(left, right2, left_on='id', right_on='emp_id'))
+
+# === concat：纵向或横向拼接 ===
+df1 = pd.DataFrame({'A': [1, 2], 'B': [3, 4]})
+df2 = pd.DataFrame({'A': [5, 6], 'B': [7, 8]})
+print(pd.concat([df1, df2], ignore_index=True))  # 纵向拼接
+```
+
+**apply / map 函数**
+
+```python
+df = pd.DataFrame({'A': [1, 2, 3], 'B': [10, 20, 30]})
+
+# apply：对行或列应用函数
+print(df.apply(np.sum, axis=1))          # 对每行求和
+print(df['A'].apply(lambda x: x ** 2))   # 对单列逐元素操作
+
+# map：Series 逐元素映射（字典或函数）
+df['B_label'] = df['B'].map({10: 'low', 20: 'mid', 30: 'high'})
+print(df)
+```
+
+**常用字符串处理**
+
+```python
+s = pd.Series(['Alice', 'Bob', 'Charlie', ' David ', 'ALICE'])
+
+print(s.str.lower())           # 全部小写
+print(s.str.strip())           # 去除两端空格
+print(s.str.len())             # 字符长度
+print(s.str.replace('a', '@', case=False))  # 替换（支持正则）
+print(s.str.contains('li'))    # 是否包含子串
+
+# 拆分
+s2 = pd.Series(['a,b,c', 'd,e,f'])
+print(s2.str.split(',', expand=True))  # 拆分为多列
+```
+
+**one-hot编码**
+
+```python
+df = pd.DataFrame({'color': ['red', 'blue', 'green', 'red', 'blue']})
+print(pd.get_dummies(df['color']))
+```
+
+**数据透视表**
+
+```python
+df = pd.DataFrame({
+    '日期': ['2025-01', '2025-01', '2025-02', '2025-02'],
+    '产品': ['A', 'B', 'A', 'B'],
+    '销量': [100, 150, 120, 180]
+})
+print(pd.pivot_table(df, values='销量', index='日期', columns='产品', aggfunc='sum'))
+```
+
+**排序与筛选**
+
+```python
+df = pd.DataFrame({
+    'name': ['alice', 'bob', 'charlie', 'david'],
+    'age': [25, 30, 35, 28],
+    'salary': [5000, 8000, 12000, 6500]
+})
+
+print(df.sort_values('salary', ascending=False))  # 按列排序
+print(df.query('age > 25 and salary < 10000'))    # 类SQL查询
+```
+
+**数据相关性分析**
+
+```python
+print(df.corr())  # Pearson 相关系数矩阵
+```
+
 ## 3. Timestamp
 
 ### 3.1 基本使用
@@ -747,11 +812,26 @@ print(day_list2)
 ### 4.1 数据的导入导出
 
 ```python
-# 数据导入
+# === 数据导入 ===
+# CSV 文件
 df = pd.read_csv('data/employees.csv')
 print(df)
-# 数据导出
-df.to_csv('data/new_employees.csv')
+
+# Excel 文件
+df = pd.read_excel('data/report.xlsx', sheet_name='Sheet1')
+
+# JSON 文件
+df = pd.read_json('data/data.json')
+
+# SQL 数据库（需要安装对应的数据库驱动）
+# import sqlite3
+# conn = sqlite3.connect('database.db')
+# df = pd.read_sql('SELECT * FROM table_name', conn)
+
+# === 数据导出 ===
+df.to_csv('data/new_employees.csv', index=False)   # index=False 不保存行索引
+df.to_excel('data/output.xlsx', sheet_name='结果')   # 导出为 Excel
+df.to_json('data/output.json', orient='records')    # 导出为 JSON
 ```
 
 ### 4.2 缺失值处理
@@ -842,6 +922,12 @@ df['is_male'] = df['gender'].map({'Male': True, 'Female': False})
 print(df['is_male'])
 ```
 
+```python
+# pd.to_numeric：安全地将字符串转为数值（无法转换的变为 NaN）
+s = pd.Series(['1', '2', '3', 'x', '5'])
+print(pd.to_numeric(s, errors='coerce'))  # [1. 2. 3. nan 5.]
+```
+
 ### 4.5 分组聚合
 
 ```python
@@ -868,6 +954,19 @@ df_aggregate_salary = df_aggregate_salary.reset_index()
 df_aggregate_salary['salary'] = df_aggregate_salary['salary'].round(2)
 df_aggregate_salary = df_aggregate_salary.sort_values('salary', ascending=False)
 print(df_aggregate_salary)
+
+# 5. agg：应用多个聚合函数
+result = df.groupby('department_id').agg({
+    'salary': ['mean', 'max', 'min', 'std', 'count'],
+    'employee_id': 'count'  # 人数统计
+}).round(2)
+print(result)
+
+# 6. transform：保持与原DataFrame相同形状的聚合结果
+# 用于计算"每个值在所在组中的比例"等场景
+df['dept_avg_salary'] = df.groupby('department_id')['salary'].transform('mean')
+df['salary_ratio'] = df['salary'] / df['dept_avg_salary']  # 每人薪资相对于部门均值的比例
+print(df[['department_id', 'salary', 'dept_avg_salary', 'salary_ratio']])
 ```
 
 
@@ -884,7 +983,7 @@ print(df_aggregate_salary)
 
 ## 1. 折线图plot
 
-```py
+```python
 import matplotlib.pyplot as plt
 from matplotlib import rcParams
 
@@ -948,105 +1047,60 @@ plt.ylim(0, 100)
 plt.show()
 ```
 
-## 3. 条形图barh
+## 3. 散点图scatter
 
 ```python
 import matplotlib.pyplot as plt
-from matplotlib import rcParams
+import numpy as np
 
-# 0. 设置字体用于处理中文字符（Windows设置为SimHei，Mac设置为STHeiti）
-rcParams['font.family'] = 'SimHei'
-
-# 1. 创建图表，设置大小（长和宽）
 plt.figure(figsize=(10, 5))
-
-# 2. 数据
-subjects = ['语文', '数学', '英语']
-scores = [85, 92, 78]
-
-# 3. 绘制条形图
-plt.barh(subjects, scores, label='张三')
-# 添加图例
-plt.legend()
-
-# 4. 显示图表
-plt.show()
-```
-
-## 4. 饼图pie
-
-```python
-import matplotlib.pyplot as plt
-from matplotlib import rcParams
-
-# 0. 设置字体用于处理中文字符（Windows设置为SimHei，Mac设置为STHeiti）
-rcParams['font.family'] = 'SimHei'
-
-# 1. 创建图表，设置大小（长和宽）
-plt.figure(figsize=(10, 5))
-
-# 2. 数据
-things = ['学习', '娱乐', '运动', '睡觉', '其他']
-times = [6, 4, 1, 8, 5]
-
-# 3. 绘制饼图
-plt.pie(times, labels=things, autopct='%.1f%%')
-
-# 4. 显示图表
-plt.show()
-```
-
-## 5. 散点图scatter
-
-```python
-import matplotlib.pyplot as plt
-from matplotlib import rcParams
-import random
-
-# 0. 设置字体用于处理中文字符（Windows设置为SimHei，Mac设置为STHeiti）
-rcParams['font.family'] = 'SimHei'
-
-# 1. 创建图表，设置大小（长和宽）
-plt.figure(figsize=(10, 5))
-
-# 2. 数据
-x = []
-y = []
-for i in range(100):
-    tmp = random.uniform(0, 10)
-    x.append(tmp)
-    y.append(tmp * 2 + random.random())
-
-# 3. 绘制散点图
+x = np.random.uniform(0, 10, 100)
+y = x * 2 + np.random.randn(100)
 plt.scatter(x, y, alpha=0.5)
-
-# 4. 显示图表
+plt.title('相关性散点图')
 plt.show()
 ```
 
-## 6. 多个图表的绘制
+## 4. 直方图hist
+
+```python
+import matplotlib.pyplot as plt
+import numpy as np
+
+data = np.random.randn(1000)
+plt.figure(figsize=(10, 5))
+plt.hist(data, bins=30, color='steelblue', edgecolor='white')
+plt.title('正态分布直方图')
+plt.show()
+```
+
+## 5. 多子图绘制（推荐OOP风格）
 
 ```python
 import matplotlib.pyplot as plt
 
-month = [1, 2, 3, 4]
+fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+
+month = ['1月', '2月', '3月', '4月']
 sales = [100, 150, 80, 130]
 
-f1 = plt.subplot(2, 2, 1)
-f1.plot(month, sales)
-f2 = plt.subplot(2, 2, 2)
-f2.bar(month, sales)
-f3 = plt.subplot(2, 2, 3)
-f3.barh(month, sales)
-f4 = plt.subplot(2, 2, 4)
-f4.scatter(month, sales)
+axes[0].plot(month, sales, marker='o')
+axes[0].set_title('折线图')
+axes[1].bar(month, sales)
+axes[1].set_title('柱状图')
 
+plt.tight_layout()  # 自动调整子图间距
 plt.show()
 ```
 
+## 6. 图表保存
 
-
-
-
-
-
+```python
+plt.figure(figsize=(10, 5))
+plt.plot([1, 2, 3, 4], [100, 150, 80, 130])
+plt.title('销售趋势')
+plt.tight_layout()
+# 保存图表（支持 png, pdf, svg 等格式）
+plt.savefig('chart.png', dpi=300, bbox_inches='tight')
+plt.savefig('chart.pdf')  # 矢量格式，适合论文
+```
