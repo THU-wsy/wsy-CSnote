@@ -3,8 +3,16 @@ from d2l import torch as d2l
 import matplotlib
 from torch import nn
 import math
+import os
 
 matplotlib.use('TkAgg')
+
+# 修复 d2l read_data_nmt 的编码问题
+def _read_data_nmt_utf8():
+    data_dir = d2l.download_extract('fra-eng')
+    with open(os.path.join(data_dir, 'fra.txt'), 'r', encoding='utf-8') as f:
+        return f.read()
+d2l.read_data_nmt = _read_data_nmt_utf8
 
 
 def sequence_mask(X, valid_len, value=0.0):
@@ -443,7 +451,7 @@ net = EncoderDecoder(encoder, decoder)
 #   - train_iter 中取出的 Y 中只有 <eos>，没有 <bos>，例如 Y = [10, 17, 21, 2, 0, 0, 0, 0, 0, 0]
 #   - 这个 Y 会作为 dec_target 进行损失计算，即 dec_target = Y
 #   - 而 decoder 的输入会在 Y 前面拼上一个 <bos> 并去掉最后一位，即 dec_input = [1, 10, 17, 21, 2, 0, 0, 0, 0, 0]
-device = torch.device('mps')
+device = torch.device('cuda')
 d2l.train_seq2seq(net, train_iter, lr, num_epochs, tgt_vocab, device)
 
 # 预测
