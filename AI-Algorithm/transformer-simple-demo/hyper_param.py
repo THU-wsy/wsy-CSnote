@@ -1,6 +1,10 @@
 BATCH_SIZE = 8
 HEADS = 4
-SEQ_LEN = 50
+SEQ_LEN_X = 50     # 输入x的固定长度
+SEQ_LEN_Y = 100    # 输出y的固定长度
+MAX_LEN = 10000    # 位置编码矩阵的固定长度：取一个远大于任何实际序列的值，encoder/decoder共用一份
 DIMENSION = 32
 D_K = DIMENSION // HEADS
 DROPOUT = 0.1
+N_LAYERS = 3
+EPOCHS = 3
